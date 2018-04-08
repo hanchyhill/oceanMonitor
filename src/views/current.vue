@@ -1,15 +1,17 @@
 <template>
 <div>
-  <router-view></router-view>
+当前台风
 </div>
 </template>
 <script>
-import Util from '../libs/util';
-import env from './env.vue';
   export default {
-    name: 'ocean-monitor',
+    name: 'cur-ty',
+    props:{
+
+    },
     data () {
-      return {}
+      return {
+      }
     },
     methods: {
     },
@@ -19,6 +21,7 @@ import env from './env.vue';
     },
   };
 </script>
+<style scoped>
 
 </style>
 

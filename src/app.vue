@@ -1,23 +1,37 @@
 <template>
-    <div>
+  <div>
+    <main-header></main-header>
         <router-view></router-view>
-    </div>
+  </div>
 </template>
 <script>
-    export default {
-        data() {
-            return {
+  import MainHeader from './views/header.vue';
 
-            };
-        },
-        mounted() {
+  export default {
+    name:'ocean',
+    components:{MainHeader,},
+    data() {
+      return {
 
-        },
-        beforeDestroy() {
+      };
+    },
+    mounted() {
 
-        },
-        methods: {
+    },
+    beforeDestroy() {
 
-        }
-    };
+    },
+    methods: {
+
+    },
+  };
 </script>
+<style >
+/* .fade-enter-active, .fade-leave-active {
+  transition: opacity .3s
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0
+} */
+/* .fade-leave-active in below version 2.1.8 */
+</style>
