@@ -42,7 +42,7 @@
     </Tabs>
     <h3>JTWC热带气旋警报图</h3>
     <img src="http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg" width="80%">
-    
+    <card-pic></card-pic>
   </Col>
   
   <Col span="1"><!--右侧空白-->
@@ -51,8 +51,10 @@
 </Row>
 </template>
 <script>
+  import CardPic from './comps/cardPic.vue';
   export default {
     name: 'env-analysis',
+    components:{CardPic,},
     props:{
 
     },
