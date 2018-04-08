@@ -8,3 +8,7 @@ dist/*
 src/config/*.tmp
 src/config/env.js
 npm-debug.log
+ZSTFW
+ZSTFW/
+ZSTFW/*
+*.pptx
