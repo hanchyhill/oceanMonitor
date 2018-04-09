@@ -117,7 +117,7 @@ http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png
 
 [col热带](http://rammb.cira.colostate.edu/ramsdis/online/himawari-8.asp) -> speedDail
 
-[NICT葵花8即时](http://rammb.cira.colostate.edu/ramsdis/online/himawari-8.asp) -> speedDail
+[NICT葵花8即时](https://himawari8.nict.go.jp/) -> speedDail
 
 [JMA葵花卫星](http://www.data.jma.go.jp/mscweb/data/himawari/sat_img.php?area=se2) -> speedDail
 
