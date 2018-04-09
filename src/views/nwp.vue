@@ -9,6 +9,7 @@
       <card-pic :dial="speedDial.ruc"></card-pic>
       <card-pic :dial="speedDial.emc"></card-pic>
       <card-pic :dial="speedDial.gd121"></card-pic>
+      <card-pic :dial="speedDial.gefs"></card-pic>
     </Row>
 
   </Col>
@@ -55,6 +56,13 @@
             headInfo:'EC集合预报',
             head2:'广东12121',
             notes:'提供EC集合预报相关产品',
+          },
+          gefs:{
+            link:'https://www.tropicaltidbits.com/storminfo/',
+            imgSrc:'/static/thumbnails/gefs_latest.png',
+            headInfo:'GFS集合',
+            head2:'tropicaltidbits',
+            notes:'提供GFS集合预报图',
           },
         }
       }

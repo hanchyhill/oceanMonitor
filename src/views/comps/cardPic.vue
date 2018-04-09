@@ -55,6 +55,7 @@
   background-color: #fff; 
   text-align: center; 
   position: relative;
+  box-shadow:2px 2px 5px #333333;
 }
 .member-image img{
   max-width: 100%; 
