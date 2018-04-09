@@ -121,6 +121,8 @@ http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png
 
 [JMA葵花卫星](http://www.data.jma.go.jp/mscweb/data/himawari/sat_img.php?area=se2) -> speedDail
 
+[风云4](http://fy4.nsmc.org.cn/nsmc/cn/image/animation.html) -> speedDail
+
 ## 相关链接
 
 * [台湾中央气象局](https://www.cwb.gov.tw/)
