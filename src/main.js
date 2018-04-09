@@ -7,12 +7,9 @@ import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 
-
+Vue.use(iView);
 Vue.use(VueRouter);
 Vue.use(Vuex);
-
-Vue.use(iView);
-
 
 
 // 路由配置

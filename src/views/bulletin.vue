@@ -1,7 +1,7 @@
 <template>
 <Row>
   <Col span="1">
-   <div>&nbsp</div><!--左侧空白-->
+   <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
 
@@ -56,7 +56,7 @@
   </Row>
   </Col>
   <Col span="1"><!--右侧空白-->
-  <div>&nbsp</div>
+  <div>&nbsp; </div>
   </Col>
 </Row>
 </template>
@@ -140,6 +140,7 @@
 <style scoped>
 .unisys-button{
   margin:2px;
+  list-style:none;
 }
 .unisys-button a{
   color:white;
