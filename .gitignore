@@ -12,4 +12,8 @@ ZSTFW
 ZSTFW/
 ZSTFW/*
 *.pptx
+<<<<<<< HEAD
 dist*zip
+=======
+*.bak
+>>>>>>> 7e968dffedfde2854aff9a6833f79e636540c013

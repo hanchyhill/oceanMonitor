@@ -1,16 +1,16 @@
 <template>
-  <a href="http://tropic.ssec.wisc.edu/real-time/dlmmain.php?&basin=westpac&sat=wgms&prod=dlm2&zoom=&time=" target="_blank">
+  <a :href="link" target="_blank">
   <div class="single-member effect-2">
     <div class="member-image">
-      <img src="/static/thumbnails/steerStream.jpg" alt="WISC引导气流">
+      <img :src="imgSrc" alt="">
     </div>
     <div class="member-info">
-      <h3>引导气流</h3>
+      <h3>{{headInfo}}</h3>
       <br>
-      <h5>WISC</h5>
+      <h5>{{head2}}</h5>
       <br>
       <p>
-      根据热带气旋强度选择平均引导流，引导气流可以指示热带气旋的移动方向。
+      {{notes}}
       </p>
       <div class="social-touch">
       </div>
@@ -22,9 +22,17 @@
 
   export default {
     name:'cardPic',
+    props:{
+      dial:Object,
+    },
     data() {
       return {
-
+        link: this.dial.link? this.dial.link:'',
+        imgSrc: this.dial.imgSrc? this.dial.imgSrc:'',
+        headInfo: this.dial.headInfo? this.dial.headInfo:'',
+        head2: this.dial.head2? this.dial.head2:'',
+        notes: this.dial.notes? this.dial.notes:'',
+        
       };
     },
     mounted() {
@@ -47,6 +55,7 @@
   background-color: #fff; 
   text-align: center; 
   position: relative;
+  box-shadow:2px 2px 5px #333333;
 }
 .member-image img{
   max-width: 100%; 

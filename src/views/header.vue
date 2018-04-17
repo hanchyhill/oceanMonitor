@@ -1,48 +1,28 @@
 <template>
- <div  class="header" title="海洋监测">
-  <div class="menu-wrapper">
-    <Row>
-      <Col span="3">
-        <div class="logo-menu menu">
-          海洋监测
-        </div>
-      </Col>
-      <Col span="21">
-        <Menu mode="horizontal" theme="primary" :active-name="activeTab" @on-select="handleTabChange" class="main-menu menu">
-          <MenuItem name="env">
-              环境分析
-          </MenuItem>
-          <MenuItem name="current">
-              当前台风
-          </MenuItem>
-          <MenuItem name="nwp">
-              数值路径
-          </MenuItem>
-          <MenuItem name="bulletin">
-              报文
-          </MenuItem>
-          <MenuItem name="satellite">
-              卫星
-          </MenuItem>
-          <MenuItem name="ref">
-              相关链接
-          </MenuItem>
-        </Menu>
-      </Col>
-    </Row>
-    
-    <!-- <div class="head-nav">
-      <Tabs :value="activeTab" @on-click="handleTabChange" class="tab">
-        <TabPane label="环境分析" name="env"></TabPane>
-        <TabPane label="当前台风" name="current"></TabPane>
-        <TabPane label="数值路径" name="nwp"></TabPane>
-        <TabPane label="报文" name="bulletin"></TabPane>
-        <TabPane label="卫星" name="satellite"></TabPane>
-        <TabPane label="相关链接" name="ref"></TabPane>
-      </Tabs>
-    </div>-->
-  </div>
- </div>
+  <Menu mode="horizontal" theme="dark" :active-name="activeTab" @on-select="handleTabChange" class="main-menu menu">
+    <div class="layout-logo"><div>海洋监测</div></div>
+    <div class="layout-nav">
+    <MenuItem name="env">
+        环境分析
+    </MenuItem>
+    <MenuItem name="current">
+        当前台风
+    </MenuItem>
+    <MenuItem name="nwp">
+        数值路径
+    </MenuItem>
+    <MenuItem name="bulletin">
+        报文
+    </MenuItem>
+    <MenuItem name="satellite">
+        卫星
+    </MenuItem>
+    <MenuItem name="ref">
+        相关链接
+    </MenuItem>
+    </div>
+  </Menu>
+
 </template>
 
 <script>
@@ -75,6 +55,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.layout-logo{
+    width: 150px;
+    height: 60px;
+    background: #5b6270;
+    border-radius: 3px;
+    float: left;
+    position: relative;
+    top: 0px;
+    left: 20px;
+    color:white;
+    font-size: 25px;
+    text-align: center;
+}
+.layout-nav{
+    width: 800px;
+    margin: 0 auto;
+    margin-right: 20px;
+}
 /* .header{
   background-color: #7e57c2;
 } */
@@ -97,19 +95,11 @@ export default {
   font-size:23px;
 }
 
-.main-menu{
-  /* background: #00cc99; 
-  width:90%;
-  overflow:hidden;*/
-}
-
 .main-menu li{
   /* color:white !important; */
   font-size:20px;
   
 }
-
-
 
 .logo{
   font-size: 24px;
