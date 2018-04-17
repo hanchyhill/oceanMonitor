@@ -62,6 +62,8 @@
 </template>
 <script>
   import CardPic from './comps/cardPic.vue';
+  import {bulletinSrc} from '../config/srcConfig.js';
+
   export default {
     components:{CardPic,},
     name: 'bul-fc',
@@ -78,43 +80,7 @@
       const bfYesArr = timeArr.map(v=>bfYesDay+v);
      
       return {
-        speedDial:{
-          ssdBulletin:{
-            link:'http://www.ssd.noaa.gov/PS/TROP/bulletins.html',
-            imgSrc:'/static/thumbnails/ssdBulletin.jpg',
-            headInfo:'NHC/JTWC报文合集',
-            head2:'NOAA / SSD',
-            notes:'提供实时NHC/JTWC/CPHC报文合集',
-          },
-          ssdADT:{
-            link:'http://www.ssd.noaa.gov/PS/TROP/adt.html',
-            imgSrc:'/static/thumbnails/ssdADT.jpg',
-            headInfo:'ADT分析合集',
-            head2:'NOAA / SSD',
-            notes:'提供实时机构ADT分析报文合集',
-          },
-          wiscADT:{
-            link:'http://tropic.ssec.wisc.edu/real-time/adt/adt.html',
-            imgSrc:'/static/thumbnails/wiscADT.jpg',
-            headInfo:'WISC ADT分析',
-            head2:'WISC / CMISS',
-            notes:'提供实时自动ADT分析',
-          },
-          nmcBulletin:{
-            link:'http://www.nmc.cn/publish/typhoon/message.html',
-            imgSrc:'/static/thumbnails/nmcBulletin.jpg',
-            headInfo:'北京报文',
-            head2:'中央气象台',
-            notes:'NMC北京报文',
-          },
-          gdBJTY:{
-            link:'http://10.148.8.228/to_pros_typonmessage.action?name=bjtfdwb',
-            imgSrc:'/static/thumbnails/gdBJ.jpg',
-            headInfo:'北京台风定位报',
-            head2:'数据中心',
-            notes:'信息中心下发的台风报文',
-          },
-        },
+        speedDial: bulletinSrc.speedDial,
         todayArr,
         yesterArr,
         bfYesArr,
