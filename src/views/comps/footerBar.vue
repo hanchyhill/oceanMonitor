@@ -28,7 +28,7 @@
 .footer{
   height:55px;
   background-color: #495060;
-  font-size: 20px;
+  font-size: 18px;
   text-align:center;
   vertical-align:middle;
   padding: 5px;

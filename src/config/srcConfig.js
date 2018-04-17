@@ -4,6 +4,46 @@ import Env from './env';
  * 环境分析
  */
 const envSrc = {
+  /**
+   * speedDial数据
+  */
+  speedDial:{
+    steer:{
+      link:'http://tropic.ssec.wisc.edu/real-time/dlmmain.php?&basin=westpac&sat=wgms&prod=dlm2&zoom=&time=',
+      imgSrc:'/static/thumbnails/steerStream.jpg',
+      headInfo:'引导气流',
+      head2:'WISC',
+      notes:'根据热带气旋强度选择平均引导流，引导气流可以指示热带气旋的移动方向。',
+    },
+    oceanHeatContent:{
+      link:'http://www.aoml.noaa.gov/phod/cyclone/data/np.html',
+      imgSrc:'/static/thumbnails/ohc.jpg',
+      headInfo:'海洋热容量',
+      head2:'NOAA / AOML',
+      notes:'海洋上层的热力结构是热带气旋与海洋相互作用中的关节要素，对热带气旋的加强起着重要作用。',
+    },
+    cyclonephase:{
+      link:'http://moe.met.fsu.edu/cyclonephase/',
+      imgSrc:'/static/thumbnails/cyclonephase.jpg',
+      headInfo:'气旋变性分析',
+      head2:'moe.met.fsu.edu',
+      notes:'本页面提供当前和历史数据中北半球气旋相位图。',
+    },
+    mtcswa:{
+      link:'http://www.ssd.noaa.gov/PS/TROP/mtcswa.html',
+      imgSrc:'/static/thumbnails/mtcswa.jpg',
+      headInfo:'融合地面风反演',
+      head2:'NOAA / MTCSWA',
+      notes:'由多部卫星探测器融合反演当前台风的地面风场。',
+    },
+    eTRaP:{
+      link:'http://www.ssd.noaa.gov/PS/TROP/etrap.html',
+      imgSrc:'/static/thumbnails/eTRaP.jpg',
+      headInfo:'集合热带降水估测',
+      head2:'NOAA / eTRaP',
+      notes:'由多部卫星微波探测器和数值预报估测热带降水。',
+    },
+  },
   tab:{
     sst:[
       {name:'西太海温',origin:'https://www.tropicaltidbits.com/analysis/ocean/cdas-sflux_sst_wpac_1.png'},
@@ -203,12 +243,12 @@ const refSrc = {
       {name:'菲律宾PAGASA', url:'https://www1.pagasa.dost.gov.ph/'},
     ],
     others:[
-      {name:'http://www.ssd.noaa.gov/PS/TROP/CI-chart.html', url:'http://www.ssd.noaa.gov/PS/TROP/CI-chart.html'},
-      {name:'http://photino.cwb.gov.tw/rdcweb/lib/comput1.htm#1', url:'http://photino.cwb.gov.tw/rdcweb/lib/comput1.htm#1'},
-      {name:'http://photino.cwb.gov.tw/rdcweb/lib/comput2.htm', url:'http://photino.cwb.gov.tw/rdcweb/lib/comput2.htm'},
-      {name:'http://www.ab126.com/Geography/2204.html', url:'http://www.ab126.com/Geography/2204.html'},
-      {name:'https://tieba.baidu.com/f?kw=%E5%8F%B0%E9%A3%8E', url:'https://tieba.baidu.com/f?kw=%E5%8F%B0%E9%A3%8E'},
-      {name:'http://bbs.typhoon.org.cn/index.php?c=thread&amp;fid=79', url:'http://bbs.typhoon.org.cn/index.php?c=thread&amp;fid=79'},
+      {name:'德法强度表', url:'http://www.ssd.noaa.gov/PS/TROP/CI-chart.html'},
+      {name:'氣象常用表單位換算', url:'http://photino.cwb.gov.tw/rdcweb/lib/comput1.htm#1'},
+      {name:'计量单位换算', url:'http://photino.cwb.gov.tw/rdcweb/lib/comput2.htm'},
+      {name:'海平面气压订正', url:'http://www.ab126.com/Geography/2204.html'},
+      {name:'百度台风吧', url:'https://tieba.baidu.com/f?kw=%E5%8F%B0%E9%A3%8E'},
+      {name:'台风论坛', url:'http://bbs.typhoon.org.cn/index.php?c=thread&amp;fid=79'},
     ],
   },
 }
@@ -300,7 +340,7 @@ const satSrc = {
   
 }
 
-const srcConfig = {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc,};
+const srcConfig = {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc,};
 
 export default srcConfig;
-export {envSrc, nwpSrc, bulletinSrc, refSrc, currentSrc,};
+export {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc,};
