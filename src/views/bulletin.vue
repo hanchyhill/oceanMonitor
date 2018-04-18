@@ -48,12 +48,13 @@
         </p>
         <ul class="unisys-list unisys-button">
           <li v-for="(item, index) in bfYesArr" :key="index">
-            <a :href="unisysUrl+item" target="_blank"><Button size="large" type="success" >{{item}}</Button></a>
+            <a :href="unisysUrl+item" target="_blank" rel="nofollow noopener noreferrer"><Button size="large" type="success" >{{item}}</Button></a>
           </li>
         </ul>
       </Card>
     </Col>
   </Row>
+  <h3>数据中心入库报文</h3>
   </Col>
   <Col span="1"><!--右侧空白-->
   <div>&nbsp; </div>
