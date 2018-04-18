@@ -8,3 +8,8 @@ dist/*
 src/config/*.tmp
 src/config/env.js
 npm-debug.log
+/static/remote-img/*
+*.png
+*.gif
+*.jpg
+*.pptx
