@@ -1,7 +1,7 @@
 <template>
 <Row>
   <Col span="1">
-   <div>&nbsp</div><!--左侧空白-->
+   <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
     <Row>
@@ -17,7 +17,7 @@
     <h3>WISC CIMSS</h3>
     <Tabs type="card">
       <TabPane v-for="(item, index) of wiscSat" :key="index" :label="item.name">
-        <img :src="item.origin" :alt="item.name" width="70%">
+        <img :src="item.src" :alt="item.name" width="70%">
       </TabPane>
     </Tabs>
 
@@ -25,7 +25,7 @@
     <Tabs type="card">
       <TabPane v-for="(item, index) of ssdSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">
-        <img :src="item.origin" :alt="item.name">
+        <img :src="item.src" :alt="item.name">
         </a>
       </TabPane>
     </Tabs>
@@ -34,7 +34,7 @@
     <Tabs type="card">
       <TabPane v-for="(item, index) of polarSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">
-        <img :src="item.origin" :alt="item.name">
+        <img :src="item.src" :alt="item.name">
         </a>
       </TabPane>
     </Tabs>
@@ -43,13 +43,13 @@
     <Tabs type="card">
       <TabPane v-for="(item, index) of coloSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">
-        <img :src="item.origin" :alt="item.name">
+        <img :src="item.src" :alt="item.name">
         </a>
       </TabPane>
     </Tabs>
   </Col>
   <Col span="1"><!--右侧空白-->
-  <div>&nbsp</div>
+  <div>&nbsp;</div>
   </Col>
 </Row>
 </template>
@@ -66,10 +66,7 @@
     data () {
       return {
         speedDial: satSrc.speedDial,
-        wiscSat: satSrc.tab.wiscSat,
-        ssdSat: satSrc.tab.ssdSat,
-        polarSat: satSrc.tab.polarSat,
-        coloSat: satSrc.tab.coloSat,
+        sourceFrom:'local',//origin
       }
     },
     methods: {
@@ -77,6 +74,30 @@
     created(){
     },
     computed:{
+      wiscSat(){
+        return satSrc.tab.wiscSat.map(item=>{
+          item.src = item[this.sourceFrom];
+          return item;
+        });
+      },
+      ssdSat(){
+        return satSrc.tab.ssdSat.map(item=>{
+          item.src = item[this.sourceFrom];
+          return item;
+        });
+      },
+      polarSat(){
+        return satSrc.tab.polarSat.map(item=>{
+          item.src = item[this.sourceFrom];
+          return item;
+        });
+      },
+      coloSat(){
+        return satSrc.tab.coloSat.map(item=>{
+          item.src = item[this.sourceFrom];
+          return item;
+        });
+      },
     },
   };
 </script>

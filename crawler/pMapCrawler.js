@@ -30,7 +30,7 @@ function getImg(item,resolve,reject){
     method: 'get',
     url: urlBase + fileName,
     responseType: 'stream',
-    timeout: 20000,// 20秒
+    // timeout: 20000,// 20秒
   })
   .then(function(res) {
     let lastModified = res.headers['last-modified'];
@@ -79,10 +79,13 @@ function getImg(item,resolve,reject){
       .on('response',(response)=>{
         console.log('代理成功：'+ fileName);
         let lastModified = response.headers['last-modified'];
+        // console.log('修改时间'+lastModified);
+        // console.log('之前时间'+item.lastModified)
         if(lastModified === item.lastModified){
           console.log('代理图片未改变: '+ fileName);
           resolve('图片未改变');
         }else{
+          item.lastModified = lastModified;// 先写入lastModified，防止同时写入相同文件
           response.pipe(fs.createWriteStream('../static/remote-img/' + item.dir + fileName));
           response.on('end',function(){
             console.log(fileName + '代理图片已写入');
