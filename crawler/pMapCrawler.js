@@ -1,31 +1,29 @@
 /**
+ *  TODO
  * config抽离
- * 分组请求，设置6min cron, 20min cron
- * p-map
- * 
- * 
- * 
+ * axios 实例分离
+ * stream模式导致文件写入文件时间过长
  */
-const schedule = require('node-schedule');
-// const cheerio = require('cheerio');
-const http = require('http');
+const schedule = require('node-schedule');// import * as schedule from 'node-schedule';
 const axios = require('axios');
 const fs = require('fs');
-const path = require("path");
+const path = require('path');
+const pMap = require('p-map');
+// const cheerio = require('cheerio');
+// const http = require('http');
+
 const dirConfig ={
   base:'../static/remote-img/',
   dirArr:['env/', 'sat/', 'ascat/']
 };
 
 const config = {
-  sst : [
+  i20: [
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_sst_wpac_1.png', lastModified:'', dir:'env/'},//'last-modified'
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_ssta_wpac_1.png', lastModified:'', dir:'env/'},
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_ssta_global_1.png', lastModified:'', dir:'env/'},
     {urlBase:'http://www.oceanweather.com/data/South-China-Sea/', name:'WAVE000.GIF', lastModified:'', dir:'env/'},
     {urlBase:'http://www.oceanweather.com/data/NPAC-Western/', name:'WAVE000.GIF', lastModified:'', dir:'env/west-'},
-  ],
-  wiscEnv:[
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsvor.GIF' , lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsconv.GIF', lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdvg.GIF' , lastModified:'', dir:'env/'},
@@ -33,41 +31,10 @@ const config = {
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmssht.GIF' , lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmswv.GIF'  , lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsir.GIF'  , lastModified:'', dir:'env/'},
-  ],
-  probability:[
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rCUMP_048.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_024.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_048.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://wxmaps.org/pix/'                            , name:'wpacpot.png'     , lastModified:'', dir:'env/'},
-  ],
-  wiscSat:[
-    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'irbdgmskml.GIF', lastModified:'', dir:'sat/'},// 这个是不是有问题?
-    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yyirgms5.GIF'  , lastModified:'', dir:'sat/'},
-    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yyirgms5n.GIF' , lastModified:'', dir:'sat/'},
-    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yywvgms5.GIF'  , lastModified:'', dir:'sat/'},
-  ],
-  ssdSat:[
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'vis-l.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'ir2-l.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'wv-l.gif' , lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'ir4-l.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'bd-l.gif' , lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'rb-l.gif' , lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'avn-l.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'rgb-l.jpg', lastModified:'', dir:'sat/'},
-  ],
-  polarSat:[
-    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'ss85-l.jpg', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'sswd-l.jpg', dir:'sat/'},
-    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'am89-l.jpg', dir:'sat/'},
-  ],
-  coloSat:[
-    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_03.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_07_sector_06.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_08.gif', lastModified:'', dir:'sat/'},
-    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_13_sector_06.gif', lastModified:'', dir:'sat/'},
-  ],
-  ascat:[
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds230.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds242.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds254.png' , lastModified:'', dir:'ascat/'},
@@ -80,7 +47,6 @@ const config = {
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds233.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds245.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds257.png' , lastModified:'', dir:'ascat/'},
-
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas230.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas242.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas254.png' , lastModified:'', dir:'ascat/'},
@@ -93,32 +59,49 @@ const config = {
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas233.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas245.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas257.png' , lastModified:'', dir:'ascat/'},
-  ]
+  ],
+  i6:[
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'irbdgmskml.GIF', lastModified:'', dir:'sat/'},// 这个是不是有问题?
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yyirgms5.GIF'  , lastModified:'', dir:'sat/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yyirgms5n.GIF' , lastModified:'', dir:'sat/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'yywvgms5.GIF'  , lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'vis-l.gif', lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'ir2-l.gif', lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'wv-l.gif' , lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'ir4-l.gif', lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'bd-l.gif' , lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'rb-l.gif' , lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'avn-l.gif', lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'rgb-l.jpg', lastModified:'', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'ss85-l.jpg', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'sswd-l.jpg', dir:'sat/'},
+    {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'am89-l.jpg', dir:'sat/'},
+  ],
 };
 
 function getImgPromise(item){
   return new Promise((resolve,reject)=>{
-    getImg(item,resolve,reject);
+    getImg(item,resolve,reject);// this
   });
 }
 
-function getImg(item, resolve,reject){
+function getImg(item,resolve,reject){
   const [urlBase, fileName] = [item.urlBase, item.name]
   // console.log(urlBase + fileName);
   axios({
     method: 'get',
     url: urlBase + fileName,
     responseType: 'stream',
-    // timeout: 20000,// 20秒
+    timeout: 20000,// 20秒
   })
   .then(function(res) {
     let lastModified = res.headers['last-modified'];
     if(lastModified === item.lastModified){
-      console.log('图片未改变: '+ fileName);
+      // console.log('图片未改变: '+ fileName);
       resolve('图片未改变');
     }
     else{
-      item.lastModified = lastModified;
+      item.lastModified = lastModified;// 先写入lastModified，防止同时写入相同文件
       res.data.pipe(fs.createWriteStream('../static/remote-img/' + item.dir + fileName));
       res.data.on('end',function(){
         console.log(fileName + '图片已写入');
@@ -160,35 +143,38 @@ function getImg(item, resolve,reject){
   });
 }
 
-async function sc01(params) {
-  let now = new Date();
-  console.log('-----------------------------');
-  console.log('轮询开始:' + now.toString());
-  for(let pocket in config){
-    try{
-      await Promise.all(config[pocket].map(item=>getImgPromise(item)));
-    }catch(e){
-      console.log(e);
-    }
+/**
+ * 可控并发事件
+ * @param {array} list -需要轮询的列表
+ * @param {Date} now -轮询开始时间
+ * @param {string} note -extra info
+ */
+async function startScheme(list=[], now=(new Date()), note='' ){
+  console.log(`----${note}轮询开始: ${now.toString()}---`);
+  try{
+    let reuslt = await pMap(list, getImgPromise, {concurrency: 8})
   }
-  console.log('本次轮询:' + now.toString());
+  catch(err){
+    console.log('pMap发生错误');
+    console.log(err);
+  }
+  console.log(`本次${note}轮询: ${now.toString()}`);
   console.log('的结束时间为:' + (new Date()).toString());
-/*   for(let item of config.sst){
-    // getImg(item.urlBase, item.name, item);
-    try{
-      await getImgPromise(item);
-    }catch(e){
-      console.log(e);
-    }
-  } */
-};
+  console.log('-----------------------------');
+}
 
-let rule01 = new schedule.RecurrenceRule();
-rule01.minute = [new schedule.Range(0, 59, 10)];
+////创建定时器
+let ruleI6 = new schedule.RecurrenceRule();
+ruleI6.minute = [new schedule.Range(0, 59, 6)];// 6分钟轮询
 
-let job01 = schedule.scheduleJob(rule01, sc01);
-sc01();
+let ruleI20 = new schedule.RecurrenceRule();
+ruleI20.minute = [new schedule.Range(0, 59, 20)];// 20分钟轮询
 
+job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
+job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
+// job20 = schedule.scheduleJob(ruleI20, startScheme(config.i20));
+startScheme(config.i6, new Date(), '6分钟');
+startScheme(config.i20, new Date(),'20分钟');
 // 创建目录
 
 
@@ -197,7 +183,7 @@ sc01();
  * @param {string} dirname - 路径名
  * @param {function} callback - 回调函数
  */
-function mkdirs(dirname, callback) {  
+function mkdirs(dirname, callback) {
     fs.exists(dirname, function (exists) {  
         if (exists) {  
           callback();

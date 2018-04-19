@@ -1,3 +1,6 @@
+*.pptx
+dist*.zip
+*.bak
 .idea
 .idea/
 .DS_Store
@@ -11,19 +14,9 @@ npm-debug.log
 ZSTFW
 ZSTFW/
 ZSTFW/*
+remote-img
 remote-img/
+remote-img/*
 /static/remote-img/*
-*.png
-*.gif
-*.jpg
-*.pptx
-<<<<<<< HEAD
-*.bak
-dist*.zip
-=======
-<<<<<<< HEAD
-dist*zip
-=======
-*.bak
->>>>>>> 7e968dffedfde2854aff9a6833f79e636540c013
->>>>>>> a56d69fdccb4bdb868c89b597c4d6e83924bd3c2
+
+

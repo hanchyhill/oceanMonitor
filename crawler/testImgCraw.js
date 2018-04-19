@@ -7,6 +7,7 @@
  * 
  */
 const schedule = require('node-schedule');
+const pMap = require('p-map');
 // const cheerio = require('cheerio');
 const http = require('http');
 const axios = require('axios');
