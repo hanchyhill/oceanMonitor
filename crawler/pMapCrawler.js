@@ -15,6 +15,29 @@ const request = require('request');
 // const http = require('http');
 
 /**
+ * 递归创建目录
+ * @param {string} dirname - 路径名
+ * @param {function} callback - 回调函数
+ */
+function mkdirs(dirname, callback) {
+  fs.exists(dirname, function (exists) {  
+    if (exists) {
+      callback();
+    } else {  
+      // console.log(path.dirname(dirname));  
+      mkdirs(path.dirname(dirname), function () {  
+          fs.mkdir(dirname, callback);  
+          console.log('在' + path.dirname(dirname) + '目录创建好' + dirname  +'目录');
+      });  
+    }  
+  });
+}
+
+for(let dir of dirConfig.dirArr){
+  mkdirs(dirConfig.base + dir, ()=>{});
+}
+
+/**
  * 封装Promise
  */
 function getImgPromise(item){
@@ -145,33 +168,12 @@ ruleI20.minute = [new schedule.Range(0, 59, 20)];// 20分钟轮询
 job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
 job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
 
-startScheme(config.i6, new Date(), '6分钟');
-startScheme(config.i20, new Date(),'20分钟');
+// startScheme(config.i6, new Date(), '6分钟');
+// startScheme(config.i20, new Date(),'20分钟');
 // 创建目录
 
 
-/**
- * 递归创建目录
- * @param {string} dirname - 路径名
- * @param {function} callback - 回调函数
- */
-function mkdirs(dirname, callback) {
-  fs.exists(dirname, function (exists) {  
-    if (exists) {  
-      callback();
-    } else {  
-      // console.log(path.dirname(dirname));  
-      mkdirs(path.dirname(dirname), function () {  
-          fs.mkdir(dirname, callback);  
-          console.log('在' + path.dirname(dirname) + '目录创建好' + dirname  +'目录');
-      });  
-    }  
-  });  
-}
 
-for(let dir of dirConfig.dirArr){
-  mkdirs(dirConfig.base + dir, ()=>{});
-}
 
 /**
  * Host: www.baidu.com

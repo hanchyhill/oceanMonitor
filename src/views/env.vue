@@ -104,7 +104,7 @@
         ascatImg.ascend.forEach(list => 
           list.forEach(v=>v.src = v[this.sourceFrom])
         );
-        console.log(ascatImg);
+        // console.log(ascatImg);
         return ascatImg;
       }
     },
