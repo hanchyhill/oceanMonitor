@@ -37,6 +37,15 @@
   
     <br>
     <h3>ASCAT风场扫描</h3>
+    <Tabs type="card">
+      <TabPane label="上升">
+        <ascat-view :imgList="ascat.ascend"></ascat-view>
+      </TabPane>
+      <TabPane label="下降">
+        <ascat-view :imgList="ascat.descend"></ascat-view>
+      </TabPane>
+    </Tabs>
+    
   </Col>
   
   <Col span="1"><!--右侧空白-->
@@ -45,12 +54,13 @@
 </Row>
 </template>
 <script>
+  import AscatView from './comps/ascatView.vue';
+  import {envSrc, ascatImg} from '../config/srcConfig.js';
   import CardPic from './comps/cardPic.vue';
-  import {envSrc} from '../config/srcConfig.js';
   
   export default {
     name: 'env-analysis',
-    components:{CardPic,},
+    components:{CardPic, AscatView},
     props:{
 
     },
@@ -87,6 +97,16 @@
         envSrc.imgs.jtwc.src = envSrc.imgs.jtwc[this.sourceFrom];
         return envSrc.imgs.jtwc;
       },
+      ascat(){
+        ascatImg.descend.forEach(list => 
+          list.forEach(v=>v.src = v[this.sourceFrom])
+        );
+        ascatImg.ascend.forEach(list => 
+          list.forEach(v=>v.src = v[this.sourceFrom])
+        );
+        console.log(ascatImg);
+        return ascatImg;
+      }
     },
   };
 </script>

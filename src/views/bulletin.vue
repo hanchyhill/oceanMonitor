@@ -75,7 +75,7 @@
       const today = this.getTimeString(0);
       const yesterday = this.getTimeString(-1);
       const bfYesDay = this.getTimeString(-2);
-      const timeArr = ['18','12','06','00'];
+      const timeArr = ['12','00'];
       const todayArr = timeArr.map(v=>today+v);
       const yesterArr = timeArr.map(v=>yesterday+v);
       const bfYesArr = timeArr.map(v=>bfYesDay+v);

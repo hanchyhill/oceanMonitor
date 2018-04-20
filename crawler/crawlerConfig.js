@@ -63,6 +63,10 @@ const config = {
     {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'ss85-l.jpg', dir:'sat/'},
     {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'sswd-l.jpg', dir:'sat/'},
     {urlBase:'http://www.ssd.noaa.gov/poes/twpac/', name:'am89-l.jpg', dir:'sat/'},
+    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_03.gif', dir:'sat/'},
+    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_07_sector_06.gif', dir:'sat/'},
+    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_08.gif', dir:'sat/'},
+    {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_13_sector_06.gif', dir:'sat/'},
   ],
 };
 

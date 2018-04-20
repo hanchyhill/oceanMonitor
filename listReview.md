@@ -121,6 +121,10 @@ http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png
 
 [JMA葵花卫星](http://www.data.jma.go.jp/mscweb/data/himawari/sat_img.php?area=se2) -> speedDail
 
+## 实况天气
+
+* [菲律宾雷达](https://www1.pagasa.dost.gov.ph/images/radar/maps/visualization.php)
+
 ## 相关链接
 
 * [台湾中央气象局](https://www.cwb.gov.tw/)

@@ -377,7 +377,57 @@ const satSrc = {
   
 }
 
-const srcConfig = {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc,};
+/**
+ * 风场扫描
+ */
+const ascatImg ={
+  descend:[
+    [ 
+      {name:'下降华东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds230.png',local:'/static/remote-img/ascat/WMBds230.png'},
+      {name:'下降黄海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds242.png',local:'/static/remote-img/ascat/WMBds242.png'},
+      {name:'下降日本', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds254.png',local:'/static/remote-img/ascat/WMBds254.png'},
+    ],
+    [
+      {name:'广东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds231.png',local:'/static/remote-img/ascat/WMBds231.png'},
+      {name:'下降东海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds243.png',local:'/static/remote-img/ascat/WMBds243.png'},
+      {name:'下降琉球以东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds255.png',local:'/static/remote-img/ascat/WMBds255.png'},
+    ],
+    [
+      {name:'下降南海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds232.png',local:'/static/remote-img/ascat/WMBds232.png'},
+      {name:'下降菲律宾北部', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds244.png',local:'/static/remote-img/ascat/WMBds244.png'},
+      {name:'下降关岛', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds256.png',local:'/static/remote-img/ascat/WMBds256.png'},
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds233.png',local:'/static/remote-img/ascat/WMBds233.png',name:'下降南海南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds245.png',local:'/static/remote-img/ascat/WMBds245.png',name:'下降菲律宾南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds257.png',local:'/static/remote-img/ascat/WMBds257.png',name:'下降菲东', },
+    ],
+  ],
+  ascend:[
+    [ 
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas230.png',local:'/static/remote-img/ascat/WMBas230.png',name:'上升华东', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas242.png',local:'/static/remote-img/ascat/WMBas242.png',name:'上升黄海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas254.png',local:'/static/remote-img/ascat/WMBas254.png',name:'上升日本', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas231.png',local:'/static/remote-img/ascat/WMBas231.png',name:'上升广东', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas243.png',local:'/static/remote-img/ascat/WMBas243.png',name:'上升东海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas255.png',local:'/static/remote-img/ascat/WMBas255.png',name:'上升琉球以东', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas232.png',local:'/static/remote-img/ascat/WMBas232.png',name:'上升南海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas244.png',local:'/static/remote-img/ascat/WMBas244.png',name:'上升菲北', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas256.png',local:'/static/remote-img/ascat/WMBas256.png',name:'上升关岛', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas233.png',local:'/static/remote-img/ascat/WMBds233.png',name:'上升南海南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas245.png',local:'/static/remote-img/ascat/WMBds245.png',name:'上升菲南', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png',local:'/static/remote-img/ascat/WMBds257.png',name:'上升菲东', },
+    ],
+  ],
+};
+
+const srcConfig = {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc, ascatImg};
 
 export default srcConfig;
-export {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc,};
+export {envSrc, nwpSrc, bulletinSrc, currentSrc, refSrc, satSrc, ascatImg};
