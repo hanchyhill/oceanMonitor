@@ -21,7 +21,7 @@ const config = {
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_024.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_048.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://wxmaps.org/pix/'                            , name:'wpacpot.png'     , lastModified:'', dir:'env/'},
-    {urlBase:'http://www.metoc.navy.mil/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/'},
+    {urlBase:'http://www.metoc.navy.mil/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/', retry:'any'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds230.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds242.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds254.png' , lastModified:'', dir:'ascat/'},
