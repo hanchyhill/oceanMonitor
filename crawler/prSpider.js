@@ -99,7 +99,7 @@ function RequsetFactory(item){
       });
     },
     switchRetry:switchRetry,
-    retry:item.retry === 'any'? 'any' : 'any',//'any',//'sequence',// 竞赛模式，递归模式
+    retry:item.retry === 'any'? 'any' : 'sequence',//'any',//'sequence',// 竞赛模式，递归模式
     proxy:['normal','socks'],
   }
   return obj;
@@ -254,8 +254,8 @@ async function switchRetry(item){
   const that = this;
   let result = '';
   let proxyLength = that.proxy.length;
-  if(that.retry !== 'any'){ // sequence递归模式, any竞赛模式 retry
-    
+  ////////////////////
+  if(that.retry !== 'any'){ // sequence递归模式
       for(let iProxy of that.proxy){
         try{
           result = await requestMeothods.promiseReqWrapper.bind(that)(that.item, iProxy);
@@ -280,6 +280,7 @@ async function switchRetry(item){
       that.resolve(myDebug('竞赛模式全都报错', true));
     });
   }
+  ////////////////////
 }
 
 /**
