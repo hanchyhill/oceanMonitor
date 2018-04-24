@@ -136,6 +136,7 @@ const requestMeothods = {
     let options = undefined;
     const customOpt = {
       resolveWithFullResponse: true,
+      encoding: null,
       url: urlBase + fileName,
       headers:{
         'If-Modified-Since': item.lastModified,
@@ -168,12 +169,8 @@ const requestMeothods = {
         }
         else{
           const ws = fs.createWriteStream('../static/remote-img/' + item.dir + fileName);
-          ws.on('pipe',()=>{
-            item.lastModified = lastModified;// 写入lastModified，防止同时写入相同文件
-            requestStatus.isPipe = true;
-            myLogger.note(notes, fileName, '正在写入');
-          });
-          res.pipe(ws);
+          ws.write(res.body,'binary');
+          ws.end();
           ws.on('finish', function() {
             resolve(myLogger.note(notes, fileName,'已写入'));
           });
@@ -306,8 +303,8 @@ async function switchRetry(item){
  * @param {Date} now -轮询开始时间
  * @param {string} note -extra info
  */
-async function startScheme(list=[], now=(new Date()), note='' ){
-  console.log(`----${note}轮询开始: ${now.toString()}---`);
+async function startScheme(list=[], now=(new Date()), notes='' ){
+  console.log(`----${notes}轮询开始: ${now.toString()}---`);
   try{
     let reuslt = await pMap(list, (item)=>RequsetFactory(item).promise(), {concurrency: 8});
     console.log(reuslt);
@@ -316,7 +313,7 @@ async function startScheme(list=[], now=(new Date()), note='' ){
     console.log('pMap发生错误');
     console.log(err);
   }
-  console.log(`本次${note}轮询: ${now.toString()}`);
+  console.log(`本次${notes}轮询: ${now.toString()}`);
   console.log('的结束时间为:' + (new Date()).toString());
   console.log('-----------------------------');
 }
