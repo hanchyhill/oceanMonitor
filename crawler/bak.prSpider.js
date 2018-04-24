@@ -23,7 +23,7 @@ const rp = require('request-promise');
 
 function myDebug(message, isError){
   console.log(message);
-  let status = {};
+  let status = undefined;
   if(isError){
     status = new Error(message);
     status.isError = true;
@@ -34,33 +34,6 @@ function myDebug(message, isError){
   }
 }
 
-const myLogger = {
-  debug(message, isError){
-    console.log(message);
-    let status = {};
-    if(isError){
-      status = new Error(message);
-      status.isError = true;
-      return status;
-    }else{
-      status.message = message;
-      return status;
-    }
-  },
-  note(notes, file, message){
-    let info = `${notes?'['+notes+']':''}${file}:${message}`;
-    console.log(info);
-    return info;
-  },
-  bug(message){
-    console.log(message);
-    return new Error(message);
-  },
-  log(message){
-    console.log(message);
-    return message;
-  }
-}
 /**
  * 递归创建目录
  * @param {string} dirname - 路径名
@@ -95,11 +68,11 @@ function RequsetFactory(item){
       return new Promise((resolve,reject)=>{
         that.resolve = resolve;
         that.reject = reject;
-        that.switchRetry(item||that.item);
+        that.getImg(item||that.item);
       });
     },
-    switchRetry:switchRetry,
-    retry:item.retry === 'any'? 'any' : 'any',//'any',//'sequence',// 竞赛模式，递归模式
+    getImg:getImg,
+    retry:item.retry === 'any'? 'any' : 'sequence',//'any',//'sequence',// 竞赛模式，递归模式
     proxy:['normal','socks'],
   }
   return obj;
@@ -115,10 +88,10 @@ const requestMeothods = {
   promiseReqWrapper(item, proxy, retry){
     let that = this;
     return new Promise((resolve,reject)=>{
-      requestMeothods.pGet.bind(that)(item, proxy, resolve, reject);
+      requestMeothods.promiseRequest.bind(that)(item, proxy, resolve, reject);
     });
   },
-  async pGet(iItem, proxy, iResolve, iReject){
+  async promiseRequest(iItem, proxy, iResolve, iReject){
     // console.log(proxy);
     const that = this;
     const item = iItem || that.item;
@@ -148,48 +121,117 @@ const requestMeothods = {
       options = Object.assign({}, requestMeothods.options.common, customOpt);
       // console.log(options);
     }
+ 
     let preModified = item.lastModified;
     let requestStatus = {};
-    try{
-      let status  = await requestMeothods.pResopne(options);
-      let res = status.response;
-      if(res){
+    rp(options)
+    .then((res)=>{
+      if(res.statusCode===200){
         let lastModified = res.headers['last-modified'];
         if(lastModified === preModified){
-          resolve(myLogger.note(notes, fileName, '最后修改时间相同'));
-        }
-        else{
+          resolve(myDebug(`${notes}文件未改变:  ${fileName}`));
+        }else{
           const ws = fs.createWriteStream('../static/remote-img/' + item.dir + fileName);
           ws.on('pipe',()=>{
             item.lastModified = lastModified;// 写入lastModified，防止同时写入相同文件
             requestStatus.isPipe = true;
-            myLogger.note(notes, fileName, '正在写入');
+            console.log(`${fileName}正在写入`);
           });
           res.pipe(ws);
           ws.on('finish', function() {
-            resolve(myLogger.note(notes, fileName,'已写入'));
+            resolve(myDebug(`${notes}已写入${fileName}`));
           });
-          ws.on('error', function(){
+          ws.on('error', function() {
             item.lastModified = preModified;
-            reject(myLogger.bug(`${notes+fileName}写入错误`));
+            reject(myDebug(`${notes}写入错误`), true);
           });
-        };
+        }
       }
       else{
-        // 304
-        resolve(myLogger.note(notes, fileName,status.message));
+        throw myDebug(`${notes}${fileName}意外的响应状态码:${res.statusCode}`,true);
       }
-    }catch(err){
-      if(err.isError){
-        reject(myLogger.note(notes, fileName, err.message));
-      }else{
-        reject(myLogger.note(notes, fileName, err.message));
-      }
-    }
+    })
+    .catch((err)=>{
+      
+      if (err.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        // console.log(error.response.data);
+        if(err.response.statusCode === 304){
+          
+          resolve(myDebug(`${notes}${fileName}文件未修改`));
+        }else{
+          reject(myDebug(`${notes}${fileName}捕获错误响应${err.response.status}`,true));
+        }
+      } else if (err.request){// 超时
+        reject(myDebug(`${notes}${fileName}超时`,true));
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        // console.log('Error', error.message);
+        console.log('连接错误: ' + urlBase + fileName);
+        console.log('Error code: ', err.error.code);
+        reject(myDebug(`${notes}${fileName}捕获错误:${err.message}`,true));
+      };
+    });
+
+//     request(options)
+//     .on('error',(err)=>{
+//       item.lastModified = preModified;// 发生错误时回退
+// /*       console.log('err.code: ' + err.code );// === 'ETIMEDOUT'
+//       console.log('err.connect: ' + err.connect); // true 连接超时，false 写入超时 */
+//       if(err.code==='ESOCKETTIMEDOUT' && err.connect === false){
+//         console.log('响应过慢导致超时');
+//       }
+//       if(requestStatus.isPipe){
+//         requestStatus.isWritingError = true;
+//         reject(myDebug(`${fileName}检测到响应中出错`, true));
+//       }else{
+//         reject(myDebug(`${notes}错误: ${err.message}-${urlBase + fileName}`, true));
+//       }
+      
+//     })
+//     .on('response',(response)=>{
+//       // console.log(`${notes}获取响应${response.statusCode}：${fileName}`);
+//       if(response.statusCode === 304){// 数据未修改
+//         resolve(myDebug(`${notes}地址304: ${fileName}`));
+//       }
+//       else if(response.statusCode === 200){
+//         let lastModified = response.headers['last-modified'];
+        
+//         if(lastModified === preModified){
+//           resolve(myDebug(`${notes}图片未改变:  ${fileName}`));
+//         }
+//         else{
+//           response.on('error',err=>{
+//             item.lastModified = preModified;// 发生错误时回退
+//             reject(myDebug(`${notes}写入错误`), true);
+//           });
+//           let ws = fs.createWriteStream('../static/remote-img/' + item.dir + fileName);
+//           ws.on('pipe',()=>{
+//             item.lastModified = lastModified;// 写入lastModified，防止同时写入相同文件
+//             requestStatus.isPipe = true;
+//             console.log(`${fileName}正在写入`);
+//           });
+
+//           response.pipe(ws);
+//           ws.on('finish',()=>{
+//             if(requestStatus.isWritingError){// TODO，还原文件
+//               console.log(`!!!!!!${notes}${fileName}finish中出现错误!!!!`);
+//               reject(myDebug(`!!!!!!${notes}${fileName}finish中出现错误!!!!`, true))
+//             }else{
+//               resolve(myDebug(`${notes}已写入${fileName}`));
+//             }
+//           });
+//         }
+//       }
+//       else{
+//         item.lastModified = preModified;
+//         reject(myDebug(`${notes}${fileName}意外的响应状态码:${response.statusCode}`, true));
+//       }
+//     });
   },
   async pResopne(options){
     let res = undefined;
-    let status = {};
+    let status = undefined;
     try{
       res = await rp(options);
       if(res.statusCode===200){
@@ -202,7 +244,7 @@ const requestMeothods = {
     }catch(err){
       if (err.response){
         if(err.response.statusCode === 304){
-          status= myDebug(`304未修改`);
+          status= myDebug(`文件未修改`);
         }else{
           status = myDebug(`捕获错误响应${err.response.status}`,true);
         }
@@ -211,13 +253,8 @@ const requestMeothods = {
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('连接错误:' + options.url);
-        if(err.error){
-          console.log('Error code: ', err.error.code);
-          status = myDebug(`捕获错误:${err.message}`,true);
-        }else{
-          console.log('内部错误: ', err);
-          status = myDebug(`捕获错误:${err.message}`,true);
-        }
+        console.log('Error code: ', err.error.code);
+        status = myDebug(`捕获错误:${err.message}`,true);
       };
     };
     if(status instanceof Error){
@@ -250,7 +287,7 @@ const requestMeothods = {
   },
 }
 
-async function switchRetry(item){
+async function getImg(item){
   const that = this;
   let result = '';
   let proxyLength = that.proxy.length;
@@ -274,7 +311,7 @@ async function switchRetry(item){
     console.log('竞赛模式>>>>>>>>>')
     pAny(that.proxy.map(iProxy=>requestMeothods.promiseReqWrapper.bind(that)(that.item, iProxy)))
     .then(first => {
-      that.resolve(myLogger.log(`first: ${first}<<<<<<<<<`));
+      that.resolve(myDebug(`first: ${first}<<<<<<<<<`));
     })
     .catch(err=>{
       that.resolve(myDebug('竞赛模式全都报错', true));
