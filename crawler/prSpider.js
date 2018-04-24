@@ -118,6 +118,14 @@ const requestMeothods = {
       requestMeothods.pGet.bind(that)(item, proxy, resolve, reject);
     });
   },
+
+  /**
+   * 获取图片并且写入磁盘
+   * @param {object} iItem 需要获取的元数据
+   * @param {string} proxy 是否使用代理
+   * @param {function} iResolve resolve句柄
+   * @param {function} iReject reject句柄
+   */
   async pGet(iItem, proxy, iResolve, iReject){
     // console.log(proxy);
     const that = this;
@@ -187,6 +195,11 @@ const requestMeothods = {
       }
     }
   },
+
+  /**
+   * 异步获取数据，错误封装，并把符合条件的respone返回，
+   * @param {object} options 请求选项
+   */
   async pResopne(options){
     let res = undefined;
     let status = {};
@@ -250,6 +263,10 @@ const requestMeothods = {
   },
 }
 
+/**
+ * 切换重试模式
+ * @param {object} item 
+ */
 async function switchRetry(item){
   const that = this;
   let result = '';
