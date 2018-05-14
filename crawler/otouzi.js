@@ -1,50 +1,10 @@
 const {requestMeothods, myLogger} = require('./lib/util.js');
 const cheerio = require('cheerio');
+const open = require('open');
+
+let isOpen = [];
 
 const config = {
-  nmcTyExpress:{
-    name:'中央气象台台风快讯',
-    url:'http://www.nmc.cn/publish/typhoon/typhoon_new.html',
-    filter(html){
-      const $ = cheerio.load(html,{decodeEntities: false});
-      const mainBlock = $('#maincontent #text');
-      const episode = mainBlock.find('.number').text().replace(/\n| /g,'');
-      const publishDate = mainBlock.find('.ctitle span:last-of-type').text();
-      const content = mainBlock.find('.writing').html();
-      return {
-        episode,
-        publishDate,
-        content,
-      }
-    },
-  },
-  tropicaltidbits:{
-    name:'tropicaltidbits',
-    url:'https://www.tropicaltidbits.com/storminfo/',
-    filter(html){
-      
-      const $ = cheerio.load(html,{decodeEntities: false});
-      const mainBlocks = $('.stormWrapper');
-//      console.log(mainBlocks.length);
-      let stroms = [];
-      if(mainBlocks.length){
-        mainBlocks.each((i, elem)=>{
-          let nameRaw = $(elem).find('.storm-name').text();
-          let timestamp = $(elem).find('.timestamp').text();
-          let infoRaw = $(elem).find('.storm-info').text();
-          let jtwc = $(elem).find('img[alt~=JTWC]').attr('src');
-          let gefs = $(elem).find('img[alt~=GEFS]').attr('src');
-          stroms[i]={
-            nameRaw, timestamp, infoRaw, jtwc,gefs
-          };
-        })
-      }else{
-        throw new Error('no storms info');
-      };
-      
-      return stroms;
-    },
-  },
   otouzi:{
     name:'otouzi',
     url:'https://www.otouzi.com/p2p',
@@ -52,7 +12,7 @@ const config = {
       
       const $ = cheerio.load(html,{decodeEntities: false});
       const mainBlocks = $('.list-detail');
-      console.log(mainBlocks.length);
+      // console.log(mainBlocks.length);
       let listArr = [];
       if(mainBlocks.length){
         mainBlocks.each((i, elem)=>{
@@ -71,7 +31,30 @@ const config = {
         throw new Error('no list');
       };
       
-      return listArr;
+      /**
+       * url 地址
+       * available 可投资金额
+       * deadline 最短投资时间
+       * duration 投资期限
+       * intersetRate 利率
+       * method 是否等本, ture, false
+       * title 标题
+       */
+      const investlist = listArr.map(ele=>{
+        const url = 'https://www.otouzi.com/' + ele.url;
+        const available = Number.parseFloat(ele.available);
+        const deadline = Number.parseInt(ele.deadline);
+        const regex1 = /\d+/;
+        // const test = regex1.exec(ele.duration);
+        const duration = Number.parseInt(regex1.exec(ele.duration)[0]);
+        const interestRate = Number.parseFloat(ele.interestRate);
+        const method = ele.method.includes('等本等息');
+        const id = Number.parseInt(regex1.exec(ele.url)[0]);
+        return {
+          url, available, deadline, duration, interestRate, method, title:ele.title, id
+        };
+      })
+      return investlist;
     },
   },
 }
@@ -94,9 +77,26 @@ async function queryData(url, callback) {
   // console.log(data.response.body);
 }
 
-queryData(config. otouzi.url, config. otouzi.filter)
+function main(){
+  queryData(config.otouzi.url, config.otouzi.filter)
   .then(data=>{
-    console.log(data);
+    data.forEach(elem => {
+      if(elem.method && elem.duration==12 && elem.deadline>=6
+      && !isOpen.includes(elem.id) ){//&& elem.available>0){
+        open(elem.url,'iexplore');
+        isOpen.push(elem.id);
+        console.log('打开');
+        console.log(elem);
+      }else{
+      };
+    });
+    console.log('完成搜索');
   })
   .catch(err=>{console.log(err)});
+
+  setTimeout(main, 10000);
+}
+
+main();
+
 
