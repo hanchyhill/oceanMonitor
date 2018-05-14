@@ -24,18 +24,27 @@ const config = {
     name:'tropicaltidbits',
     url:'https://www.tropicaltidbits.com/storminfo/',
     filter(html){
-      let stroms = [];
+      
       const $ = cheerio.load(html,{decodeEntities: false});
       const mainBlocks = $('.stormWrapper');
+//      console.log(mainBlocks.length);
+      let stroms = [];
       if(mainBlocks.length){
-        mainBlocks.forEach(item => {
-          
-        });
+        mainBlocks.each((i, elem)=>{
+          let nameRaw = $(elem).find('.storm-name').text();
+          let timestamp = $(elem).find('.timestamp').text();
+          let infoRaw = $(elem).find('.storm-info').text();
+          let jtwc = $(elem).find('img[alt~=JTWC]').attr('src');
+          let gefs = $(elem).find('img[alt~=GEFS]').attr('src');
+          stroms[i]={
+            nameRaw, timestamp, infoRaw, jtwc,gefs
+          };
+        })
       }else{
-
+        throw new Error('no storms info');
       };
-      return {
-      };
+      
+      return stroms;
     },
   },
 }
