@@ -75,12 +75,12 @@ const envSrc = {
       local:'/static/remote-img/env/wgmsir.GIF',},
     ],
     wiscSteer:[
-      {name:'700-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm1.GIF', note:'>1000hPa/<23m/s', local:'/static/remote-img/env/wgmsdlm1.GIF'},
-      {name:'500-850hPa',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm2.GIF', note:'(990-999hPa)/23-31m/s', local:'/static/remote-img/env/wgmsdlm2.GIF'},
-      {name:'400-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm3.GIF', note:'970-989hPa/31-46m/s', local:'/static/remote-img/env/wgmsdlm3.GIF'},
-      {name:'300-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm4.GIF', note:'950-969hPa/46-57m/s', local:'/static/remote-img/env/wgmsdlm4.GIF'},
-      {name:'250-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm5.GIF', note:'940-949hPa/57-63m/s', local:'/static/remote-img/env/wgmsdlm5.GIF'},
-      {name:'200-700mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm6.GIF', note:'<940hPa/>63m/s', local:'/static/remote-img/env/wgmsdlm6.GIF'},
+      {name:'700-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm1.GIF', note:'中心气压>1000hPa / 最大风力<23m/s', local:'/static/remote-img/env/wgmsdlm1.GIF'},
+      {name:'500-850hPa',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm2.GIF', note:'中心气压(990-999hPa) / 最大风力23-31m/s', local:'/static/remote-img/env/wgmsdlm2.GIF'},
+      {name:'400-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm3.GIF', note:'中心气压970-989hPa / 最大风力31-46m/s', local:'/static/remote-img/env/wgmsdlm3.GIF'},
+      {name:'300-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm4.GIF', note:'中心气压950-969hPa / 最大风力46-57m/s', local:'/static/remote-img/env/wgmsdlm4.GIF'},
+      {name:'250-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm5.GIF', note:'中心气压940-949hPa / 最大风力57-63m/s', local:'/static/remote-img/env/wgmsdlm5.GIF'},
+      {name:'200-700mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm6.GIF', note:'中心气压<940hPa / 最大风力>63m/s', local:'/static/remote-img/env/wgmsdlm6.GIF'},
     ],
     probability:[
       {name:'0-48h 生成概率',origin:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/wp_rCUMP_048.gif',

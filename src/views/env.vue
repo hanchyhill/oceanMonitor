@@ -13,21 +13,29 @@
     </Row>
 
     <h3>海温 & 浪高</h3>
-    <Tabs type="card">
+    <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of sst" :key="index" :label="item.name">
         <img :src="item.src" :alt="item.name">
       </TabPane>
     </Tabs>
     
     <h3>WISC 环境场分析</h3>
-    <Tabs type="card">
+    <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of wiscEnv" :key="index" :label="item.name">
+        <img :src="item.src" :alt="item.name">
+      </TabPane>
+    </Tabs>
+
+    <h3>WISC 引导气流</h3>
+    <Tabs type="card" :animated="false">
+      <TabPane v-for="(item, index) of wiscSteer" :key="index" :label="item.name">
+        <div>{{item.note}}</div>
         <img :src="item.src" :alt="item.name">
       </TabPane>
     </Tabs>
     
     <h3>生成概率 & 潜在强度</h3>
-    <Tabs type="card">
+    <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of probability" :key="index" :label="item.name">
         <img :src="item.src" :alt="item.name">
       </TabPane>
@@ -37,7 +45,7 @@
   
     <br>
     <h3>ASCAT风场扫描</h3>
-    <Tabs type="card">
+    <Tabs type="card" :animated="false">
       <TabPane label="上升A">
         <ascat-view :imgList="ascat.ascend"></ascat-view>
       </TabPane>
@@ -89,6 +97,12 @@
       },
       wiscEnv(){
         return envSrc.tab.wiscEnv.map(item=>{
+          item.src = item[this.sourceFrom];
+          return item;
+        })
+      },
+      wiscSteer(){
+        return envSrc.tab.wiscSteer.map(item=>{
           item.src = item[this.sourceFrom];
           return item;
         })
