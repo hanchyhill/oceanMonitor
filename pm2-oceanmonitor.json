@@ -1,6 +1,6 @@
 {
   "name"        : "oceanMonitor",  // 应用名称
-  "script"      : "./crawler/pMapCrawler.js",  // 实际启动脚本
+  "script"      : "./crawler/prSpider.js",  // 实际启动脚本
   "cwd"         : "./crawler/",  // 当前工作路径
   "watch": [  // 监控变化的目录，一旦变化，自动重启
     "crawler"
