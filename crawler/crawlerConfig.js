@@ -17,6 +17,12 @@ const config = {
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmssht.GIF' , lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmswv.GIF'  , lastModified:'', dir:'env/'},
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsir.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm1.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm2.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm3.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm4.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm5.GIF'  , lastModified:'', dir:'env/'},
+    {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/', name:'wgmsdlm6.GIF'  , lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rCUMP_048.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_024.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_048.gif', lastModified:'', dir:'env/'},
@@ -46,6 +52,31 @@ const config = {
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas233.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas245.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBas257.png' , lastModified:'', dir:'ascat/'},
+
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds230.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds242.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds254.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds231.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds243.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds255.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds232.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds244.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds256.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds233.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds245.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBds257.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas230.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas242.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas254.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas231.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas243.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas255.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas232.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas244.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas256.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas233.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas245.png' , lastModified:'', dir:'ascat/B-'},
+    {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas257.png' , lastModified:'', dir:'ascat/B-'},
   ],
   i6:[
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'irbdgmskml.GIF', lastModified:'', dir:'sat/'},// 这个是不是有问题?
@@ -68,6 +99,9 @@ const config = {
     {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_08.gif', dir:'sat/'},
     {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_13_sector_06.gif', dir:'sat/'},
   ],
+  iTest:[
+    {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'vis-l.gif', lastModified:'', dir:'sat/'},
+  ]
 };
 
 module.exports = {

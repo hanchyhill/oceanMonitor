@@ -38,11 +38,17 @@
     <br>
     <h3>ASCAT风场扫描</h3>
     <Tabs type="card">
-      <TabPane label="上升">
+      <TabPane label="上升A">
         <ascat-view :imgList="ascat.ascend"></ascat-view>
       </TabPane>
-      <TabPane label="下降">
+      <TabPane label="下降A">
         <ascat-view :imgList="ascat.descend"></ascat-view>
+      </TabPane>
+      <TabPane label="上升B">
+        <ascat-view :imgList="ascat.ascendB"></ascat-view>
+      </TabPane>
+      <TabPane label="下降B">
+        <ascat-view :imgList="ascat.descendB"></ascat-view>
       </TabPane>
     </Tabs>
     
@@ -102,6 +108,12 @@
           list.forEach(v=>v.src = v[this.sourceFrom])
         );
         ascatImg.ascend.forEach(list => 
+          list.forEach(v=>v.src = v[this.sourceFrom])
+        );
+        ascatImg.descendB.forEach(list => 
+          list.forEach(v=>v.src = v[this.sourceFrom])
+        );
+        ascatImg.ascendB.forEach(list => 
           list.forEach(v=>v.src = v[this.sourceFrom])
         );
         // console.log(ascatImg);

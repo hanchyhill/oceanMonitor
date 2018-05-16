@@ -17,5 +17,8 @@
   "out_file"   : "../logs/app-out.log",  // 普通日志路径
   "env": {
       "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
-  }
+  },
+  "max_memory_restart": "500M",
+  // "merge_logs"  	   : true,
+  "log_date_format"  : "YYYY-MM-DD HH:mm Z"
 }

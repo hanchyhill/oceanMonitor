@@ -41,7 +41,7 @@ const config = {
        * title 标题
        */
       const investlist = listArr.map(ele=>{
-        const url = 'https://www.otouzi.com/' + ele.url;
+        const url = 'https://www.otouzi.com' + ele.url;
         const available = Number.parseFloat(ele.available);
         const deadline = Number.parseInt(ele.deadline);
         const regex1 = /\d+/;
@@ -85,7 +85,7 @@ function main(){
       && !isOpen.includes(elem.id) ){//&& elem.available>0){
         open(elem.url,'iexplore');
         isOpen.push(elem.id);
-        console.log('打开');
+        console.log((new Date()).toDateString()+'打开');
         console.log(elem);
       }else{
       };

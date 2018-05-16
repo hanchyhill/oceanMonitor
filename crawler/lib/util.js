@@ -25,8 +25,6 @@ function mkdirsCall(dirname, callback) {
   });
 }
 
-
-
 const pMakeDir = (dirname)=>{
   return new Promise((resolve,reject)=>{
     mkdirsCall(dirname,(err)=>err instanceof Error?reject(err):resolve('success'));
@@ -86,17 +84,22 @@ const requestMeothods = {
       // console.log(options);
     }
     let preModified = item.lastModified;
+    
     let requestStatus = {};
     try{
       let status  = await requestMeothods.pResopne(options);
       let res = status.response;
       if(res){
+        
         let lastModified = res.headers['last-modified'];
         // console.log(res.headers['content-type']); // 'image/png'
+        // console.log('pre:'+preModified);
+        // console.log('now:'+lastModified);
         if(lastModified === preModified){
           resolve(myLogger.note(notes, fileName, '最后修改时间相同'));
         }
         else{
+          item.lastModified = lastModified;
           const ws = fs.createWriteStream('../static/remote-img/' + item.dir + fileName);
           ws.write(res.body,'binary');
           ws.end();
@@ -141,7 +144,7 @@ const requestMeothods = {
     }catch(err){
       if (err.response){
         if(err.response.statusCode === 304){
-          status= myDebug(`304未修改`);
+          status= myDebug(`304未修改`);// 304归入错误类
         }else{
           status = myDebug(`捕获错误响应${err.response.statusCode}`,true);
         }
@@ -218,7 +221,12 @@ const myLogger = {
 }
 
 function myDebug(message, isError){
-  console.log(message);
+  if (process.env.NODE_ENV === 'production') {
+    // just for production code
+  }else{
+    console.log(message);
+  }
+  
   let status = {};
   if(isError){
     status = new Error(message);

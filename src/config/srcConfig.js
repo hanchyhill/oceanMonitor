@@ -74,6 +74,14 @@ const envSrc = {
       {name:'中低层风反演',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsir.GIF',
       local:'/static/remote-img/env/wgmsir.GIF',},
     ],
+    wiscSteer:[
+      {name:'700-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm1.GIF', note:'>1000hPa/<23m/s', local:'/static/remote-img/env/wgmsdlm1.GIF'},
+      {name:'500-850hPa',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm2.GIF', note:'(990-999hPa)/23-31m/s', local:'/static/remote-img/env/wgmsdlm2.GIF'},
+      {name:'400-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm3.GIF', note:'970-989hPa/31-46m/s', local:'/static/remote-img/env/wgmsdlm3.GIF'},
+      {name:'300-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm4.GIF', note:'950-969hPa/46-57m/s', local:'/static/remote-img/env/wgmsdlm4.GIF'},
+      {name:'250-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm5.GIF', note:'940-949hPa/57-63m/s', local:'/static/remote-img/env/wgmsdlm5.GIF'},
+      {name:'200-700mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm6.GIF', note:'<940hPa/>63m/s', local:'/static/remote-img/env/wgmsdlm6.GIF'},
+    ],
     probability:[
       {name:'0-48h 生成概率',origin:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/wp_rCUMP_048.gif',
       local:'/static/remote-img/env/wp_rCUMP_048.gif',},
@@ -420,9 +428,53 @@ const ascatImg ={
       {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas256.png',local:'/static/remote-img/ascat/WMBas256.png',name:'上升关岛', },
     ],
     [
-      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas233.png',local:'/static/remote-img/ascat/WMBds233.png',name:'上升南海南部', },
-      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas245.png',local:'/static/remote-img/ascat/WMBds245.png',name:'上升菲南', },
-      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png',local:'/static/remote-img/ascat/WMBds257.png',name:'上升菲东', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas233.png',local:'/static/remote-img/ascat/WMBas233.png',name:'上升南海南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas245.png',local:'/static/remote-img/ascat/WMBas245.png',name:'上升菲南', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png',local:'/static/remote-img/ascat/WMBas257.png',name:'上升菲东', },
+    ],
+  ],
+  descendB:[
+    [ 
+      {name:'下降华东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds230.png',local:'/static/remote-img/ascat/B-WMBds230.png'},
+      {name:'下降黄海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds242.png',local:'/static/remote-img/ascat/B-WMBds242.png'},
+      {name:'下降日本', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds254.png',local:'/static/remote-img/ascat/B-WMBds254.png'},
+    ],
+    [
+      {name:'广东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds231.png',local:'/static/remote-img/ascat/B-WMBds231.png'},
+      {name:'下降东海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds243.png',local:'/static/remote-img/ascat/B-WMBds243.png'},
+      {name:'下降琉球以东', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds255.png',local:'/static/remote-img/ascat/B-WMBds255.png'},
+    ],
+    [
+      {name:'下降南海', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds232.png',local:'/static/remote-img/ascat/B-WMBds232.png'},
+      {name:'下降菲律宾北部', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds244.png',local:'/static/remote-img/ascat/B-WMBds244.png'},
+      {name:'下降关岛', origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds256.png',local:'/static/remote-img/ascat/B-WMBds256.png'},
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds233.png',local:'/static/remote-img/ascat/B-WMBds233.png',name:'下降南海南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds245.png',local:'/static/remote-img/ascat/B-WMBds245.png',name:'下降菲律宾南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds257.png',local:'/static/remote-img/ascat/B-WMBds257.png',name:'下降菲东', },
+    ],
+  ],
+  ascendB:[
+    [ 
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas230.png',local:'/static/remote-img/ascat/B-WMBas230.png',name:'上升华东', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas242.png',local:'/static/remote-img/ascat/B-WMBas242.png',name:'上升黄海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas254.png',local:'/static/remote-img/ascat/B-WMBas254.png',name:'上升日本', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas231.png',local:'/static/remote-img/ascat/B-WMBas231.png',name:'上升广东', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas243.png',local:'/static/remote-img/ascat/B-WMBas243.png',name:'上升东海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas255.png',local:'/static/remote-img/ascat/B-WMBas255.png',name:'上升琉球以东', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas232.png',local:'/static/remote-img/ascat/B-WMBas232.png',name:'上升南海', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas244.png',local:'/static/remote-img/ascat/B-WMBas244.png',name:'上升菲北', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas256.png',local:'/static/remote-img/ascat/B-WMBas256.png',name:'上升关岛', },
+    ],
+    [
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas233.png',local:'/static/remote-img/ascat/B-WMBas233.png',name:'上升南海南部', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas245.png',local:'/static/remote-img/ascat/B-WMBas245.png',name:'上升菲南', },
+      {origin:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas257.png',local:'/static/remote-img/ascat/B-WMBas257.png',name:'上升菲东', },
     ],
   ],
 };

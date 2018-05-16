@@ -15,13 +15,9 @@ const fs = require('fs');
 const path = require('path');
 const pMap = require('p-map');
 const pAny = require('p-any');
-// const AgentHttp = require('socks5-http-client/lib/Agent');
-// const request = require('request');
-// const AgentHttps = require('socks5-https-client/lib/Agent');
-// const rp = require('request-promise');
+
 const {requestMeothods, myLogger, myDebug, pMakeDir} = require('./lib/util.js');
-// const cheerio = require('cheerio');
-// const http = require('http');
+
 
 
 function RequsetFactory(item){
@@ -109,7 +105,7 @@ async function startScheme(list=[], now=(new Date()), notes='' ){
 async function main(){
   // 创建所需目录
   for(let dir of dirConfig.dirArr){
-    await pMakeDir('dir')
+    await pMakeDir(dirConfig.base+dir)
     .then(err=>{console.log(err)});
   }
   let ruleI6 = new schedule.RecurrenceRule();
@@ -118,14 +114,18 @@ async function main(){
   let ruleI20 = new schedule.RecurrenceRule();
   ruleI20.minute = [new schedule.Range(0, 59, 20)];// 20分钟轮询
   
-  let ruleITest = new schedule.RecurrenceRule();
-  // ruleITest.second = [new schedule.Range(0, 59, 30)];// 20分钟轮询
+ /*  let ruleITest = new schedule.RecurrenceRule();
+  ruleITest.second = [new schedule.Range(0, 59, 30)];// Test
+
+  let jobTest = schedule.scheduleJob(ruleITest, (fireDate)=>startScheme(config.iTest, fireDate, '30s')); */
   
-  job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
-  job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
+  let job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
+  let job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
   
   startScheme(config.i6, new Date(), '6分钟');
   startScheme(config.i20, new Date(),'20分钟');
+
+
   // 创建目录
   //schedule.scheduleJob(ruleITest, (fireDate)=>startScheme(config.i20, fireDate, '30s'));
   // startScheme(config.i20, new Date(),'30s');
