@@ -31,11 +31,7 @@
         <li>wtss**.vhhh 香港天文台</li>
         <li>wtko**.rksl 韩国气象局</li>
         <li>wtph**.rpmm 菲律宾PAGASA</li>
-        <li>
-          <a href="http://tgftp.nws.noaa.gov/data/raw/fx/fxxt03.egrr..txt"  target="_blank">
-            <Button size="large" type="success">fxxt03.egrr 英国报文</Button>
-          </a>
-        </li>
+        
       </ul>
       <hr>
       其他
@@ -61,7 +57,12 @@
         </li>
         <li>
           <a href="http://tgftp.nws.noaa.gov/data/raw/wd/?C=M;O=D"  target="_blank">
-            <Button size="large" type="success">tppn**.pgtw JTWC 诊断分析报 <br> Prognostic Reasoning</Button>
+            <Button size="large" type="success">wdpn**.pgtw JTWC 诊断分析报 <br> Prognostic Reasoning</Button>
+          </a>
+        </li>
+        <li>
+          <a href="http://tgftp.nws.noaa.gov/data/raw/fx/fxxt03.egrr..txt"  target="_blank">
+            <Button size="large" type="success">fxxt03.egrr 英国报文(模式)</Button>
           </a>
         </li>
         <li>

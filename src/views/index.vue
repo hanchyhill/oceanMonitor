@@ -19,9 +19,6 @@ import env from './env.vue';
     },
   };
 </script>
-
-</style>
-
 <style>
 
 </style>

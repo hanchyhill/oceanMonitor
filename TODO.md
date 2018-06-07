@@ -27,3 +27,5 @@
 * https://www.nrlmry.navy.mil/tcdat/ NRL TC数据
 * FXSS21 VHHH 香港预报
 * ftp://gmcrgz:guangz123@10.148.8.212/bcgzup/msg/publ 省数据中心接收报文
+* http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/clivar_wh.shtml MJO预报
+* http://cmdp.ncc-cma.net/Monitoring/cn_stratosphere.php 气候平均

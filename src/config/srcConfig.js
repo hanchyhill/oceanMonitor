@@ -53,6 +53,12 @@ const envSrc = {
         local:'/static/remote-img/env/cdas-sflux_ssta_wpac_1.png',},
       {name:'全球海温距平',origin:'https://www.tropicaltidbits.com/analysis/ocean/cdas-sflux_ssta_global_1.png',
         local:'/static/remote-img/env/cdas-sflux_ssta_global_1.png',},
+      {name:'海洋热容量',origin:'http://models.weatherbell.com/sst/tcheat_wpac_2017.png',
+      local:'http://models.weatherbell.com/sst/tcheat_wpac_2017.png',},
+      {name:'西太海温2',origin:'http://models.weatherbell.com/sst/wpac_cdas1.png',
+      local:'http://models.weatherbell.com/sst/wpac_cdas1.png',},
+      {name:'海温距平2',origin:'http://models.weatherbell.com/sst/wpac_cdas1_anom.png',
+      local:'http://models.weatherbell.com/sst/wpac_cdas1_anom.png',},
       {name:'南海浪高',origin:'http://www.oceanweather.com/data/South-China-Sea/WAVE000.GIF',
       local:'/static/remote-img/env/WAVE000.GIF',},
       {name:'西太浪高',origin:'http://www.oceanweather.com/data/NPAC-Western/WAVE000.GIF',
@@ -91,12 +97,26 @@ const envSrc = {
       local:'/static/remote-img/env/wp_rTCFP_048.gif',},
       {name:'最大潜在强度',origin:'http://wxmaps.org/pix/wpacpot.png',
       local:'/static/remote-img/env/wpacpot.png',},
-    ]
+    ],
+    mjo:[
+      {name:'MJO(EC)',origin:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/ECMF_phase_51m_full.gif',
+      local:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/ECMF_phase_51m_full.gif',},
+      {name:'MJO(NCEP-GEFS)',origin:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/ensplume_full.gif',
+      local:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/ensplume_full.gif',},
+    ],
   },
   imgs:{
-    jtwc:{name:'JTWC热带气旋警报图',origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
+    jtwc:{name:'JTWC热带气旋警报图',origin:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwsair.jpg',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
     local:'/static/remote-img/env/abpwsair.jpg',},
-  }
+    tropicOutlook:{name:'2周热带天气展望',origin:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/gth_full.png',
+    local:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/gth_full.png',},
+    phSatAnalysis:{name:'热带卫星天气分析',origin:'http://www.typhoon2000.ph/t2kgraphsat.gif',
+    local:'http://www.typhoon2000.ph/t2kgraphsat.gif',},
+    scs2idx:{name:'南海夏季风爆发指数',origin:'http://cmdp.ncc-cma.net/Monitoring/EastAsian/scs2idx.today.gif',
+    local:'http://cmdp.ncc-cma.net/Monitoring/EastAsian/scs2idx.today.gif',},
+
+  },
+  
 };
 
 /**
@@ -204,6 +224,13 @@ const bulletinSrc = {
       head2:'数据中心',
       notes:'信息中心下发的台风报文',
     },
+    nchmf:{
+      link:'http://www.nchmf.gov.vn/Web/en-US/70/102/Default.aspx',
+      imgSrc:'/static/thumbnails/nchmf-vietnam.jpg',
+      headInfo:'越南预报',
+      head2:'越南水文气象预报中心',
+      notes:'越南路径预报',
+    },
   },
 };
 
@@ -270,6 +297,8 @@ const refSrc = {
       {name:'台湾中央气象局', url:'https://www.cwb.gov.tw/'},
       {name:'日本气象厅-风观测', url:'http://www.jma.go.jp/en/amedas/000.html?elementCode=1'},
       {name:'菲律宾PAGASA', url:'https://www1.pagasa.dost.gov.ph/'},
+      {name:'NRL历史台风数据', url:'https://www.nrlmry.navy.mil/tcdat/'},
+      
     ],
     others:[
       {name:'德法强度表', url:'http://www.ssd.noaa.gov/PS/TROP/CI-chart.html'},
