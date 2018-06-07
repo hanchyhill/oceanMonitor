@@ -105,6 +105,8 @@ http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas257.png
 
 [unisys报文合集](http://www.weather.unisys.com/hurricane/archive/18040206) -> 根据系统时间动态生成链接
 
+[JTWC Prognostic Reasoning 诊断报](http://tgftp.nws.noaa.gov/data/raw/wd/)
+
 ## 卫星
 
 [WISC BD色阶](http://tropic.ssec.wisc.edu/real-time/westpac/images/irbdgms5kml.GIF) -> image

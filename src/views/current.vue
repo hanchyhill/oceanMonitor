@@ -5,9 +5,7 @@
   </Col>
   <Col span="22">
     <Row>
-      <card-pic :dial="speedDial.typhoonNew"></card-pic>
-      <card-pic :dial="speedDial.jma"></card-pic>
-      <card-pic :dial="speedDial.jtwc"></card-pic>
+      
       <card-pic :dial="speedDial.activeTCinSSD"></card-pic>
       <card-pic :dial="speedDial.tropicaltidbits"></card-pic>
       <card-pic :dial="speedDial.colostate"></card-pic>

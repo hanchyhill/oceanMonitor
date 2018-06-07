@@ -8,11 +8,11 @@
     <MenuItem name="current">
         当前台风
     </MenuItem>
+    <MenuItem name="bulletin">
+        机构-报文
+    </MenuItem>
     <MenuItem name="nwp">
         数值路径
-    </MenuItem>
-    <MenuItem name="bulletin">
-        报文
     </MenuItem>
     <MenuItem name="satellite">
         卫星
