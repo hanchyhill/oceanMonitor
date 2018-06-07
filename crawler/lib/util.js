@@ -1,3 +1,4 @@
+// TODO 304归入错误类
 const AgentHttp = require('socks5-http-client/lib/Agent');
 const AgentHttps = require('socks5-https-client/lib/Agent');
 const rp = require('request-promise');
@@ -21,7 +22,7 @@ function mkdirsCall(dirname, callback) {
           fs.mkdir(dirname, callback);  
           console.log('在' + path.dirname(dirname) + '目录创建好' + dirname  +'目录');
       });  
-    }  
+    }
   });
 }
 
@@ -128,6 +129,9 @@ const requestMeothods = {
   /**
    * 异步获取数据，错误封装，并把符合条件的respone返回，
    * @param {object} options 请求选项
+   * 响应 200 返回所有响应体
+   * 响应 304 返回status.is304 true
+   * 其他响应抛出错误
    */
   async pResopne(options){
     let res = undefined;
@@ -144,7 +148,8 @@ const requestMeothods = {
     }catch(err){
       if (err.response){
         if(err.response.statusCode === 304){
-          status= myDebug(`304未修改`);// 304归入错误类
+          status= myDebug(`304未修改`);
+          status.is304 = true;
         }else{
           status = myDebug(`捕获错误响应${err.response.statusCode}`,true);
         }

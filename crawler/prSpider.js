@@ -18,8 +18,6 @@ const pAny = require('p-any');
 
 const {requestMeothods, myLogger, myDebug, pMakeDir} = require('./lib/util.js');
 
-
-
 function RequsetFactory(item){
   let obj = {
     resolve:undefined,
@@ -106,7 +104,8 @@ async function main(){
   // 创建所需目录
   for(let dir of dirConfig.dirArr){
     await pMakeDir(dirConfig.base+dir)
-    .then(err=>{console.log(err)});
+    .then(success=>{})
+    .catch(err=>console.error(err));
   }
   let ruleI6 = new schedule.RecurrenceRule();
   ruleI6.minute = [new schedule.Range(0, 59, 6)];// 6分钟轮询
