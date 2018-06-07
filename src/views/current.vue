@@ -12,6 +12,7 @@
       <card-pic :dial="speedDial.wisc"></card-pic>
       <card-pic :dial="speedDial.digitalTY"></card-pic>
       <card-pic :dial="speedDial.nrlNavy"></card-pic>
+      <card-pic :dial="speedDial.hurZone"></card-pic>
     </Row>
 
   </Col>

@@ -10,6 +10,7 @@
       <card-pic :dial="speedDial.emc"></card-pic>
       <card-pic :dial="speedDial.gd121"></card-pic>
       <card-pic :dial="speedDial.gefs"></card-pic>
+      <card-pic :dial="speedDial.hkoTrack"></card-pic>
     </Row>
 
   </Col>

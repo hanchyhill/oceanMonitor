@@ -9,7 +9,8 @@
       <card-pic :dial="speedDial.colTropics"></card-pic>
       <card-pic :dial="speedDial.nictHim8"></card-pic>
       <card-pic :dial="speedDial.jmaSat"></card-pic>
-      <card-pic :dial="speedDial.fy4"></card-pic>
+      <card-pic :dial="speedDial.h8target"></card-pic>
+      <card-pic :dial="speedDial.swap2"></card-pic>
       <card-pic :dial="speedDial.gdWeb"></card-pic>
       <card-pic :dial="speedDial.gdSat"></card-pic>
     </Row>
