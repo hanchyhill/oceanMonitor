@@ -1,3 +1,10 @@
+# 安装
+
+1. 环境 node.js >= 8.0
+2. npm install  or  cnpm install
+3. npm run dev
+4. cd crawler & node prSprider.js
+
 # 海洋监测网页
 
 分步走战略：
