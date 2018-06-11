@@ -76,12 +76,23 @@ const scanMeta = (bulletin='')=>{
 /**
  * 主执行文件
  */
-const main = async ()=>{
+const readDataFromFile = async ()=>{
   const raw = await readFile(path.join(__dirname,'93080200.ABJ'),'ascii');
+  resolveData(raw);
+}
+
+const resolveData = async (raw)=>{
   const rawArr = raw.split('NNNN');
   const catchArr = rawArr.filter(chunk=>headFilter(chunk));
   const dataArr = catchArr.map(scanMeta);
-  dataArr.forEach(saveBulletin);
+  if(dataArr.length===0){
+    // console.log('没有匹配数据');
+    return '没有匹配数据';
+  }
+  else{
+    dataArr.forEach(saveBulletin);
+  }
+  
 }
 
 async function saveBulletin(item){
@@ -106,7 +117,8 @@ async function saveBulletin(item){
   }
 }
 
-exports.readData = main;
+exports.readDataFromFile = readDataFromFile;
+exports.resolveData = resolveData;
 // main()
 // .then(v=>{})
 // .catch(err=>console.log(err));

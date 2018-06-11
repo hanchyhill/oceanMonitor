@@ -7,14 +7,14 @@
     {
         "type": "node",
         "request": "launch",
-        "name": "read data",
-        "program": "${workspaceFolder}/demo/readData.js"
+        "name": "ftpRead",
+        "program": "${workspaceFolder}/bulletin/readData/ftpread.js"
     },
         {
             "type": "node",
             "request": "launch",
-            "name": "otouzi",
-            "program": "${workspaceFolder}/crawler/otouzi.js"
+            "name": "index",
+            "program": "${workspaceFolder}/bulletin/index.js"
         },
     {
         "type": "node",

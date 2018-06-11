@@ -1,7 +1,8 @@
 const PromiseFtp = require('promise-ftp');
 const config = {
-  ftp:{host: '10.148.8.212', user: 'gmcrgz', password: 'guangz123',keepalive:5000, autoReconnect:true,preserveCwd:true},
-  dir01:'/bcgzup/msg/publ/',
+  ftp:{host: '10.148.8.212', user: 'gmcrgz', password: 'guangz123',keepalive:500, autoReconnect:true,preserveCwd:true},
+  dir01:'/bcgz/dmsg/',
+  dir02:'/bcgzup/msg/publ/',
 }
 
 const main = async ()=>{
@@ -17,7 +18,7 @@ const main = async ()=>{
   for(let file of list){
     let content = '';
     let stream = await ftp.get(file.name);
-    let content = await readStream(stream);
+    content = await readStream(stream);
 
     solveBulletin(content)
     .then(resolve=>{})

@@ -2,6 +2,8 @@ const Koa = require('koa');
 const app = new Koa();
 const logger = require('koa-logger');
 const session = require('koa-session');
+const static = require('koa-static');
+const {resolve} = require('path');
 app.keys = ['some secret hurr'];
  
 async function main(ctx,next){
@@ -12,8 +14,9 @@ async function main(ctx,next){
   next()
 };
 
-app.use(logger());
+/* app.use(logger());
 app.use(session(app));
-app.use(main);
+app.use(main); */
+app.use(static(resolve(__dirname,'./')));
 app.listen(2333);
 
