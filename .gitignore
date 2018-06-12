@@ -5,6 +5,7 @@ dist*.zip
 .idea/
 .DS_Store
 node_modules/
+node_modules_bak/
 .project
 dist
 dist/*

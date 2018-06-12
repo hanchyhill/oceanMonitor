@@ -10,9 +10,9 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://127.0.0.1:8888' :
+    'http://127.0.0.1:10074' :
     env === 'production' ?
-    'https://www.url.com' :
+    'https://trident.gdmo.gq' :
     'https://debug.url.com';
 
 util.ajax = axios.create({

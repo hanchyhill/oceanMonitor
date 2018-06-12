@@ -1,6 +1,7 @@
 import Env from './env';
 
 let config = {
-    env: Env
+    env: Env,
+    proxyTable: {'/api/':'http://localhost:10074'},
 };
 export default config;

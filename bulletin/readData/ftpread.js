@@ -19,15 +19,7 @@ const main = async ()=>{
   await ftp.cwd(config.dir01);
   const list = await ftp.list();
   const filterList = scanList(list);
-  if(filterList.length!==0){
-    
-    config.lastDate = filterList[0].date.getTime();
-    // console.log('最新文件时间 ' + config.lastDate);
-    console.log('文件数 ' + filterList.length)
-  }
-  else{
-    console.log('没有新文件');
-  }
+  console.log('文件数 ' + filterList.length)
   // console.log('Directory listing:');
   // console.dir(filterList);
   // await ftp.ascii();
@@ -39,6 +31,12 @@ const main = async ()=>{
     // console.log('读取完毕');
     resolveData(content)
       .catch(err=>{throw err});
+  }
+  if(filterList.length!==0){
+    config.lastDate = filterList[0].date.getTime();
+  }
+  else{
+    console.log('没有新文件');
   }
   console.log('ftp 读取完毕');
   await ftp.end();

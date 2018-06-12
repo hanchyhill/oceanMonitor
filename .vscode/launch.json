@@ -10,6 +10,12 @@
         "name": "ftpRead",
         "program": "${workspaceFolder}/bulletin/readData/ftpread.js"
     },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "get db",
+        "program": "${workspaceFolder}/bulletin/getData.js"
+    },
         {
             "type": "node",
             "request": "launch",
