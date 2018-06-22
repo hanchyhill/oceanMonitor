@@ -9,11 +9,13 @@ util.title = function(title) {
     window.document.title = title;
 };
 
+const protocol = location.protocol;
+
 const ajaxUrl = env === 'development' ?
-    'http://127.0.0.1:10074' :
+    protocol + '//127.0.0.1:10074' :
     env === 'production' ?
-    'https://trident.gdmo.gq' :
-    'https://debug.url.com';
+    protocol + '//trident.gdmo.gq' :
+    protocol + '//trident.gdmo.gq';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,

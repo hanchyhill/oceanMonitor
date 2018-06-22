@@ -20,6 +20,8 @@
       <card-pic :dial="speedDial.ssdADT"></card-pic>
       <card-pic :dial="speedDial.wiscADT"></card-pic>
     </Row>
+    <h3>报文</h3>
+    <show-bulletin></show-bulletin>
     <h3 id="bulletin-col">机构热带气旋报文集</h3>
     <div class="bulletin-flex">
       <Card style="width:400px;margin:20px">
@@ -137,10 +139,11 @@
 </template>
 <script>
   import CardPic from './comps/cardPic.vue';
+  import ShowBulletin from './comps/showBulletin.vue';
   import {bulletinSrc} from '../config/srcConfig.js';
 
   export default {
-    components:{CardPic,},
+    components:{CardPic,ShowBulletin,},
     name: 'bul-fc',
     props:{
 

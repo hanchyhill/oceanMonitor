@@ -34,7 +34,7 @@ const config = {
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/', name:'ECMF_phase_51m_full.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/', name:'ensplume_full.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/', name:'gth_full.png', lastModified:'', dir:'env/'},
-    {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.gif', lastModified:'', dir:'env/'},
+    // {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://cmdp.ncc-cma.net/Monitoring/EastAsian/', name:'scs2idx.today.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds230.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds242.png' , lastModified:'', dir:'ascat/'},
