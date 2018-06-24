@@ -1,5 +1,13 @@
 # todo
 
+* 子进程，减少启动的终端
+* 服务器配置mongod自启动，远程登录，登录用户名，密码等创建
+* 数据库无法连接时的错误处理能力
+* 增加NOAA数据提取的能力
+* 删除VTBB卫星报
+* 没有报文时的空白显示处理
+* 增加时间控件
+* api增加适应各种日期模式的能力
 * 添加 http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/gth_full.png http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/index.php
 * MJO http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/ecmf.shtml
 

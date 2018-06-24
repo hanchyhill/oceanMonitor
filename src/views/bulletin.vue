@@ -80,7 +80,12 @@
           </li>
           <li>
             <a href="ftp://gmcrgz:guangz123@10.148.8.212/bcgzup/msg/publ"  target="_blank">
-              <Button size="large" type="success"> 广东省气象局数据中心接收报文</Button>
+              <Button size="large" type="success"> 数据中心接收报文(报头排序)</Button>
+            </a>
+          </li>
+          <li>
+            <a href="ftp://gmcrgz:guangz123@10.148.8.212/bcgz/dmsg"  target="_blank">
+              <Button size="large" type="success"> 数据中心报文(日期排序)</Button>
             </a>
           </li>
         </ul>

@@ -5,6 +5,7 @@ const Router = require('koa-router');
 const mongoose = require('mongoose');
 const {connect,initSchemas} = require('./database/initDB.js');
 const router = new Router();
+const moment = require('moment');
 
 let Bulletin = undefined;
 
@@ -22,7 +23,7 @@ router.get('/api',async(ctx,next)=>{
   console.log(maxTime, minTime, ins);
   const bulletins = await Bulletin.find({}).
                     where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
-                    where('ins').in(['BABJ', 'RJTD', 'PGTW',]).
+                    where('ins').in(['BABJ', 'RJTD', 'PGTW','VHHH']).
                     select('content name cn date fulltime title ins').exec();
   // console.log(bulletins);
   ctx.body = {
