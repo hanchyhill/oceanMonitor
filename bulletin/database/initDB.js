@@ -1,3 +1,4 @@
+// 合并initSchemas 和 connect
 const mongoose = require('mongoose');
 const glob = require('glob');
 // mongoose.Promise = global.Promise;
@@ -15,6 +16,10 @@ exports.initSchemas = ()=>{
 exports.connect = ()=>{
   let maxConnectTimes = 0;
   return new Promise((resolve,reject)=>{
+    if(mongoose.connection.readyState ==1){
+      console.log('mongo 已连接');
+      resolve('mongo 已连接');
+    }
     if(process.env.NODE_ENV !== 'production'){
       mongoose.set('debug', true);
     };
@@ -29,7 +34,7 @@ exports.connect = ()=>{
         mongoose.connect(dbLink);
       }
       else{
-        throw new Error('Max Reconnect, DB breakdown.');
+        reject(new Error('Max Reconnect, DB breakdown.'));
       }
     });
     mongoose.connection.once('open',()=>{

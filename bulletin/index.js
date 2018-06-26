@@ -19,10 +19,15 @@ async function main (){
   let job1 = schedule.scheduleJob(ruleI1, (fireDate)=>{
     // TODO 检测是否连接上mongodb
     console.log('轮询开始'+fireDate.toString());
-    // ftpRead()
+    ftpRead()
+      .catch(err=>{
+        console.log('ftp Error:'+err.message);
+        console.error(err);
+      });
     getNoaa()
      .catch(err=>{
-       console.log('readData Error:'+err.message);
+       console.log('noaa Error:'+err.message);
+       console.error(err);
      });
   }); 
   // ftpRead()

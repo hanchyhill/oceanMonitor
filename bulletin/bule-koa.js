@@ -1,3 +1,4 @@
+// TODO monent.js
 const Koa = require('koa');
 const logger = require('koa-logger');
 const {resolve} = require('path');
@@ -10,27 +11,33 @@ const moment = require('moment');
 let Bulletin = undefined;
 
 router.get('/api',async(ctx,next)=>{
-/*   const Movie = mongoose.model('Movie');
-  const movies = await Movie.find().sort({
-    'meta.createdAt':-1
-  });
-  ctx.body = {
-    movies
-  } */
-  const minTime = ctx.query.gt?Number.parseInt(ctx.query.gt):NaN;
-  const maxTime = ctx.query.lt?Number.parseInt(ctx.query.lt):NaN;
-  const ins = ctx.query.ins;
-  console.log(maxTime, minTime, ins);
-  const bulletins = await Bulletin.find({}).
-                    where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
-                    where('ins').in(['BABJ', 'RJTD', 'PGTW','VHHH']).
-                    select('content name cn date fulltime title ins').exec();
-  // console.log(bulletins);
-  ctx.body = {
-    data: bulletins,
-    success: true
-  };
-  await next();
+
+  // const minTime = ctx.query.gt?Number.parseInt(ctx.query.gt):NaN;
+  // const maxTime = ctx.query.lt?Number.parseInt(ctx.query.lt):NaN;
+  let [minTime,maxTime] = [NaN,NaN];
+  const ins = ctx.query.ins.split(',');
+  minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
+  maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
+  if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
+    const bulletins = await Bulletin.find({}).
+                      where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
+                      where('ins').in(['BABJ', 'RJTD', 'PGTW','VHHH']).
+                      select('content name cn date fulltime title ins').exec();
+  
+    ctx.body = {
+      data: bulletins,
+      success: true
+    };
+    await next();
+  }
+  else{
+    ctx.body = {
+      error:'日期参数错误',
+      success: false,
+    };
+    ctx.status = 400;
+    await next();
+  }
 });
 
 main = async (ctx,next)=>{

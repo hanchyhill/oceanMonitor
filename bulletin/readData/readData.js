@@ -1,4 +1,4 @@
-/* TODO config抽离
+/* TODO 
         fulltime 日期由Date 对象来转化
 */
 const {promisify} = require('util');
@@ -101,13 +101,21 @@ async function saveBulletin(item){
   if(!bulletin){// 不存在直接插入
     let transItem = Object.assign({},item,{content:[item.content],md5:[item.md5]});
     bulletin = new Bulletin(transItem);
-    await bulletin.save();
+    await bulletin.save()
+      .catch(err=>{
+        console.log('储存错误');
+        console.error(err);
+      });
   }
   else{// 存在判断md5是否一致
     if(!bulletin.md5.includes(item.md5)){
       bulletin.content.push(item.content);
       bulletin.md5.push(item.md5);
-      await bulletin.save();
+      await bulletin.save()
+        .catch(err=>{
+          console.log('储存错误');
+          console.error(err);
+        });
     }
     else{
       console.log(item.title+'已存在');

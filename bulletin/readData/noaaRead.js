@@ -1,3 +1,4 @@
+// TODO 并发执行rp
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment');
@@ -69,7 +70,6 @@ async function getFileList(opt){
   let fileArr = [];
   trs.each((i,item)=>{
     const tds = $(item).find('td');
-    // console.log(tds);
     const fileName = $(tds[0]).text();
     const url = $(tds[0]).find('a').attr('href');
     const dateString = $(tds[1]).text();
@@ -89,28 +89,25 @@ async function getFileList(opt){
     };
     return isInclude;
   });
-  console.log(filterArr);
+  
   return filterArr;
 }
 
 async function getNoaa(){
   let configKey = Object.keys(config);
-  console.log(configKey);
   try{
     for (let iConfig of configKey){
       const list = await getFileList(config[iConfig]);
       if(list.length!=0){
-        list.lastDate = list[0].date.valueOf();// 记录最后更新时间，其实也可以记录lastModified
+        console.log(list);
+        config[iConfig].lastDate = list[0].date.valueOf();// 记录最后更新时间，其实也可以记录lastModified
       }
       else{
-        console.log('noaa 没有更新');
+        console.log(iConfig + ' noaa 没有更新');
       }
 
       for(let file of list){
-        // console.log(file);
-        // console.log(config[iConfig].base+file.url);
         let bulletin = await rp(config[iConfig].base+file.url);
-        // console.log(bulletin);
         resolveData(bulletin)
           .catch(err=>{console.log('解析储存时发生错误'+err.message)});
       }
@@ -121,9 +118,9 @@ async function getNoaa(){
   }
 }
 
-getNoaa()
-  .catch(err=>{
-    console.log(err);
-  });
+// getNoaa()
+//   .catch(err=>{
+//     console.log(err);
+//   });
 
-exports.getNoaa() = getNoaa();
+exports.getNoaa = getNoaa;

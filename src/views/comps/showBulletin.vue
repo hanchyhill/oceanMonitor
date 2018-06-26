@@ -1,7 +1,10 @@
 <template>
 <div class='show-bulletin'>
-  <DatePicker type="daterange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
-  <Button type="primary" icon="ios-search">Search</Button>
+  <DatePicker v-model="dateRange" type="daterange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
+  <Select v-model="selectIns" multiple style="width:300px" placeholder="Select institution">
+    <Option v-for="item in insList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+  </Select>
+  <Button type="primary" icon="ios-search" @click.native="searchBulletin">Search</Button>
   <Tabs value="CMA">
     <TabPane label="CMA" name="CMA">
       <Row>
@@ -43,6 +46,12 @@
           </Radio>
           <Radio label="WTPQ3-RJTD">
               <span>JMA分析报</span>
+          </Radio>
+          <Radio label="WTJP2-RJTD">
+              <span>warning</span>
+          </Radio>
+          <Radio label="WTJP3-RJTD">
+              <span>storm warning</span>
           </Radio>
           <Radio label="FXPQ8-RJTD">
               <span>数值指导预报</span>
@@ -129,6 +138,7 @@
 <script>
   import Util from '../../libs/util';
   import BulletinContainer from './BulletinContainer.vue';
+  import * as moment from 'moment';
   //import axios from 'axios';
   const axios = Util.ajax;
   export default {
@@ -136,37 +146,81 @@
     name: 'show-bulletin',
     data(){
       return{
-        typeBABJ:'all',
-        typeRJTD:'all',
-        typePGTW:'all',
-        typeVHHH:'all',
-        BABJ:[],
-        PGTW:[],
-        RJTD:[],
-        VHHH:[],
+        typeBABJ:'all', typeRJTD:'all', typePGTW:'all', typeVHHH:'all',
+        BABJ:[],PGTW:[], RJTD:[], VHHH:[],
+        selectIns:['BABJ','RJTD','PGTW','VHHH'],
+        insList: [
+          {value: 'BABJ',label: '北京'},
+          {value: 'RJTD',label: '日本'},
+          {value: 'PGTW',label: 'JTWC'},
+          {value: 'VHHH',label: '香港'},
+        ],
+        dateRange:[new Date(Date.now()-1000*60*60*24*30), new Date()],
       };
     },
     methods: {
+      getBulletin(gt,lt,dateFormat){
+        // lt = Date.now();
+        // gt = lt - 1000*60*60*24*30;
+        axios.get(`http://127.0.0.1:10074/api/?gt=${gt}&lt=${lt}&ins=PGTW,BABJ,RJTD,VHHH&dateFormat=${dateFormat}`)
+          .then(res=>{
+            if(res.data.success){
+              const data = res.data.data;
+              this.BABJ = data.filter(v=>v.ins==='BABJ');
+              this.PGTW = data.filter(v=>v.ins==='PGTW');
+              this.RJTD = data.filter(v=>v.ins==='RJTD');
+              this.VHHH = data.filter(v=>v.ins==='VHHH');
+              if(data.length===0){
+                this.showNotice('获取内容为空','请求范围内无数据',2);
+              }else{
+                this.showNotice('请求成功','',1);
+              }
+            }
+            else{
+              console.error('获取报文出现意外');
+              this.showNotice('获取报文出现意外',res.data,-1);
+            }
+          })
+          .catch(err=>{
+            console.error(err.response?err.response.data:err);
+            this.showNotice('连接发生错误',err.response?err.response.data:err,-1);
+          });
+      },
+      searchBulletin(){
+        let gt = moment.utc(moment(this.dateRange[0]).format('YYYY-MM-DD')).valueOf();
+        let lt = moment.utc(moment(this.dateRange[1]).format('YYYY-MM-DD')+' 23:59:59').valueOf();
+        this.getBulletin(gt,lt,'x');
+      },
+      showNotice(title,content,status){
+        if(status === 1){//成功
+          this.$Notice.success({
+            title: title?title:'成功',
+            desc: content ? content : '',
+            duration:1.5,
+          });
+        }
+        else if(status === -1){
+          this.$Notice.error({
+            title: title?title:'错误',
+            desc: content ? content : '',
+          });
+        }
+        else if(status === 2){ // 警告
+          this.$Notice.warning({
+            title: title?title:'警告',
+            desc: content ? content : '',
+          });
+        }
+        else{
+          this.$Notice.info({
+            title: title?title:'提示',
+            desc: content ? content : '',
+          });
+        }
+      }
     },
     created(){
-      const lt = Date.now();
-      const gt = lt - 1000*60*60*24*30;
-      axios.get(`http://127.0.0.1:10074/api/?gt=${gt}&lt=${lt}&ins=PGTW,BABJ,RJTD`)
-        .then(res=>{
-          if(res.data.success){
-            const data = res.data.data;
-            this.BABJ = data.filter(v=>v.ins==='BABJ');
-            this.PGTW = data.filter(v=>v.ins==='PGTW');
-            this.RJTD = data.filter(v=>v.ins==='RJTD');
-            this.VHHH = data.filter(v=>v.ins==='VHHH');
-          }
-          else{
-            console.error('获取报文出现意外');
-          }
-        })
-        .catch(err=>{
-          console.error(err.response?err.response.data:err);
-        });
+      this.searchBulletin();
     },
     computed:{
       filterBABJ(){
