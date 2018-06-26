@@ -48,7 +48,7 @@ const scanMeta = (bulletin='')=>{
       let iHour = Number(iTime.slice(2,4));
       let iMinute = Number(iTime.slice(4,6));
       let initTime = new Date(Date.UTC(utc[0],utc[1],iDay,iHour,iMinute));
-      let md5 = MD5(bulletin.replace(/ZCZC.*?\d{3}/,'').replace(/\s/g,''));//去除ZCZC开头，去除所有空白字符
+      let md5 = MD5(bulletin.replace(/ZCZC.*?\d{3}/,'').replace(/\s/g,'').replace(/NNNN/g,''));//去除ZCZC开头，去除所有空白字符
       if(initTime.getTime()-today.getTime()>0){
         initTime = new Date(Date.UTC(utc[0],utc[1]-1,iDay,iHour,iMinute));
         //fulltime = utc[0].toString() + number2(utc[1]) + number2(iDay) + number2(iHour) + number2(iMinute);
@@ -92,7 +92,6 @@ const resolveData = async (raw)=>{
   else{
     dataArr.forEach(saveBulletin);
   }
-  
 }
 
 async function saveBulletin(item){
@@ -119,6 +118,7 @@ async function saveBulletin(item){
 
 exports.readDataFromFile = readDataFromFile;
 exports.resolveData = resolveData;
+exports.saveBulletin = saveBulletin;
 // main()
 // .then(v=>{})
 // .catch(err=>console.log(err));
