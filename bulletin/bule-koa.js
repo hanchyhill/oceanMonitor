@@ -1,4 +1,4 @@
-// TODO monent.js
+//
 const Koa = require('koa');
 const logger = require('koa-logger');
 const {resolve} = require('path');
