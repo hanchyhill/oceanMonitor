@@ -52,6 +52,16 @@ const config = {
       {reg:/wdpn.*?pgtw/,name:'WDPN-PGTW',},
     ],
   },
+  jtwc:{
+    hasImg:true,
+    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
+    base:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
+    lastDate : Date.now() - 1000*60*60*24*30,
+    rules:[
+      // {reg:/abpwweb/,name:'ABPW-PGTW',},
+      {reg:/\.txt/,name:'PGTW',},
+    ],
+  }
 }
 
 async function getFileList(opt){
@@ -67,12 +77,13 @@ async function getFileList(opt){
   }
   const $ = cheerio.load(html);
   const trs = $('tr').slice(3,-1);// 去除头尾
+  const initTd = opt.hasImg?1:0;// 兼容noaa jtwc镜像
   let fileArr = [];
   trs.each((i,item)=>{
     const tds = $(item).find('td');
-    const fileName = $(tds[0]).text();
-    const url = $(tds[0]).find('a').attr('href');
-    const dateString = $(tds[1]).text();
+    const fileName = $(tds[initTd+0]).text();
+    const url = $(tds[initTd+0]).find('a').attr('href');
+    const dateString = $(tds[initTd+1]).text();
     date = moment(dateString.trim(), "DD-MMM-YYYY HH:mm")
     fileArr.push({fileName,url,date,});
   });

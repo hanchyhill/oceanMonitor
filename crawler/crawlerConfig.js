@@ -34,7 +34,7 @@ const config = {
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/CLIVAR/', name:'ECMF_phase_51m_full.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/', name:'ensplume_full.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/', name:'gth_full.png', lastModified:'', dir:'env/'},
-    // {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.gif', lastModified:'', dir:'env/'},
+   // {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://cmdp.ncc-cma.net/Monitoring/EastAsian/', name:'scs2idx.today.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds230.png' , lastModified:'', dir:'ascat/'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/', name:'WMBds242.png' , lastModified:'', dir:'ascat/'},
@@ -106,6 +106,9 @@ const config = {
     {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_07_sector_06.gif', dir:'sat/'},
     {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'tropics_band_08.gif', dir:'sat/'},
     {urlBase:'http://rammb.cira.colostate.edu/ramsdis/online/images/latest/himawari-8/', name:'himawari-8_band_13_sector_06.gif', dir:'sat/'},
+  ],
+  h1:[
+   {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.gif', lastModified:'', dir:'env/'},
   ],
   iTest:[
     {urlBase:'http://www.ssd.noaa.gov/jma/twpac/', name:'vis-l.gif', lastModified:'', dir:'sat/'},

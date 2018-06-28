@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>JTWC TROPICAL CYCLONE INFORMATION FEED</title>
+        <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+        <description>JTWC Tropical Cyclone Information</description>
+        <pubDate>Wed, 27 Jun 2018 13:36:07 +0000</pubDate>
+        <lastBuildDate>Wed, 27 Jun 2018 13:36:07 +0000</lastBuildDate>
+        <generator>ContentFeeder 2.0</generator>
+        <image>
+            <url>https://pzal.ndbc.noaa.gov/collab/jtwc</url>
+            <title>JTWC TROPICAL CYCLONE INFORMATION FEED</title>
+            <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+        </image>
+        <item>
+            <title>Current Northwest Pacific/North Indian Ocean* Tropical Systems</title>
+            <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+            <description><![CDATA[<ul><li><font color='red'>No Current Tropical Cyclone Warnings.</font></li></ul>
+ <p><i>* Includes Bay of Bengal and Arabian Sea</i>
+]]></description>
+            <author>CDO.JTWC.fct@navy.mil (JTWC CDO)</author>
+            <category>Northwest Pacific/North Indian Ocean* Tropical Systems</category>
+            <guid>NWPAC-NIO-WARNINGS</guid>
+            <pubDate>Wed, 27 Jun 18 13:36:07 +0000</pubDate>
+        </item>
+        <item>
+            <title>Current Central/Eastern Pacific Tropical Systems</title>
+            <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+            <description><![CDATA[<p><b>Tropical Cyclone Formation Alert WTPN21 </b><br>
+<b>Issued at 27/0200Z<b>
+
+<ul>
+<li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/ep9618web.txt' target='newwin'>TCFA Text </a></li>
+ <li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/ep9618.gif' target='newwin'>TCFA Graphic</a></li>
+ <li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/ep9618.tcw' target='newwin'>JMV 3.0 Data</a></li>
+ <li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/ep9618.kmz' target='newwin'>Google Earth Overlay</a> <img src='https://pzal.ndbc.noaa.gov/collab/jtwc/img/kml.jpg'></li>
+ <li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/96E_270200sair.jpg' target='newwin'>IR Satellite Imagery</a></li>
+ </ul>
+]]></description>
+            <author>CDO.JTWC.fct@navy.mil (JTWC CDO)</author>
+            <category>Central/Eastern Pacific Tropical Systems</category>
+            <guid>EPAC-CPAC-WARNINGS</guid>
+            <pubDate>Wed, 27 Jun 18 13:36:07 +0000</pubDate>
+        </item>
+        <item>
+            <title>Current Southern Hemisphere Tropical Systems</title>
+            <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+            <description><![CDATA[<ul><li><font color='red'>No Current Tropical Cyclone Warnings.</font></li></ul>
+]]></description>
+            <author>CDO.JTWC.fct@navy.mil (JTWC CDO)</author>
+            <category>Southern Hemisphere Tropical Systems</category>
+            <guid>SH-WARNINGS</guid>
+            <pubDate>Wed, 27 Jun 18 13:36:07 +0000</pubDate>
+        </item>
+        <item>
+            <title>Current Significant Tropical Weather Advisories</title>
+            <link>https://pzal.ndbc.noaa.gov/collab/jtwc</link>
+            <description><![CDATA[<ul>
+      <li><b><a href="https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwweb.txt" target='newwin'>ABPW10 (Western/South Pacific Ocean)</a><br>
+
+      Issued at 27/0600Z</b><br></li>
+      <li><b><a href="https://pzal.ndbc.noaa.gov/collab/jtwc/products/abioweb.txt" target='newwin'>ABIO10 (Indian Ocean)</a><br>
+
+      Issued at 26/1800Z</b><br></li>
+<li><a href='https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwsair.jpg' target='newwin'>Satellite Image</a></li>
+
+</ul>
+]]></description>
+            <author>CDO.JTWC.fct@navy.mil (JTWC CDO)</author>
+            <category>Significant Tropical Weather Advisories</category>
+            <guid>TROPICAL-ADVISORIES</guid>
+            <pubDate>Wed, 27 Jun 18 13:36:07 +0000</pubDate>
+        </item>
+    </channel>
+</rss>
+ 

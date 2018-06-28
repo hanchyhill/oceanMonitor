@@ -31,11 +31,11 @@ const routers = [
     component:(resolve) => require(['./views/nwp.vue'], resolve)
   },
   {
-    path:'/bulletin',
+    path:'/bullet',
     meta: {
       title: '报文'
     },
-    name:'bulletin',
+    name:'bullet',
     component:(resolve) => require(['./views/bulletin.vue'], resolve)
   },
   {

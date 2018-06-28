@@ -112,7 +112,9 @@ async function main(){
   
   let ruleI20 = new schedule.RecurrenceRule();
   ruleI20.minute = [new schedule.Range(0, 59, 20)];// 20分钟轮询
-  
+ 
+  let ruleH1 = new schedule.RecurrenceRule();
+  ruleH1.minute = 3;// 1d 
  /*  let ruleITest = new schedule.RecurrenceRule();
   ruleITest.second = [new schedule.Range(0, 59, 30)];// Test
 
@@ -120,10 +122,10 @@ async function main(){
   
   let job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
   let job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
-  
+  let jobH1 = schedule.scheduleJob(ruleH1, (fireDate)=>startScheme(config.h1, fireDate, '1 day'));
   startScheme(config.i6, new Date(), '6分钟');
   startScheme(config.i20, new Date(),'20分钟');
-
+  startScheme(config.h1, new Date(),'1 day');
 
   // 创建目录
   //schedule.scheduleJob(ruleITest, (fireDate)=>startScheme(config.i20, fireDate, '30s'));

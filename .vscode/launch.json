@@ -13,6 +13,12 @@
     {
         "type": "node",
         "request": "launch",
+        "name": "readOthers",
+        "program": "${workspaceFolder}/bulletin/readData/readOthers.js"
+    },
+    {
+        "type": "node",
+        "request": "launch",
         "name": "get db",
         "program": "${workspaceFolder}/bulletin/getData.js"
     },

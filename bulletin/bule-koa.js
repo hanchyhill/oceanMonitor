@@ -1,4 +1,6 @@
-//
+// TODO 设置机构
+// TODO 日期范围限制
+// TODO 
 const Koa = require('koa');
 const logger = require('koa-logger');
 const {resolve} = require('path');
@@ -15,13 +17,13 @@ router.get('/api',async(ctx,next)=>{
   // const minTime = ctx.query.gt?Number.parseInt(ctx.query.gt):NaN;
   // const maxTime = ctx.query.lt?Number.parseInt(ctx.query.lt):NaN;
   let [minTime,maxTime] = [NaN,NaN];
-  const ins = ctx.query.ins.split(',');
+  const ins = ctx.query.ins?ctx.query.ins.split(','):['BABJ','PGTW','RJTD','VHHH'];
   minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
   maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
   if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
     const bulletins = await Bulletin.find({}).
                       where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
-                      where('ins').in(['BABJ', 'RJTD', 'PGTW','VHHH']).
+                      where('ins').in(ins).
                       select('content name cn date fulltime title ins').exec();
   
     ctx.body = {
