@@ -8,7 +8,7 @@
     <MenuItem name="current">
         当前台风
     </MenuItem>
-    <MenuItem name="bulletin">
+    <MenuItem name="bullet">
         机构-报文
     </MenuItem>
     <MenuItem name="nwp">

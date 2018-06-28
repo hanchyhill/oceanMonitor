@@ -162,7 +162,7 @@
       getBulletin(gt,lt,dateFormat){
         // lt = Date.now();
         // gt = lt - 1000*60*60*24*30;
-        axios.get(`http://127.0.0.1:10074/api/?gt=${gt}&lt=${lt}&ins=PGTW,BABJ,RJTD,VHHH&dateFormat=${dateFormat}`)
+        axios.get(`/api/?gt=${gt}&lt=${lt}&ins=PGTW,BABJ,RJTD,VHHH&dateFormat=${dateFormat}`)
           .then(res=>{
             if(res.data.success){
               const data = res.data.data;
