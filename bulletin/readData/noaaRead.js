@@ -54,7 +54,7 @@ const config = {
   },
   jtwc:{
     hasImg:true,
-    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
+    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/?C=M;O=D',
     base:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
     lastDate : Date.now() - 1000*60*60*24*30,
     rules:[
