@@ -21,9 +21,10 @@ const config = {
     {name:'FXXT03-EGRR', cn:'英国模式报文',       reg:/FXXT03.*?EGRR\s*?(\d{6})/i,ins:'EGRR',},
     {name:'WTPQ2-BABJ',cn:'北京台风警报',      reg:/WTPQ2.*?BABJ\s*?(\d{6})/i,extra:{warning:'sameFileName'},ins:'BABJ',},
     {name:'TCPQ4-BABJ',cn:'北京卫星定位报',    reg:/TCPQ4.*?BABJ\s*?(\d{6})/i,ins:'BABJ',},
+    {name:'WSCI40-BABJ',cn:'北京重要天气报',    reg:/WSCI40.*?BABJ\s*?(\d{6})/i,ins:'BABJ',},
     {name:'SBHK-VHHH', cn:'HKO卫星定位报',    reg:/SBHK.*?VHHH\s*?(\d{6})/i,ins:'VHHH',},
     {name:'SBCI-BCGZ', cn:'广州卫星定位报',   reg:/SBCI.*?BCGZ\s*?(\d{6})/i,ins:'BCGZ',},
-    {name:'SDTH20-VTBB',cn:'曼谷卫星定位报',  reg:/SDTH20.*?VTBB\s*?(\d{6})/i,ins:'VTBB',},
+    // {name:'SDTH20-VTBB',cn:'曼谷卫星定位报',  reg:/SDTH20.*?VTBB\s*?(\d{6})/i,ins:'VTBB',},
     {name:'SDPH-RPMM', cn:'PAGASA卫星定位报', reg:/SDPH.*?RPMM\s*?(\d{6})/i,ins:'RPMM',},
   ]
 };

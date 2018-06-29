@@ -1,5 +1,8 @@
 # todo
 
+* https://www.nrlmry.navy.mil/tcdat/sectors/atcf_sector_file
+* https://www.nrlmry.navy.mil/tc-bin/tc_list_storms2.cgi
+* http://severe.worldweather.wmo.int/tc/wnp/pop-ups/tc/?C=M;O=D
 * 子进程，减少启动的终端
 * 服务器配置mongod自启动，远程登录，登录用户名，密码等创建
 * 数据库无法连接时的错误处理能力

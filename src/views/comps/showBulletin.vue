@@ -1,7 +1,7 @@
 <template>
 <div class='show-bulletin'>
   <DatePicker v-model="dateRange" type="daterange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
-  <Select v-model="selectIns" multiple style="width:300px" placeholder="Select institution">
+  <Select v-model="selectIns" multiple style="width:400px" placeholder="Select institution">
     <Option v-for="item in insList" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
   <Button type="primary" icon="ios-search" @click.native="searchBulletin">Search</Button>
@@ -18,6 +18,9 @@
           </Radio>
           <Radio label="TCPQ4-BABJ">
               <span>卫星报</span>
+          </Radio>
+          <Radio label="WSCI40-BABJ">
+              <span>重要天气报</span>
           </Radio>
           </RadioGroup>
         </Col>
@@ -131,6 +134,33 @@
         </Col>
       </Row>
     </TabPane>
+    <TabPane label="PAGASA" name="PAGASA">
+      <Row>
+        <Col span="2">
+          <RadioGroup v-model="typeRPMM" vertical >
+          <Radio label="all">
+            <span>全部</span>
+          </Radio>
+          <Radio label="WTPH2-RPMM">
+            <span>台风预报</span>
+          </Radio>
+          <Radio label="WTPH0-RPMM">
+              <span>台风警报</span>
+          </Radio>
+          <Radio label="SDPH-RPMM">
+              <span>卫星定位报</span>
+          </Radio>
+          </RadioGroup>
+        </Col>
+        <Col span="22">
+          <div class= "bullet-wrapper">
+            <bulletin-container 
+            v-for="(item,index) of filterRPMM" :key="index" :item="item">
+            </bulletin-container>
+          </div>
+        </Col>
+      </Row>
+    </TabPane>
   </Tabs>
 </div>
 </template>
@@ -146,14 +176,15 @@
     name: 'show-bulletin',
     data(){
       return{
-        typeBABJ:'all', typeRJTD:'all', typePGTW:'all', typeVHHH:'all',
-        BABJ:[],PGTW:[], RJTD:[], VHHH:[],
-        selectIns:['BABJ','RJTD','PGTW','VHHH'],
+        typeBABJ:'all', typeRJTD:'all', typePGTW:'all', typeVHHH:'all', typeRPMM:'all',
+        BABJ:[],PGTW:[], RJTD:[], VHHH:[],RPMM:[],
+        selectIns:['BABJ','RJTD','PGTW','VHHH','RPMM'],
         insList: [
           {value: 'BABJ',label: '北京'},
           {value: 'RJTD',label: '日本'},
           {value: 'PGTW',label: 'JTWC'},
           {value: 'VHHH',label: '香港'},
+          {value: 'RPMM',label: '菲律宾'},
         ],
         dateRange:[new Date(Date.now()-1000*60*60*24*30), new Date()],
       };
@@ -162,7 +193,7 @@
       getBulletin(gt,lt,dateFormat){
         // lt = Date.now();
         // gt = lt - 1000*60*60*24*30;
-        axios.get(`/api/?gt=${gt}&lt=${lt}&ins=PGTW,BABJ,RJTD,VHHH&dateFormat=${dateFormat}`)
+        axios.get(`/api/?gt=${gt}&lt=${lt}&ins=${this.selectIns.join(',')}&dateFormat=${dateFormat}`)
           .then(res=>{
             if(res.data.success){
               const data = res.data.data;
@@ -170,6 +201,7 @@
               this.PGTW = data.filter(v=>v.ins==='PGTW');
               this.RJTD = data.filter(v=>v.ins==='RJTD');
               this.VHHH = data.filter(v=>v.ins==='VHHH');
+              this.RPMM = data.filter(v=>v.ins==='RPMM');
               if(data.length===0){
                 this.showNotice('获取内容为空','请求范围内无数据',2);
               }else{
@@ -253,6 +285,14 @@
         }
         else{
           return this.VHHH.filter(v=>v.name == this.typeVHHH);
+        }
+      },
+      filterRPMM(){
+        if(this.typeRPMM === 'all'){
+          return this.RPMM;
+        }
+        else{
+          return this.RPMM.filter(v=>v.name == this.typeRPMM);
         }
       },
     },
