@@ -10,6 +10,7 @@ const config = {
   first2read : 10,
   lastDate:0,
 }
+const errorFileList = [];//['93200820.ABJ'];
 
 const main = async ()=>{
   const ftp = new PromiseFtp();
@@ -25,12 +26,32 @@ const main = async ()=>{
   // await ftp.ascii();
   for(let file of filterList){
     let content = '';
-    let stream = await ftp.get(file.name);
-    console.log('await '+ file.name);
-    content = await readStream(stream);
-    // console.log('读取完毕');
+    let stream = undefined;
+    
+    if(errorFileList.includes(file.name)){
+      console.log('skip'+file.name);
+      continue;
+    }
+    try {
+      // console.log('await '+ file.name);
+      stream = await ftp.get(file.name);
+      // console.log(file.name + '读取完毕');
+      content = await readStream(stream);
+      
+    } catch (error) {// 发生错误重新连接一次
+      console.log('意外中断，重新读取'+file.name);
+      await ftp.end();
+      await ftp.reconnect();
+      await ftp.cwd(config.dir01);
+      stream = await ftp.get(file.name);
+      console.log(file.name + '读取完毕');
+      content = await readStream(stream);
+    }
+    //let stream = await ftp.get(file.name);
+    //console.log(file.name + '读取完毕');
+    //content = await readStream(stream);
     resolveData(content)
-      .catch(err=>{throw err});
+      .catch(err=>{console.error('解析错误:'+err.message)});
   }
   if(filterList.length!==0){
     config.lastDate = filterList[0].date.getTime();
