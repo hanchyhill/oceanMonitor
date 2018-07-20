@@ -1,7 +1,7 @@
 <template>
 <Row>
   <Col span="1">
-   <div>&nbsp</div><!--左侧空白-->
+   <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
     <Row>
@@ -11,11 +11,12 @@
       <card-pic :dial="speedDial.gd121"></card-pic>
       <card-pic :dial="speedDial.gefs"></card-pic>
       <card-pic :dial="speedDial.hkoTrack"></card-pic>
+      <card-pic :dial="speedDial.nullschool"></card-pic>
     </Row>
 
   </Col>
   <Col span="1"><!--右侧空白-->
-  <div>&nbsp</div>
+  <div>&nbsp;</div>
   </Col>
 </Row>
 </template>

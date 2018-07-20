@@ -4,11 +4,13 @@
    <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
+    
     <Row id="bulletin-dial">
       <card-pic :dial="speedDial.typhoonNew"></card-pic>
       <card-pic :dial="speedDial.nmcBulletin"></card-pic>
       <card-pic :dial="speedDial.jma"></card-pic>
       <card-pic :dial="speedDial.jtwc"></card-pic>
+      <span v-if="showMoreBul">
       <card-pic :dial="speedDial.gdBJTY"></card-pic>
       <card-pic :dial="speedDial.hkoTC"></card-pic>
       <card-pic :dial="speedDial.cwbTC"></card-pic>
@@ -19,6 +21,11 @@
       <card-pic :dial="speedDial.ssdBulletin"></card-pic>
       <card-pic :dial="speedDial.ssdADT"></card-pic>
       <card-pic :dial="speedDial.wiscADT"></card-pic>
+      </span>
+      <Button type="success" @click="showMoreBul = !showMoreBul" long>
+        <span v-if="showMoreBul">↑ 隐藏更多</span>
+        <span v-else>↓ 显示更多机构</span>
+      </Button>
     </Row>
     <h3>报文</h3>
     <show-bulletin></show-bulletin>
@@ -91,94 +98,34 @@
         </ul>
       </Card>
     </div>
-    
+  <!--<bul-unisys></bul-unisys>-->
   <h3 id="bulletin-db">数据中心入库报文</h3>
-  <h3 id="unisys">UNISYS报文合集-已失效</h3>
-    <Row>
-      <Col span="8">
-        <Card style="width:200px;margin:20px">
-          <p slot="title">
-              <Icon type="ios-film-outline"></Icon>
-              今天
-          </p>
-          <ul class="card-list card-button">
-            <li v-for="(item, index) in todayArr" :key="index">
-              <a :href="unisysUrl+item" target="_blank"><Button size="large" type="success" >{{item}}</Button></a>
-            </li>
-          </ul>
-        </Card>
-      </Col>
-      <Col span="8">
-        <Card style="width:200px;margin:20px">
-          <p slot="title">
-              <Icon type="ios-film-outline"></Icon>
-              昨天
-          </p>
-          <ul class="card-list card-button">
-            <li v-for="(item, index) in yesterArr" :key="index">
-              <a :href="unisysUrl+item" target="_blank"><Button size="large" type="success" >{{item}}</Button></a>
-            </li>
-          </ul>
-        </Card>
-      </Col>
-      <Col span="8">
-        <Card style="width:200px;margin:20px">
-          <p slot="title">
-              <Icon type="ios-film-outline"></Icon>
-              前天
-          </p>
-          <ul class="card-list card-button">
-            <li v-for="(item, index) in bfYesArr" :key="index">
-              <a :href="unisysUrl+item" target="_blank" rel="nofollow noopener noreferrer"><Button size="large" type="success" >{{item}}</Button></a>
-            </li>
-          </ul>
-        </Card>
-      </Col>
-    </Row>
-    
   </Col>
   <Col span="1"><!--右侧空白-->
   <div>&nbsp; </div>
   </Col>
+  
 </Row>
 </template>
 <script>
   import CardPic from './comps/cardPic.vue';
   import ShowBulletin from './comps/showBulletin.vue';
   import {bulletinSrc} from '../config/srcConfig.js';
+  // import BulUnisys from './comps/unisys.vue';
 
   export default {
-    components:{CardPic,ShowBulletin,},
+    components:{CardPic,ShowBulletin,},// components:{CardPic,ShowBulletin,BulUnisys,},
     name: 'bul-fc',
     props:{
 
     },
     data () {
-      const today = this.getTimeString(0);
-      const yesterday = this.getTimeString(-1);
-      const bfYesDay = this.getTimeString(-2);
-      const timeArr = ['12','00'];
-      const todayArr = timeArr.map(v=>today+v);
-      const yesterArr = timeArr.map(v=>yesterday+v);
-      const bfYesArr = timeArr.map(v=>bfYesDay+v);
-     
       return {
         speedDial: bulletinSrc.speedDial,
-        todayArr,
-        yesterArr,
-        bfYesArr,
-        unisysUrl:'http://www.weather.unisys.com/hurricane/archive/',
+        showMoreBul:false,
       }
     },
     methods: {
-      getTimeString(dayCount){
-        const initTime = new Date();
-        initTime.setDate(initTime.getDate() + dayCount);
-        const year = initTime.getUTCFullYear().toString().slice(2);// 两位年份
-        const month = (Array(2).join('0') + (initTime.getUTCMonth()+1)).slice(-2)
-        const date = (Array(2).join('0') + initTime.getUTCDate()).slice(-2);
-        return `${year}${month}${date}`;
-      },
     },
     created(){
     },
@@ -213,6 +160,10 @@
   flex-wrap:wrap;
   justify-content:flex-start;
   align-items: flex-start;
+}
+#bulletin-dial{
+  box-shadow: 2px 2px 5px #333333;
+  margin-top: 5px;
 }
 </style>
 

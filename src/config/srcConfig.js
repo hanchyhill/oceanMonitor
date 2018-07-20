@@ -165,6 +165,13 @@ const nwpSrc = {
       headInfo:'香港集合预报',
       head2:'熱帶氣旋路徑概率預報',
       notes:'提供未來九天熱帶氣旋經過某地方的概率',
+    },//https://earth.nullschool.net/#current/wind/isobaric/850hPa/orthographic=-240.92,9.22,1106
+    nullschool:{
+      link:'https://earth.nullschool.net/#current/wind/isobaric/850hPa/orthographic=-240.92,9.22,1106',
+      imgSrc:'/static/thumbnails/nullschool.jpg',
+      headInfo:'流场图',
+      head2:'nullschool流场图',
+      notes:'提供GFS/NCEP模式预报',
     },
   },
 }

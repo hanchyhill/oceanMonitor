@@ -1,7 +1,7 @@
 <template>
 <div class='show-bulletin'>
   <DatePicker v-model="dateRange" type="daterange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
-  <Select v-model="selectIns" multiple style="width:400px" placeholder="Select institution">
+  <Select v-model="selectIns" multiple style="width:450px" placeholder="Select institution">
     <Option v-for="item in insList" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
   <Button type="primary" icon="ios-search" @click.native="searchBulletin">Search</Button>
@@ -161,6 +161,24 @@
         </Col>
       </Row>
     </TabPane>
+        <TabPane label="KMA" name="KMA">
+      <Row>
+        <Col span="2">
+          <RadioGroup v-model="typeRKSL" vertical >
+          <Radio label="all">
+            <span>全部</span>
+          </Radio>
+          </RadioGroup>
+        </Col>
+        <Col span="22">
+          <div class= "bullet-wrapper">
+            <bulletin-container 
+            v-for="(item,index) of filterRKSL" :key="index" :item="item">
+            </bulletin-container>
+          </div>
+        </Col>
+      </Row>
+    </TabPane>
   </Tabs>
 </div>
 </template>
@@ -176,15 +194,16 @@
     name: 'show-bulletin',
     data(){
       return{
-        typeBABJ:'all', typeRJTD:'all', typePGTW:'all', typeVHHH:'all', typeRPMM:'all',
-        BABJ:[],PGTW:[], RJTD:[], VHHH:[],RPMM:[],
-        selectIns:['BABJ','RJTD','PGTW','VHHH','RPMM'],
+        typeBABJ:'all', typeRJTD:'all', typePGTW:'all', typeVHHH:'all', typeRPMM:'all',typeRKSL:'all',
+        BABJ:[],PGTW:[], RJTD:[], VHHH:[],RPMM:[],RKSL:[],
+        selectIns:['BABJ','RJTD','PGTW','VHHH','RPMM','RKSL'],
         insList: [
           {value: 'BABJ',label: '北京'},
           {value: 'RJTD',label: '日本'},
           {value: 'PGTW',label: 'JTWC'},
           {value: 'VHHH',label: '香港'},
           {value: 'RPMM',label: '菲律宾'},
+          {value: 'RKSL',label: '韩国'},
         ],
         dateRange:[new Date(Date.now()-1000*60*60*24*3), new Date()],
       };
@@ -202,6 +221,7 @@
               this.RJTD = data.filter(v=>v.ins==='RJTD');
               this.VHHH = data.filter(v=>v.ins==='VHHH');
               this.RPMM = data.filter(v=>v.ins==='RPMM');
+              this.RKSL = data.filter(v=>v.ins==='RKSL');
               if(data.length===0){
                 this.showNotice('获取内容为空','请求范围内无数据',2);
               }else{
@@ -293,6 +313,14 @@
         }
         else{
           return this.RPMM.filter(v=>v.name == this.typeRPMM);
+        }
+      },
+      filterRKSL(){
+        if(this.typeRKSL === 'all'){
+          return this.RKSL;
+        }
+        else{
+          return this.RKSL.filter(v=>v.name == this.typeRKSL);
         }
       },
     },
