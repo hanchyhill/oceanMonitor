@@ -29,7 +29,7 @@ async function main (){
        console.log('noaa Error:'+err.message);
        console.error(err);
      });
-  }); 
+  });
   // ftpRead()
   //   .catch(err=>{
   //     console.log(err.message);

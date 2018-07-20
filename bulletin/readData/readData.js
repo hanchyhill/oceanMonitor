@@ -42,7 +42,7 @@ const scanMeta = (bulletin='')=>{
     reg = iReg.reg;
     let result = reg.exec(bulletin);
     if(result){
-      
+      if(iReg.ins == 'BABJ' && bulletin.includes('\nNIL\r')) break;// 如果BABJ报文为空则中断
       let iTime = result[1];
       let iDay = Number(iTime.slice(0,2));
       let iHour = Number(iTime.slice(2,4));
@@ -73,18 +73,17 @@ const scanMeta = (bulletin='')=>{
   return data;
 }
 
-/**
- * 主执行文件
- */
 const readDataFromFile = async ()=>{
   const raw = await readFile(path.join(__dirname,'93080200.ABJ'),'ascii');
   resolveData(raw);
 }
-
+/**
+ * 主执行文件
+ */
 const resolveData = async (raw)=>{
   const rawArr = raw.split('NNNN');
   const catchArr = rawArr.filter(chunk=>headFilter(chunk));
-  const dataArr = catchArr.map(scanMeta);
+  const dataArr = catchArr.map(scanMeta).filter(data=>data!==undefined);//剔除undefined,BABJ为空的例子
   if(dataArr.length===0){
     // console.log('没有匹配数据');
     return '没有匹配数据';
