@@ -54,7 +54,7 @@
   background-color:#1fb554;
 }
 .bulletin-content{
-  min-width: 400px;
+  min-width: 450px;
   max-height:1500px;
   overflow: auto;
 }

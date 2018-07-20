@@ -5,7 +5,7 @@
     <Option v-for="item in insList" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Select>
   <Button type="primary" icon="ios-search" @click.native="searchBulletin">Search</Button>
-  <Tabs value="CMA">
+  <Tabs value="CMA" :animated="false">
     <TabPane label="CMA" name="CMA">
       <Row>
         <Col span="2">

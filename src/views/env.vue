@@ -12,7 +12,7 @@
     <card-pic :dial="speedDial.eTRaP"></card-pic>
     </Row>
 
-    <h3>海温 & 浪高</h3>
+    <h3><a href="#sst">海温 & 浪高</a></h3>
     <Tabs class="tabs-style" type="card" :animated="false">
       <TabPane v-for="(item, index) of sst" :key="index" :label="item.name">
         <a :href="item.origin"  target="_blank">
@@ -21,7 +21,7 @@
       </TabPane>
     </Tabs>
     
-    <h3>WISC 环境场分析</h3>
+    <h3><a href="#wisc">WISC 环境场分析</a></h3>
     <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of wiscEnv" :key="index" :label="item.name">
         <a :href="item.origin"  target="_blank">
@@ -52,7 +52,7 @@
         <img :src="item.src" :alt="item.name">
       </TabPane>
     </Tabs>
-    <h3>热带天气/短期气候分析</h3>
+    <h3><a href="#climate">热带天气/短期气候分析</a></h3>
     <Tabs type="card" :animated="false">
       <TabPane label="JTWC热带气旋警报图">
         <a :href="jtwcImg.origin"  target="_blank">
@@ -84,7 +84,7 @@
     </Tabs>
   
     <br>
-    <h3>ASCAT风场扫描</h3>
+    <h3><a href="#ascat">ASCAT风场扫描</a></h3>
     <Tabs type="card" :animated="false">
       <TabPane label="上升A">
         <ascat-view :imgList="ascat.ascend"></ascat-view>
