@@ -186,7 +186,7 @@
           {value: 'VHHH',label: '香港'},
           {value: 'RPMM',label: '菲律宾'},
         ],
-        dateRange:[new Date(Date.now()-1000*60*60*24*30), new Date()],
+        dateRange:[new Date(Date.now()-1000*60*60*24*3), new Date()],
       };
     },
     methods: {

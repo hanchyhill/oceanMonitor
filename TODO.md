@@ -1,5 +1,8 @@
 # todo
 
+* https://earth.nullschool.net/#current/wind/isobaric/850hPa/orthographic=-240.92,9.22,1106
+* https://ruc.noaa.gov/tracks/ecbufr2/track.2018071012.EBF
+* https://ruc.noaa.gov/tracks/
 * https://www.nrlmry.navy.mil/tcdat/sectors/atcf_sector_file
 * https://www.nrlmry.navy.mil/tc-bin/tc_list_storms2.cgi
 * http://severe.worldweather.wmo.int/tc/wnp/pop-ups/tc/?C=M;O=D
