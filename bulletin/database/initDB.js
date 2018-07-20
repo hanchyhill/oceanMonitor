@@ -4,7 +4,7 @@ const glob = require('glob');
 // mongoose.Promise = global.Promise;
 const dbLink = 'mongodb://localhost:12345/bulletinTest';
 const dbLink2 = 'mongodb://10.148.16.20:20186/bulletins';
-const dbConfig = {user:'bulletinowner', pass:'9184ab8a6b', autoIndex: false, keepAlive: 120};
+const dbConfig = {user:'bulletinowner', pass:'9184ab8a6b', autoIndex: false, keepAlive: 120,useNewUrlParser: true};
 const {resolve} = require('path');
 const MAX_RECONNECTED = 10;
 
@@ -23,7 +23,7 @@ exports.connect = ()=>{
     }
     if(process.env.NODE_ENV !== 'production'){
       mongoose.set('debug', true);
-      mongoose.connect(dbLink,{ keepAlive: 120 , autoIndex: false, });
+      mongoose.connect(dbLink,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,});
     }
     else{
       mongoose.connect(dbLink2,dbConfig,);
