@@ -5,8 +5,10 @@ import Routers from './router';
 import Vuex from 'vuex';
 import Util from './libs/util';
 import App from './app.vue';
+// import polify from './libs/polyfill.js';
 import 'iview/dist/styles/iview.css';
 
+// polify();// 兼容性poly注入
 Vue.use(iView);
 Vue.use(VueRouter);
 Vue.use(Vuex);

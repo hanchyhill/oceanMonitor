@@ -10,9 +10,10 @@ util.title = function(title) {
 };
 
 const protocol = location.protocol;
-
-const ajaxUrl = env === 'development' ?
-    protocol + '//127.0.0.1:10074' :
+const isLocal = location.host.search(/8080/)===-1?false:true;
+const ajaxUrl = isLocal ?
+    'http://127.0.0.1:10074' :
+    // 'https://trident.gdmo.gq' :
     env === 'production' ?
     protocol + '//trident.gdmo.gq' :
     protocol + '//trident.gdmo.gq';
