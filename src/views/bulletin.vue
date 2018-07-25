@@ -100,6 +100,7 @@
     </div>
   <!--<bul-unisys></bul-unisys>-->
   <h3 id="bulletin-db">数据中心入库报文</h3>
+  <grmc-bulletin></grmc-bulletin>
   </Col>
   <Col span="1"><!--右侧空白-->
   <div>&nbsp; </div>
@@ -110,11 +111,12 @@
 <script>
   import CardPic from './comps/cardPic.vue';
   import ShowBulletin from './comps/showBulletin.vue';
+  import GrmcBulletin from './comps/GrmcBulletin.vue';
   import {bulletinSrc} from '../config/srcConfig.js';
   // import BulUnisys from './comps/unisys.vue';
 
   export default {
-    components:{CardPic,ShowBulletin,},// components:{CardPic,ShowBulletin,BulUnisys,},
+    components:{CardPic,ShowBulletin,GrmcBulletin,},// components:{CardPic,ShowBulletin,BulUnisys,},
     name: 'bul-fc',
     props:{
 
