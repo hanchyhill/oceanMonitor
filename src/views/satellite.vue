@@ -15,14 +15,14 @@
       <card-pic :dial="speedDial.gdSat"></card-pic>
     </Row>
 
-    <h3>WISC CIMSS</h3>
+    <h2>WISC CIMSS</h2>
     <Tabs type="card">
       <TabPane v-for="(item, index) of wiscSat" :key="index" :label="item.name">
         <img :src="item.src" :alt="item.name" width="70%">
       </TabPane>
     </Tabs>
 
-    <h3>NOAA 卫星产品与服务中心</h3>
+    <h2>NOAA 卫星产品与服务中心</h2>
     <Tabs type="card">
       <TabPane v-for="(item, index) of ssdSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">
@@ -31,7 +31,7 @@
       </TabPane>
     </Tabs>
 
-    <h3>极轨卫星</h3>
+    <h2>极轨卫星</h2>
     <Tabs type="card">
       <TabPane v-for="(item, index) of polarSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">
@@ -40,7 +40,7 @@
       </TabPane>
     </Tabs>
 
-    <h3>科罗拉多州立大学</h3>
+    <h2>科罗拉多州立大学</h2>
     <Tabs type="card">
       <TabPane v-for="(item, index) of coloSat" :key="index" :label="item.name">
         <a :href="item.anchorUrl" rel="nofollow noopener noreferrer" target="_blank">

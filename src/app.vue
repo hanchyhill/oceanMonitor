@@ -64,7 +64,7 @@ body{
   overflow-y:auto;
 }
 
-h3{
+h2,h3{
   margin-top:20px !important;
   margin-bottom:10px !important;
   font-size:30px;

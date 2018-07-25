@@ -12,7 +12,7 @@
     <card-pic :dial="speedDial.eTRaP"></card-pic>
     </Row>
 
-    <h3><a href="#sst">海温 & 浪高</a></h3>
+    <h2><a href="#sst">海温 & 浪高</a></h2>
     <Tabs class="tabs-style" type="card" :animated="false">
       <TabPane v-for="(item, index) of sst" :key="index" :label="item.name">
         <a :href="item.origin"  target="_blank">
@@ -21,7 +21,7 @@
       </TabPane>
     </Tabs>
     
-    <h3><a href="#wisc">WISC 环境场分析</a></h3>
+    <h2><a href="#wisc">WISC 环境场分析</a></h2>
     <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of wiscEnv" :key="index" :label="item.name">
         <a :href="item.origin"  target="_blank">
@@ -30,11 +30,11 @@
       </TabPane>
     </Tabs>
 
-    <h3>
+    <h2>
       <a href="http://tropic.ssec.wisc.edu/real-time/dlmmain.php?&basin=westpac&sat=wgms&prod=dlm2&zoom=&time=" target="_blank">
         WISC 引导气流
       </a>
-    </h3>
+    </h2>
     <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of wiscSteer" :key="index" :label="item.name">
         <div>{{item.note}}</div>
@@ -42,17 +42,17 @@
       </TabPane>
     </Tabs>
 
-    <h3>
+    <h2>
       <a href="http://www.ssd.noaa.gov/PS/TROP/TCFP/west_pacific.html" target="_blank">
         生成概率 & 潜在强度
       </a>
-    </h3>
+    </h2>
     <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of probability" :key="index" :label="item.name">
         <img :src="item.src" :alt="item.name">
       </TabPane>
     </Tabs>
-    <h3><a href="#climate">热带天气/短期气候分析</a></h3>
+    <h2><a href="#climate">热带天气/短期气候分析</a></h2>
     <Tabs type="card" :animated="false">
       <TabPane label="JTWC热带气旋警报图">
         <a :href="jtwcImg.origin"  target="_blank">
@@ -84,7 +84,7 @@
     </Tabs>
   
     <br>
-    <h3><a href="#ascat">ASCAT风场扫描</a></h3>
+    <h2><a href="#ascat">ASCAT风场扫描</a></h2>
     <Tabs type="card" :animated="false">
       <TabPane label="上升A">
         <ascat-view :imgList="ascat.ascend"></ascat-view>

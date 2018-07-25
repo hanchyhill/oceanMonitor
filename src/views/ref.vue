@@ -4,7 +4,7 @@
    <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
-  <h3>机构</h3>
+  <h2>机构</h2>
    <ul class="am-list">
     <li v-for="(item, index) of org" :key="index">
       <a :href="item.url"  target="_blank" rel=" nofollow noopener noreferrer">
@@ -13,7 +13,7 @@
     </li>
    </ul>
 
-  <h3>其他</h3>
+  <h2>其他</h2>
   <ul class="am-list">
     <li v-for="(item, index) of others" :key="index">
       <a :href="item.url"  target="_blank" rel=" nofollow noopener noreferrer">

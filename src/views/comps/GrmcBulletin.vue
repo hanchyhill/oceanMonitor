@@ -14,16 +14,16 @@
       </a>
     </div>
     <div>
-      <Input v-model="tsid" placeholder="Input TSID" style="width: 100px"></Input>
-      <Select v-model="selectIns" style="width:100px" placeholder="Select institution">
+      <Input size="large" v-model="tsid" placeholder="Input TSID" style="width: 100px"></Input>
+      <Select size="large" v-model="selectIns" style="width:100px" placeholder="Select institution">
         <Option v-for="item in insList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
-      <Button type="primary" icon="ios-search" @click.native="openObs">根据TSID查询台风观测记录</Button>
+      <Button size="large" type="primary" icon="ios-search" @click.native="openObs">根据TSID查询台风观测记录</Button>
     </div>
     <div>
-      <DatePicker v-model="fcDate" type="date"  placeholder="Select date" style="width: 200px"></DatePicker>
-      <TimePicker :value="hour" format="HH" :steps="[3,60,60]" placeholder="Select time" style="width: 112px" @on-change="changeTime"></TimePicker>
-      <Button type="primary" icon="ios-search" @click.native="openFc">根据TSID查询指定时次预报</Button>
+      <DatePicker size="large" v-model="fcDate" type="date"  placeholder="Select date" style="width: 200px"></DatePicker>
+      <TimePicker size="large" :value="hour" format="HH" :steps="[3,60,60]" placeholder="Select time" style="width: 112px" @on-change="changeTime"></TimePicker>
+      <Button size="large" type="primary" icon="ios-search" @click.native="openFc">根据TSID查询指定时次预报</Button>
     </div>
   </div>
 </div>
@@ -84,6 +84,9 @@
 <style scoped>
   .grmc-bulletin div{
     margin-top:10px;
+  }
+  .ivu-btn-large{
+    font-size: 18px;
   }
 </style>
 
