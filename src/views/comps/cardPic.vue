@@ -6,7 +6,6 @@
     </div>
     <div class="member-info">
       <h3>{{headInfo}}</h3>
-      <br>
       <h5>{{head2}}</h5>
       <br>
       <p>

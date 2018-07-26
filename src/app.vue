@@ -64,10 +64,16 @@ body{
   overflow-y:auto;
 }
 
-h2,h3{
+h2{
   margin-top:20px !important;
   margin-bottom:10px !important;
   font-size:30px;
+  font-weight:normal;
+}
+h3{
+  margin-top:10px !important;
+  margin-bottom:5px !important;
+  font-size:20px;
 }
  .fade-enter-active, .fade-leave-active {
   transition: opacity .3s

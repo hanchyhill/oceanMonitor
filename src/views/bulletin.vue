@@ -29,6 +29,10 @@
     </Row>
     <h2>报文</h2>
     <show-bulletin></show-bulletin>
+
+    <h2 id="bulletin-db">数据中心入库报文</h2>
+    <grmc-bulletin></grmc-bulletin>
+    
     <h2 id="bulletin-col">机构热带气旋报文集</h2>
     <div class="bulletin-flex">
       <Card style="width:400px;margin:20px">
@@ -99,8 +103,7 @@
       </Card>
     </div>
   <!--<bul-unisys></bul-unisys>-->
-  <h2 id="bulletin-db">数据中心入库报文</h2>
-  <grmc-bulletin></grmc-bulletin>
+  
   </Col>
   <Col span="1"><!--右侧空白-->
   <div>&nbsp; </div>
