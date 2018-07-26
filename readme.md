@@ -1,11 +1,16 @@
-# 安装
+# 海洋监测
+
+许可协议：Mozilla Public License 2.0
+
+## 安装
 
 1. 环境 node.js >= 8.0
-2. npm install  or  cnpm install
+2. npm install  or  cnpm install or yarn install
 3. npm run dev
 4. cd crawler & node prSprider.js
+5. cd bulletin & node bule-koa.js & node index.js
 
-# 海洋监测网页
+## 海洋监测网页
 
 分步走战略：
 
