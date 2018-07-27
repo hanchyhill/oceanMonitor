@@ -1,6 +1,8 @@
 <template>
   <Menu mode="horizontal" theme="dark" :active-name="activeTab" @on-select="handleTabChange" class="main-menu menu">
-    <div class="layout-logo"><div>海洋监测</div></div>
+    <div class="layout-logo">
+      <div @click="openSilder">海洋监测</div>
+    </div>
     <div class="layout-nav">
     <MenuItem name="env">
         环境分析
@@ -41,6 +43,9 @@ export default {
      */
       this.activeTab = value;
       this.$router.push(value);
+    },
+    openSilder(){//折叠侧边栏
+      this.$emit('showSideBar');
     },
   }, // methods end
   watch: {
