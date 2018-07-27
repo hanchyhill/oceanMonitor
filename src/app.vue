@@ -20,9 +20,9 @@
       </Sider>
     <Layout>
       <Header>
-        <main-header @showSideBar="isCollapsed=!isCollapsed" ></main-header>
+        <main-header @showSideBar="sideBarCollapse" ></main-header>
       </Header>
-      <Content  @click.native="closeSideBar">
+      <Content id="main-content">
         <router-view></router-view>
       </Content>
       <Footer class="footer-wrapper">
@@ -53,7 +53,16 @@
     },
     methods: {
       closeSideBar(){
-        !this.isCollapsed?this.isCollapsed=true:'';
+        if(!this.isCollapsed){
+          this.isCollapsed=true;
+        };
+        document.getElementById('main-content').removeEventListener('click',this.closeSideBar);
+      },
+      sideBarCollapse(){
+        if(this.isCollapsed===true){
+          document.getElementById('main-content').addEventListener('click',this.closeSideBar);
+        }
+        this.isCollapsed=!this.isCollapsed;
       }
     },
     computed:{
