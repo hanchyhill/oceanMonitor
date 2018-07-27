@@ -2,7 +2,7 @@
 <div class="grmc-bulletin">
   <h3>广州台风报文ftp</h3>
   <div class="row">
-    <a href="ftp://zxt:123456@172.22.1.17/dbdata/nas226/begz/rcv/tq/typh/"  target="_blank">
+    <a href="ftp://zxt:123456@172.22.1.17/../../../../nas226/begz/rcv/tq/typh/"  target="_blank">
       <Button size="large" type="success">广州台风报文ftp</Button>
     </a>
   </div>
@@ -64,7 +64,7 @@
         window.open(url, '_blank').location;
       },
       openFc(){// 打开台风预报接口
-        let url = this.obsUrl
+        let url = this.fcUrl
                       .replace('%ins',this.selectIns)
                       .replace('%tsid',this.tsid)
                       .replace('%date',this.dateString);
