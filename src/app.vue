@@ -1,48 +1,30 @@
 <template>
   <div class="layout">
     <Layout>
-      <Sider class="side-bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed"
-      :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}" >
-        <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-          <MenuItem name="1-1">
-              <Icon type="ios-navigate"></Icon>
-              <span>Option 1</span>
-          </MenuItem>
-          <MenuItem name="1-2">
-              <Icon type="search"></Icon>
-              <span>Option 2</span>
-          </MenuItem>
-          <MenuItem name="1-3">
-              <Icon type="settings"></Icon>
-              <span>Option 3</span>
-          </MenuItem>
-        </Menu>
-      </Sider>
-    <Layout>
-      <Header>
-        <main-header @showSideBar="sideBarCollapse" ></main-header>
-      </Header>
-      <Content id="main-content">
-        <router-view></router-view>
-      </Content>
-      <Footer class="footer-wrapper">
-        <footer-bar></footer-bar>
-      </Footer>
-    </Layout>
+      <Header><main-header @showSideBar="sideBarCollapse" ></main-header></Header>
+      <Layout>
+        <Sider class="side-bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed"
+        :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto', background: '#fff'}" >
+          <sidebar-menu :isCollapsed="isCollapsed"></sidebar-menu>
+        </Sider>
+        <Content id="main-content"><router-view></router-view></Content>
+        
+      </Layout>
+      <Footer class="footer-wrapper"><footer-bar></footer-bar></Footer>
     </Layout>
   </div>
 </template>
 <script>
   import MainHeader from './views/header.vue';
   import FooterBar from './views/comps/footerBar.vue';
+  import SidebarMenu from './views/comps/sidebarMenu.vue';
 
   export default {
     name:'ocean',
-    components:{MainHeader,FooterBar,},
+    components:{MainHeader,FooterBar,SidebarMenu,},
     data() {
       return {
         isCollapsed: true,
-        isSideBarOpen:false,
       };
     },
     mounted() {
@@ -52,26 +34,16 @@
 
     },
     methods: {
-      closeSideBar(){
-        if(!this.isCollapsed){
-          this.isCollapsed=true;
-        };
-        document.getElementById('main-content').removeEventListener('click',this.closeSideBar);
-      },
       sideBarCollapse(){
         if(this.isCollapsed===true){
-          document.getElementById('main-content').addEventListener('click',this.closeSideBar);
+          document.getElementById('main-content').addEventListener('click',this.sideBarCollapse);
+        }else{
+          document.getElementById('main-content').removeEventListener('click',this.sideBarCollapse);
         }
         this.isCollapsed=!this.isCollapsed;
-      }
+      },
     },
     computed:{
-      menuitemClasses () {
-        return [
-            'menu-item',
-            this.isCollapsed ? 'collapsed-menu' : ''
-        ];
-      },
     },
   };
 </script>
@@ -97,37 +69,6 @@
   z-index: 999;
 }
 
-    .menu-icon{
-        transition: all .3s;
-    }
-    .rotate-icon{
-        transform: rotate(-90deg);
-    }
-    .menu-item span{
-        display: inline-block;
-        overflow: hidden;
-        width: 69px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        vertical-align: bottom;
-        transition: width .2s ease .2s;
-    }
-    .menu-item i{
-        transform: translateX(0px);
-        transition: font-size .2s ease, transform .2s ease;
-        vertical-align: middle;
-        font-size: 16px;
-    }
-    .collapsed-menu span{
-        width: 0px;
-        transition: width .2s ease;
-    }
-    .collapsed-menu i{
-        transform: translateX(5px);
-        transition: font-size .2s ease .2s, transform .2s ease .2s;
-        vertical-align: middle;
-        font-size: 22px;
-    }
 </style>
 <style >
 html,body{

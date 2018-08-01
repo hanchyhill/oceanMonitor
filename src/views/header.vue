@@ -1,7 +1,8 @@
 <template>
   <Menu mode="horizontal" theme="dark" :active-name="activeTab" @on-select="handleTabChange" class="main-menu menu">
     <div class="layout-logo">
-      <div @click="openSilder">海洋监测</div>
+      
+      <div @click="openSilder"><Icon type="navicon-round"></Icon> 海洋监测</div>
     </div>
     <div class="layout-nav">
     <MenuItem name="env">
@@ -68,10 +69,11 @@ export default {
     float: left;
     position: relative;
     top: 0px;
-    left: 20px;
+    left: 0px;
     color:white;
     font-size: 25px;
     text-align: center;
+    cursor:pointer;
 }
 .layout-nav{
     width: 800px;

@@ -1,0 +1,58 @@
+<template>
+<div>
+  <Menu theme="light" width="auto" :class="menuitemClasses" class="sidebar-menu">
+    <MenuItem  @click.native="isSettingOpen=!isSettingOpen" name="1-1">
+      <Icon type="settings"></Icon>
+      <span>设置</span>
+    </MenuItem>
+    <MenuItem name="1-2">
+      <Icon type="code-download"></Icon>
+      <span>代码仓库</span>
+    </MenuItem>
+    <MenuItem name="1-3">
+      <Icon type="help-circled"></Icon>
+      <span>帮助WIKI</span>
+    </MenuItem>
+    <MenuItem name="1-4">
+      <Icon type="bug"></Icon>
+      <span>提交BUG</span>
+    </MenuItem>
+  </Menu>
+  <popup-setting :isSettingOpen="isSettingOpen"></popup-setting>
+</div>
+</template>
+
+<script>
+import PopupSetting from './popSetting.vue';
+export default {
+  components:{PopupSetting,},
+  name: 'sidebar-menu',
+  props:{isCollapsed:Boolean,},
+  data () {
+    return {
+      isSettingOpen:false,
+    }
+  }, // data end
+  methods:{
+
+  }, // methods end
+  watch: {
+
+  },
+  computed:{
+      menuitemClasses () {
+        return [
+            'menu-item',
+            this.isCollapsed ? 'collapsed-menu' : ''
+        ];
+      },
+  },
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.sidebar-menu i{
+  font-size: 22px;
+}
+</style>
