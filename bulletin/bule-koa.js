@@ -16,6 +16,9 @@ webPush.setVapidDetails(
   'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE',
   'kGeqK9MsnaI4PTOvMAD8w9dSV6sYBvsIeISGpx9NIEE'
 );
+proxyOptions = {
+  proxy: 'http://127.0.0.1:1070'
+}
 
 let Bulletin = undefined;
 let Subscribe = undefined;
@@ -54,6 +57,11 @@ router.post('/register', koaBody(), async (ctx,next) => {
   const subscribes = await Subscribe.findOne({endpoint:endpoint})
                              .exec();
   console.log('注册');
+  if(!endpoint){
+    ctx.status = 401;
+    ctx.body = '未发送有效参数'
+    return await next();
+  } 
   // console.log(body);
   try{
 
@@ -68,7 +76,8 @@ router.post('/register', koaBody(), async (ctx,next) => {
         console.error(err);
       });
     };
-    await webPush.sendNotification(body,'{"text":"hello world"}')
+    if(endpoint.indexOf('google')>-1){
+      await webPush.sendNotification(body,'订阅成功',proxyOptions)
     .catch(err=>{
       console.log('错误code:'+err.code);
       if (err.statusCode === 410 || err.statusCode === 404) {
@@ -81,12 +90,35 @@ router.post('/register', koaBody(), async (ctx,next) => {
       else{
         console.log(err.statusCode);
         throw err;
-        
       }
+      
     });
     console.log('推送完成');
-    ctx.status = 201;
-    await next();
+      ctx.status = 201;
+      await next();
+    }else{
+      await webPush.sendNotification(body,'订阅成功')
+      .catch(err=>{
+        console.log('错误code:'+err.code);
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          console.log('订阅已失效失效');
+          throw err;
+        }else if(err.code=='ETIMEDOUT'||err.code == 'ECONNRESET'){
+          console.log('超时错误');
+          ctx.status = 408;
+          ctx.body = '连接push服务器超时';
+          throw new Error('连接push服务器超时')
+        }
+        else{
+          console.log(err.statusCode);
+          throw err;
+        }
+      });
+      console.log('推送完成');
+      ctx.status = 201;
+      await next();
+
+    }
   }
   catch(error){
     console.log(error);
@@ -94,8 +126,6 @@ router.post('/register', koaBody(), async (ctx,next) => {
     ctx.status = 401;
     await next();
   }
-
-  
 });
 
 router.post('/unregister', koaBody(), async (ctx,next) => {
@@ -107,7 +137,7 @@ router.post('/unregister', koaBody(), async (ctx,next) => {
   
   const subscribes = await Subscribe.find({endpoint:endpoint})
                      .exec();
-  if(subscribes){
+  if(subscribes.length!==0){
     await Subscribe.deleteOne({endpoint:endpoint})
           .then(()=>console.log('删除成功'))
           .catch(err=>{

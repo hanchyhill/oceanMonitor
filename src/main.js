@@ -5,7 +5,7 @@ import Routers from './router';
 import Vuex from 'vuex';
 import Util from './libs/util';
 import App from './app.vue';
-import {registerSW} from './libs/push.js';
+import {registerSW,testPush,subscribePush,isSubscribe} from './libs/push.js';
 import 'iview/dist/styles/iview.css';
 // import urlBase64ToUint8Array from './libs/base64util';
 // import runtime from 'serviceworker-webpack-plugin/lib/runtime';
@@ -56,3 +56,34 @@ new Vue({
 });
 
 registerSW();
+
+
+if(testPush()&&localStorage.getItem('isPush')=='true'){
+  isSubscribe()
+  .then(isSub=>{
+    if(!isSub){
+      return subscribePush()
+      .then(subscription=>{
+        return axios.post('/register',subscription)
+      })
+      .then(()=>{
+        this.$Notice.success({
+          title: '成功',
+          desc:  '已订阅实时消息'
+        });
+      })
+      .catch(err=>{
+        this.$Notice.error({
+          title: '服务器注册时发生错误',
+          desc:  err.message,
+        });
+      })
+    }else{
+      console.log('订阅状态与历史记录相同');
+    }
+  })
+  .catch(err=>{
+    console.log(err);
+  })
+  
+}

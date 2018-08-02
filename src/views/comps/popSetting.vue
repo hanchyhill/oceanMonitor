@@ -7,7 +7,7 @@
       <h3>实时消息推送</h3>
       <p>
         <Icon type="ios-bookmarks-outline"></Icon><span>订阅实时消息</span>
-        <i-switch size="large" :disabled="!subscribable" @on-change="triggerSubscribe" v-model="isBookMark">
+        <i-switch size="large" :disabled="!subscribable" @on-change="triggerSubscribe" v-model="bookmark">
           <span slot="open">订阅</span>
           <span slot="close">关闭</span>
         </i-switch>
@@ -41,6 +41,7 @@
 <script>
 import {isSubscribe,subscribePush,unsubscribePush} from '../../libs/push.js';
 import Util from '../../libs/util';
+import urlBase64ToUint8Array from '../../libs/base64util';
 const axios = Util.ajax;
 export default {
   name: 'popup-setting',
@@ -65,7 +66,7 @@ export default {
       .then(subscription=>{
         if(subscription){
           this.bookmark = true;
-          console.log('已订阅');
+          // console.log('已订阅');
         }
         else{
           this.bookmark = false;
@@ -82,13 +83,15 @@ export default {
     settingOk(){},
     settingCancel(){},
     triggerSubscribe(){
-      if(this.bookmark){
+      if(!this.bookmark){
         unsubscribePush()
         .then(subscription=>{
           // TODO 出错时bookmark与按钮状态不同步
           if(subscription){
+            const endpoint = subscription.endpoint;
             console.log('取消订阅'+subscription.endpoint);
             axios.post('/unregister',subscription)
+            //axios.get('/unregister?endpoint='+endpoint)
             .then(()=>{
               // console.log('取消订阅'+subscription.endpoint);
               
@@ -97,6 +100,7 @@ export default {
                 title: '消息',
                 desc:  '已取消订阅'
               });
+              localStorage.setItem('isPush', 'false');
             })
             .catch(err=>{
               this.$Notice.info({
@@ -123,21 +127,31 @@ export default {
           });
           console.error(err);
         })
-      }else{
+      }else{//订阅
+
         this.loadingSub = true;
         subscribePush()
-        .then(subscription=>{
-          this.loadingSub = false;
+          .then(subscription=>{
+          
           this.bookmark = true;
-          console.log('订阅信息'+subscription.endpoint);
+          const sub = JSON.parse(JSON.stringify(subscription));
+          console.log('订阅信息'+sub.endpoint);
+          const endpoint = sub.endpoint;
+          const auth = sub.keys.auth;
+          const p256dh = sub.keys.p256dh;
           axios.post('/register',subscription)
+          //axios.get('/register?endpoint='+endpoint+'&auth='+auth+'&p256dh='+p256dh)
           .then((data)=>{
             this.$Notice.success({
               title: '成功',
               desc:  '已订阅实时消息'
             });
+            this.loadingSub = false;
+            localStorage.setItem('isPush', 'true');
           })
           .catch(err=>{
+            this.bookmark = false;
+            this.loadingSub = false;
             this.$Notice.error({
               title: '服务器注册时发生错误',
               desc:  err.message,
@@ -147,14 +161,13 @@ export default {
         .catch(err=>{
           console.log('订阅错误');
           this.loadingSub = false;
-          this.bookmark = !this.bookmark;
           this.bookmark = false;
           console.error(err);
           this.$Notice.error({
             title: '错误',
             desc:  '无法与push服务取得联系，可能是网络问题',
           });
-        });
+        });  
       }
     }
   }, // methods end

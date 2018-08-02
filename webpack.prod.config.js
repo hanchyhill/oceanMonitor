@@ -10,6 +10,7 @@ fs.open('./src/config/env.js', 'w', function(err, fd) {
 });
 
 module.exports = merge(webpackBaseConfig, {
+    mode: 'production',
     output: {
         publicPath: '/dist/',
         filename: '[name].[hash].js',
@@ -21,11 +22,11 @@ module.exports = merge(webpackBaseConfig, {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin({
+/*         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             }
-        }),
+        }), */
         new HtmlWebpackPlugin({
             filename: '../index_prod.html',
             template: './src/template/index.ejs',

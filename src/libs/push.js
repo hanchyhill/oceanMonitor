@@ -9,8 +9,6 @@ const testServiceWorker = ()=>{
 }
 
 const testPush = ()=>'PushManager' in window?true:false;
-
-
 const registerSW = ()=>{
   if (testServiceWorker()) {
     navigator.serviceWorker.register('/sw.js');
@@ -21,30 +19,26 @@ const registerSW = ()=>{
   };
 }
 
-const subscribePush = async ()=>{
-  return isSubscribe()
+const subscribePush =  ()=>{
+  let reg = undefined;
+  return navigator.serviceWorker.ready
+  .then(registration=>{
+    reg = registration;
+    return registration.pushManager.getSubscription()
+  })
   .then(subscription=>{
     if (subscription) {// If a subscription was found, return it.
       console.log('已订阅');
       return subscription;
+    }else{
+      const vapidPublicKey = 'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE';
+      const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+      return  reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey
+      });
     }
-    else{
-      return navigator.serviceWorker.ready
-      .then((registration)=>{
-        // console.log('ready');
-        const vapidPublicKey = 'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE';
-        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-        return  registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: convertedVapidKey
-        });
-      })
-    };
   })
-  .catch(err=>{
-    console.log(err);
-    throw err;
-  });
 };
 
 function unsubscribePush() {

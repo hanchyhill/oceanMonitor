@@ -14,23 +14,26 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('push', function(event) {
   event.waitUntil(
     (function(){
-      let trimData = `时    间： 	01 日 08 时
-      命    名： 	“云雀”，JONGDARI
-      编    号： 	1812 号
-      中心位置： 	北纬30.4度、东经128.0度
-      强度等级： 	热带风暴
-      最大风力： 	8级， 20米/秒（约72公里/时）
-      中心气压： 	990 hPa
-      参考位置： 	距离浙江省舟山市偏东方向约560公里
-      风圈半径： 	七级风圈半径 东北方向150公里；东南方向90公里；西南方向110公里；西北方向200公里
-      预报结论： 	“云雀”将以每小时15公里左右的速度向西南方向移动，强度变化不大。
-      （下次更新时间为1日11时30分）`.replace(/\n/g,' ').replace(/\s{2,}/g,'');
+      let trimData = `意外的文本信息`;
       let data = undefined;
       try{
-        data = event.data.json();//{}
-        trimData = data.text
+        
+          data = JSON.parse(event.data.text());
+          if(data.text){
+            trimData = data.text.replace(/\n/g,' ').replace(/\s{2,}/g,'');
+          }else{
+            trimData = '不符合预期格式的文本信息：' + data;
+          }
       }
       catch(err){
+        try{
+          trimData = '文本信息:'+event.data.text();
+        }
+        catch(err){
+          console.error(err);
+        }
+        
+        // console.log(err);
       }
       
       // console.log(data);

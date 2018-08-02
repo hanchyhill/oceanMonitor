@@ -69,6 +69,30 @@
   "max_memory_restart": "800M",
   // "merge_logs"  	   : true,
   "log_date_format"  : "YYYY-MM-DD HH:mm Z"
+},
+{
+  "name"        : "ocean-push",  // 应用名称
+  "script"      : "./bulletin/push/ty-express.js",  // 实际启动脚本
+  "cwd"         : "./bulletin/push/",  // 当前工作路径
+  "watch": [  // 监控变化的目录，一旦变化，自动重启
+    "."
+  ],
+  "ignore_watch" : [  // 从监控目录中排除
+    "node_modules",
+    "dist",
+    "logs"
+  ],
+  "watch_options": {
+    "followSymlinks": false
+  },
+  "error_file" : "../logs/push-err.log",  // 错误日志路径
+  "out_file"   : "../logs/push-out.log",  // 普通日志路径
+  "env": {
+      "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
+  },
+  "max_memory_restart": "600M",
+  // "merge_logs"  	   : true,
+  "log_date_format"  : "YYYY-MM-DD HH:mm Z"
 }
 ]
 }

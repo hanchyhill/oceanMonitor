@@ -23,7 +23,7 @@ exports.connect = ()=>{
     }
     if(process.env.NODE_ENV !== 'production'){
       mongoose.set('debug', true);
-      mongoose.connect(dbLink,{ keepAlive: 120 , autoIndex: true, useNewUrlParser: true,});
+      mongoose.connect(dbLink,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,});
     }
     else{
       mongoose.connect(dbLink2,dbConfig,);
