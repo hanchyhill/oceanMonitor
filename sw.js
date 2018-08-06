@@ -1,7 +1,3 @@
-// Immediately take control of the page, see the 'Immediate Claim' recipe
-// for a detailed explanation of the implementation of the following two
-// event listeners.
-
 self.addEventListener('install', function(event) {
   event.waitUntil(self.skipWaiting());
 });
@@ -17,7 +13,6 @@ self.addEventListener('push', function(event) {
       let trimData = `意外的文本信息`;
       let data = undefined;
       try{
-        
           data = JSON.parse(event.data.text());
           if(data.text){
             trimData = data.text.replace(/\n/g,' ').replace(/\s{2,}/g,'');
@@ -32,12 +27,8 @@ self.addEventListener('push', function(event) {
         catch(err){
           console.error(err);
         }
-        
-        // console.log(err);
-      }
-      
-      // console.log(data);
 
+      }
       self.registration.showNotification('台风快讯', {
         body: trimData,
         icon: '/static/thumbnails/nmc-icon.jpg',

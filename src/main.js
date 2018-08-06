@@ -48,7 +48,7 @@ const store = new Vuex.Store({
     }
 });
 
-new Vue({
+var app = new Vue({
     el: '#app',
     router: router,
     store: store,
@@ -67,13 +67,13 @@ if(testPush()&&localStorage.getItem('isPush')=='true'){
         return axios.post('/register',subscription)
       })
       .then(()=>{
-        this.$Notice.success({
+        app.$Notice.success({
           title: '成功',
           desc:  '已订阅实时消息'
         });
       })
       .catch(err=>{
-        this.$Notice.error({
+        app.$Notice.error({
           title: '服务器注册时发生错误',
           desc:  err.message,
         });

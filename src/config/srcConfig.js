@@ -267,7 +267,7 @@ const bulletinSrc = {
       notes:'',
     },
     jmaWIS:{
-      link:'https://www.wis-jma.go.jp/cms/warning/category/tropical_cyclone_information/',
+      link:'https://www.wis-jma.go.jp/d/o/RJTD/Alphanumeric/Warning/Tropical_cyclone/',
       imgSrc:'/static/thumbnails/jma-wis.jpg',
       headInfo:'JMA WIS',
       head2:'日本气象厅报文分发系统',

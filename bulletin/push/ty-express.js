@@ -19,7 +19,8 @@ config ={
   md5:''
 }
 proxyOptions = {
-  proxy: 'http://127.0.0.1:1070'
+  proxy: 'http://127.0.0.1:1070',
+  gcmAPIKey:"AIzaSyBOVsyCvlwjaBLTZyzR14t6Mgt9yLTWJjo"
 }
 let Subscribe = undefined;
 async function getTyExpress(){

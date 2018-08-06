@@ -5,7 +5,7 @@ const Mixed =Schema.Types.Mixed;
 let uniSchema = new Schema({
   uniqueid:{type:String,index:true,unique:true,},
   payload: String,
-  endpoint:   {type:String,index:true,unique:true,},
+  endpoint:   {type:String,index:true,unique:true,required: true},
   keys: Mixed,
   opt: Mixed,
   },

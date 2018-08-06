@@ -17,7 +17,8 @@ webPush.setVapidDetails(
   'kGeqK9MsnaI4PTOvMAD8w9dSV6sYBvsIeISGpx9NIEE'
 );
 proxyOptions = {
-  proxy: 'http://127.0.0.1:1070'
+  proxy: 'http://127.0.0.1:1070',
+  gcmAPIKey:'AIzaSyBOVsyCvlwjaBLTZyzR14t6Mgt9yLTWJjo'
 }
 
 let Bulletin = undefined;
@@ -54,14 +55,14 @@ router.post('/register', koaBody(), async (ctx,next) => {
   let  body = ctx.request.body;
   let endpoint = body.endpoint;
   // const subscription = body.subscription;
-  const subscribes = await Subscribe.findOne({endpoint:endpoint})
-                             .exec();
-  console.log('注册');
   if(!endpoint){
     ctx.status = 401;
     ctx.body = '未发送有效参数'
     return await next();
   } 
+  const subscribes = await Subscribe.findOne({endpoint:endpoint})
+                             .exec();
+  console.log('注册');
   // console.log(body);
   try{
 
