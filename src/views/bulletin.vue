@@ -65,6 +65,10 @@
           其他报文
         </p>
         <ul class="card-list card-button">
+          <li><a href="http://ftp.emc.ncep.noaa.gov/wd20vxt/hwrf-init/decks/?C=M;O=D"  target="_blank">
+              <Button size="large" type="success">JTWC台风定位集</Button>
+            </a>
+          </li>
           <li><a href="http://tgftp.nws.noaa.gov/data/raw/ab/?C=M;O=D"  target="_blank">
               <Button size="large" type="success">abpw**.pgtw JTWC 当前台风通报</Button>
             </a>
