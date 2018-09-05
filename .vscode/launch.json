@@ -19,6 +19,12 @@
     {
         "type": "node",
         "request": "launch",
+        "name": "getBJbulletin",
+        "program": "${workspaceFolder}/bulletin/push/getBJbulletin.js"
+    },
+    {
+        "type": "node",
+        "request": "launch",
         "name": "readOthers",
         "program": "${workspaceFolder}/bulletin/readData/readOthers.js"
     },
