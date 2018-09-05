@@ -85,8 +85,8 @@
   "watch_options": {
     "followSymlinks": false
   },
-  "error_file" : "../logs/push-err.log",  // 错误日志路径
-  "out_file"   : "../logs/push-out.log",  // 普通日志路径
+  "error_file" : "../../logs/push-err.log",  // 错误日志路径
+  "out_file"   : "../../logs/push-out.log",  // 普通日志路径
   "env": {
       "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
   },
