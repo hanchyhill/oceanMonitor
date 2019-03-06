@@ -372,7 +372,11 @@ const refSrc = {
       {name:'百度台风吧', url:'https://tieba.baidu.com/f?kw=%E5%8F%B0%E9%A3%8E'},
       {name:'台风论坛', url:'http://bbs.typhoon.org.cn/index.php?c=thread&amp;fid=79'},
       {name:'ECMWF 二进制报文解析', url:'http://apps.ecmwf.int/codes/bufr/validator/'},
-      
+      {name:'海洋局海洋预报网', url:'http://g.hyyb.org/systems/HyybServices/SF/'},
+      {name:'海洋局数值预报', url:'http://g.hyyb.org/systems/HyybServices/SF/'},
+      {name:'ECMWF GTS数据', url:'ftp://dissemination.ecmwf.int/'},
+      //http://121.33.201.243/systems/HyybData/DataDB/ObsSOA_Buoy/
+      // ftp://dissemination.ecmwf.int/
     ],
   },
 }

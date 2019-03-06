@@ -1,20 +1,20 @@
-const urlBase64ToUint8Array = function (base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+// const urlBase64ToUint8Array = function (base64String) {
+//   const padding = '='.repeat((4 - base64String.length % 4) % 4);
+//   const base64 = (base64String + padding)
+//     .replace(/\-/g, '+')
+//     .replace(/_/g, '/');
 
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
+//   const rawData = window.atob(base64);
+//   const outputArray = new Uint8Array(rawData.length);
 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
+//   for (let i = 0; i < rawData.length; ++i) {
+//     outputArray[i] = rawData.charCodeAt(i);
+//   }
+//   return outputArray;
+// }
 
-const vapidPublicKey = 'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE';
-const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+// const vapidPublicKey = 'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE';
+// const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
 self.addEventListener('install', function(event) {
   event.waitUntil(self.skipWaiting());
@@ -38,6 +38,7 @@ self.addEventListener('push', function(event) {
     if(data.text){
       trimData = data.text.replace(/\n/g,' ').replace(/\s{2,}/g,'');
       title = data.title;
+      data.icon?icon=data.icon:'';
       tag = data.url;
     }else{
       trimData = '不符合预期格式的文本信息：' + data;
@@ -79,7 +80,7 @@ self.addEventListener('pushsubscriptionchange', function(event) {
   event.waitUntil(
     self.registration.pushManager.subscribe({
        userVisibleOnly: true,
-       applicationServerKey: convertedVapidKey
+       // applicationServerKey: convertedVapidKey
     })
     .then(function(subscription) {
       console.log('Subscribed after expiration', subscription.endpoint);
@@ -92,5 +93,9 @@ self.addEventListener('pushsubscriptionchange', function(event) {
       });
     })
   );
+});
+
+self.addEventListener('fetch', function (event) {
+  // it can be empty if you just want to get rid of that error
 });
 

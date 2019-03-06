@@ -21,15 +21,15 @@
       </div>
       <CheckboxGroup v-model="messageList">
         <Checkbox label="nmcTyphoonExpress">
-            <span>北京-台风快讯</span>
+            <span>台风快讯</span>
         </Checkbox>
-        <Checkbox label="jma" disabled>
+        <Checkbox label="babj">
+            <span>北京报文</span>
+        </Checkbox>
+        <Checkbox label="jma">
             <span>JMA-台风预报</span>
         </Checkbox>
-        <Checkbox label="jtwc" disabled>
-            <span>JTWC-台风预报</span>
-        </Checkbox>
-        <Checkbox label="jtwc-ty" disabled>
+        <Checkbox label="jtwc-ty">
             <span>JTWC-生成报</span>
         </Checkbox>
     </CheckboxGroup>
@@ -53,7 +53,7 @@ export default {
     }
     return {
       subscribable,
-      messageList:['nmcTyphoonExpress'],
+      messageList:['nmcTyphoonExpress','babj','jma','jtwc-ty'],
       bookmark:false,
       loadingSub:false,
       isGFW:false,

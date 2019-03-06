@@ -1,6 +1,9 @@
 *.pptx
 dist*.zip
 *.bak
+*private*
+*private
+private*
 .idea
 .idea/
 .DS_Store

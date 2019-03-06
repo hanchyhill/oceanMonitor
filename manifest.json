@@ -23,9 +23,15 @@
         "type": "image/x-icon"
         },
         {
-        "src": "/static/trident128.ico",
-        "sizes": "128x128",
-        "type": "image/x-icon"
+            "src": "/static/trident-ico144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+           },
+        {
+         "src": "/static/trident-ico192.png",
+         "type": "image/png",
+         "sizes": "192x192"
         }
+
     ]
 }

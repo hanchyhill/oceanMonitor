@@ -6,16 +6,18 @@
       <span>设置</span>
     </MenuItem>
     <MenuItem name="1-2">
-      <Icon type="code-download"></Icon>
-      <span>代码仓库</span>
+      <a href="https://github.com/hanchyhill/oceanMonitor" target="_blank" style="color:black"><Icon type="code-download"></Icon>
+      <span>代码仓库</span></a>
     </MenuItem>
     <MenuItem name="1-3">
       <Icon type="help-circled"></Icon>
       <span>帮助WIKI</span>
     </MenuItem>
     <MenuItem name="1-4">
+      <a href="https://github.com/hanchyhill/oceanMonitor/issues" target="_blank" style="color:black">
       <Icon type="bug"></Icon>
       <span>提交BUG</span>
+      </a>
     </MenuItem>
   </Menu>
   <popup-setting :isSettingOpen="isSettingOpen"></popup-setting>
