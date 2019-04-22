@@ -1,49 +1,91 @@
 // TODO 设置机构
 const Koa = require('koa');
 const logger = require('koa-logger');
-const {resolve} = require('path');
+// const {resolve} = require('path');
 const Router = require('koa-router');
-const mongoose = require('mongoose');
-const {connect,initSchemas} = require('./database/initDB.js');
+// const mongoose = require('mongoose');
+// const {connect,initSchemas} = require('./database/initDB.js');
+const {connectBL,connectTC} = require('./database/initMultiDB.js')
 const router = new Router();
 const koaBody   = require('koa-body');
 const moment = require('moment');
 const webPush = require('web-push');
 var cors = require('koa2-cors');
+const {webPushConfig} = require('./config/private.push.config.js');
 
 webPush.setVapidDetails(
-  'mailto:lrrq369@gmail.com',
-  'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE',
-  'kGeqK9MsnaI4PTOvMAD8w9dSV6sYBvsIeISGpx9NIEE'
+  webPushConfig.eMail,
+  webPushConfig.key1,
+  webPushConfig.key2,
 );
 proxyOptions = {
   proxy: 'http://127.0.0.1:1070',
-  gcmAPIKey:'AIzaSyBOVsyCvlwjaBLTZyzR14t6Mgt9yLTWJjo'
+  gcmAPIKey: webPushConfig.gcmAPIKey,
 }
 
 let Bulletin = undefined;
 let Subscribe = undefined;
-
-router.get('/api',async(ctx,next)=>{
-  let [minTime,maxTime] = [NaN,NaN];
-  const ins = ctx.query.ins?ctx.query.ins.split(','):['BABJ','PGTW','RJTD','VHHH'];
-  minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
-  maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
-  if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
-    const bulletins = await Bulletin.find({}).
-                      where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
-                      where('ins').in(ins).
-                      select('content name cn date fulltime title ins').exec();
-  
+let Cyclone = undefined;
+// '/api/:type/'
+router.get('/api/',async(ctx,next)=>{
+  // let type = ctx.params.type;
+  // console.log(type);
+  // console.log(ctx.query);
+  let interface = ctx.query.interface;
+  console.log(interface);
+  if(interface == "bulletin"){
+    let [minTime,maxTime] = [NaN,NaN];
+    const ins = ctx.query.ins?ctx.query.ins.split(','):['BABJ','PGTW','RJTD','VHHH'];
+    minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
+    maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
+    if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
+      const bulletins = await Bulletin.find({}).
+                        where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
+                        where('ins').in(ins).
+                        select('content name cn date fulltime title ins').exec();
+    
+      ctx.body = {
+        data: bulletins,
+        success: true
+      };
+      await next();
+    }
+    else{
+      ctx.body = {
+        error:'日期参数错误',
+        success: false,
+      };
+      ctx.status = 400;
+      await next();
+    }
+  }else if(interface == 'tc-ens'){
+    let minTime,maxTime;
+    const ins = ctx.query.ins?ctx.query.ins.split(','):['NCEP','ecmwf'];
+    minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
+    maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
+    if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
+      const cyclones = await Cyclone.find({}).
+        where('initTime').gt(new Date(minTime)).lt(new Date(maxTime)).
+        where('ins').in(ins).
+        where('controlIndex').ne(-1).
+        select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2').exec();
+      ctx.body = {
+        data: cyclones,
+        success: true
+      };
+      await next();
+    }
+    else{
+      ctx.body = {
+        error:'日期参数错误',
+        success: false,
+      };
+      ctx.status = 400;
+      await next();
+    }
+  }else{
     ctx.body = {
-      data: bulletins,
-      success: true
-    };
-    await next();
-  }
-  else{
-    ctx.body = {
-      error:'日期参数错误',
+      error:'参数错误',
       success: false,
     };
     ctx.status = 400;
@@ -65,7 +107,6 @@ router.post('/register', koaBody(), async (ctx,next) => {
   console.log('注册');
   // console.log(body);
   try{
-
     if(subscribes){
       console.log('已注册');
     }else{
@@ -160,10 +201,14 @@ main = async (ctx,next)=>{
 (async()=>{
   const app = new Koa();
   app.keys = ['some secret hurr'];
-  await connect();
-  initSchemas();
-  Bulletin = mongoose.model('Bulletin');
-  Subscribe = mongoose.model('Subscribe');
+  // await connect();
+  // initSchemas();
+  let dbBL = await connectBL();
+  let dbTC = await connectTC();
+  Bulletin = dbBL.model('Bulletin');
+  Subscribe = dbBL.model('Subscribe');
+  // 连接台风集合预报
+  Cyclone = dbTC.model('Cyclone');
 
   app.use(logger());
   // 

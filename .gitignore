@@ -22,5 +22,8 @@ remote-img
 remote-img/
 remote-img/*
 /static/remote-img/*
+*.pdf
+yarn.lock
+yarn-error.log
 
 

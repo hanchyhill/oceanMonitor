@@ -2,10 +2,11 @@ const path = require('path');
 // const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+require("babel-polyfill");
 
 module.exports = {
     entry: {
-        main: './src/main',
+        main: ["babel-polyfill",'./src/main'],
         //vendors: './src/vendors'
     },
     output: {

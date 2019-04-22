@@ -7,13 +7,14 @@ const {connect,initSchemas} = require('../database/initDB.js');
 const schedule = require('node-schedule');
 // const MD5 = require('md5');
 const {getTyExpress,getBJbulet} = require('./getBJbulletin.js');
+const {webPushConfig} = require('../config/private.push.config.js');
 // TODO: 模块化
 // TODO: 改成30秒轮询
 
 webPush.setVapidDetails(
-  'mailto:lrrq369@gmail.com',
-  'BFqbp_L8wDhix6IIki9mxJGcJmOQAQ32euPT8NIvL4YPn-ahHuw6flgPVOvkgu2VTlHJ6cvcXy-BjKA7EWHrqFE',
-  'kGeqK9MsnaI4PTOvMAD8w9dSV6sYBvsIeISGpx9NIEE'
+  webPushConfig.eMail,
+  webPushConfig.key1,
+  webPushConfig.key2,
 );
 
 config ={
@@ -21,7 +22,7 @@ config ={
 }
 proxyOptions = {
   proxy: 'http://127.0.0.1:1070',
-  gcmAPIKey:"AIzaSyBOVsyCvlwjaBLTZyzR14t6Mgt9yLTWJjo"
+  gcmAPIKey: webPushConfig.gcmAPIKey,
 }
 let Subscribe = undefined;
 

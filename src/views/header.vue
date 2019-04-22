@@ -2,7 +2,7 @@
   <Menu mode="horizontal" theme="dark" :active-name="activeTab" @on-select="handleTabChange" class="main-menu menu">
     <div class="layout-logo">
       
-      <div @click="openSilder"><Icon type="navicon-round"></Icon> 海洋监测</div>
+      <div @click="openSilder"><Icon type="md-menu" /> 海洋监测</div>
     </div>
     <div class="layout-nav">
     <MenuItem name="env">

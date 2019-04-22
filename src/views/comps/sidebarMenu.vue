@@ -2,20 +2,20 @@
 <div>
   <Menu theme="light" width="auto" :class="menuitemClasses" class="sidebar-menu">
     <MenuItem  @click.native="isSettingOpen=!isSettingOpen" name="1-1">
-      <Icon type="settings"></Icon>
+      <Icon type="md-settings" />
       <span>设置</span>
     </MenuItem>
     <MenuItem name="1-2">
-      <a href="https://github.com/hanchyhill/oceanMonitor" target="_blank" style="color:black"><Icon type="code-download"></Icon>
+      <a href="https://github.com/hanchyhill/oceanMonitor" target="_blank" style="color:black"><Icon type="md-code-download" />
       <span>代码仓库</span></a>
     </MenuItem>
     <MenuItem name="1-3">
-      <Icon type="help-circled"></Icon>
+      <Icon type="md-help-circle" />
       <span>帮助WIKI</span>
     </MenuItem>
     <MenuItem name="1-4">
       <a href="https://github.com/hanchyhill/oceanMonitor/issues" target="_blank" style="color:black">
-      <Icon type="bug"></Icon>
+      <Icon type="ios-bug" />
       <span>提交BUG</span>
       </a>
     </MenuItem>
