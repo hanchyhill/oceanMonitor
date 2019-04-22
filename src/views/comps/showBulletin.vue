@@ -205,14 +205,14 @@
           {value: 'RPMM',label: '菲律宾'},
           {value: 'RKSL',label: '韩国'},
         ],
-        dateRange:[new Date(Date.now()-1000*60*60*24*2), new Date()],
+        dateRange:[new Date(Date.now()-1000*60*60*24*3), new Date()],
       };
     },
     methods: {
       getBulletin(gt,lt,dateFormat){
         // lt = Date.now();
         // gt = lt - 1000*60*60*24*30;
-        axios.get(`/api/?gt=${gt}&lt=${lt}&ins=${this.selectIns.join(',')}&dateFormat=${dateFormat}`)
+        axios.get(`/api?interface=bulletin&gt=${gt}&lt=${lt}&ins=${this.selectIns.join(',')}&dateFormat=${dateFormat}`)
           .then(res=>{
             if(res.data.success){
               const data = res.data.data;
