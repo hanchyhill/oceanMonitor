@@ -4,6 +4,7 @@
    <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
+    <cyc-ens></cyc-ens>
     <Row>
       <card-pic :dial="speedDial.typhoon2000"></card-pic>
       <card-pic :dial="speedDial.ruc"></card-pic>
@@ -23,9 +24,9 @@
 <script>
   import CardPic from './comps/cardPic.vue';
   import {nwpSrc} from '../config/srcConfig.js';
-
+  import CycEns from './comps/cyclone-ens.vue';
   export default {
-    components:{CardPic,},
+    components:{CardPic,CycEns},
     name: 'nwp-track',
     props:{
 

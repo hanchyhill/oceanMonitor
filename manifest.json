@@ -1,0 +1,37 @@
+{
+    "name": "海洋台风监测",
+    "short_name": "海洋监测",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#333",
+    "description": "监测西太地区热带气旋、海洋灾害性天气",
+    "orientation": "portrait-primary",
+    "theme_color": "#5eace0",
+    "icons": [{
+        "src": "/static/trident32.ico",
+        "sizes": "32x32",
+        "type": "image/x-icon"
+        },
+        {
+        "src": "/static/trident48.ico",
+        "sizes": "48x48",
+        "type": "image/x-icon"
+        },
+        {
+        "src": "/static/trident64.ico",
+        "sizes": "64x64",
+        "type": "image/x-icon"
+        },
+        {
+            "src": "/static/trident-ico144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+           },
+        {
+         "src": "/static/trident-ico192.png",
+         "type": "image/png",
+         "sizes": "192x192"
+        }
+
+    ]
+}

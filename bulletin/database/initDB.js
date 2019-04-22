@@ -2,11 +2,13 @@
 const mongoose = require('mongoose');
 const glob = require('glob');
 // mongoose.Promise = global.Promise;
-const dbLink = 'mongodb://localhost:12345/bulletinTest';
-const dbLink2 = 'mongodb://10.148.16.20:20186/bulletins';
-const dbConfig = {user:'bulletinowner', pass:'9184ab8a6b', autoIndex: false, keepAlive: 120,useNewUrlParser: true};
+
 const {resolve} = require('path');
 const MAX_RECONNECTED = 10;
+const {configBL} = require('./privateConfig/private.dbConfig.js');
+const dbLink = configBL.localLink;
+const dbLink2 = configBL.remoteLink;
+const dbConfig = configBL.remoteConfig;
 
 exports.initSchemas = ()=>{
   glob.sync(resolve(__dirname,'./schema','**/*.js')).forEach(

@@ -1,28 +1,21 @@
 const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+require("babel-polyfill");
 
 module.exports = {
     entry: {
-        main: './src/main',
-        vendors: './src/vendors'
+        main: ["babel-polyfill",'./src/main'],
+        //vendors: './src/vendors'
     },
     output: {
         path: path.join(__dirname, './dist')
     },
     module: {
         rules: [{
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-
-                        css: ExtractTextPlugin.extract({
-                            use: ['css-loader', 'autoprefixer-loader'],
-                            fallback: 'vue-style-loader'
-                        })
-                    }
-                }
+            test: /\.vue$/,
+            loader: 'vue-loader'
             },
             {
                 test: /iview\/.*?js$/,
@@ -35,12 +28,13 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    use: ['css-loader?minimize', 'autoprefixer-loader'],
-                    fallback: 'style-loader'
-                })
+                use: [
+                  process.env.NODE_ENV !== 'production'
+                    ? 'vue-style-loader'
+                    : MiniCssExtractPlugin.loader,
+                  'css-loader'
+                ]
             },
-
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
                 loader: 'url-loader?limit=1024'
@@ -56,5 +50,20 @@ module.exports = {
         alias: {
             'vue': 'vue/dist/vue.esm.js'
         }
-    }
+    },
+    plugins: [
+        // new ServiceWorkerWebpackPlugin({
+        //   entry:path.join(__dirname, 'sw.js'),
+        // }),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'style.css'
+        }),
+        new VueLoaderPlugin(),
+    ],
 };

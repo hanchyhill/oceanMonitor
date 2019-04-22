@@ -15,12 +15,18 @@
 
   <h2>其他</h2>
   <ul class="am-list">
+    <li>
+      <a  @click="openDecode" rel=" nofollow noopener noreferrer">
+      解码中文电码报文
+      </a>
+    </li>
     <li v-for="(item, index) of others" :key="index">
       <a :href="item.url"  target="_blank" rel=" nofollow noopener noreferrer">
       {{item.name}}
       </a>
     </li>
   </ul>
+  <decode-chn :showDecodeCCC="isOpenDecode"></decode-chn>
   </Col>
   <Col span="1">
    <div>&nbsp;</div><!--右侧空白-->
@@ -29,9 +35,10 @@
 </template>
 <script>
   import {refSrc} from '../config/srcConfig.js';
-  
+  import DecodeChn from './comps/decodeCCC.vue';
   export default {
     name: 'ref-s',
+    components:{DecodeChn,},
     props:{
 
     },
@@ -39,9 +46,13 @@
       return {
         org: refSrc.links.org,
         others: refSrc.links.others,
+        isOpenDecode:false,
       }
     },
     methods: {
+      openDecode(){
+        this.isOpenDecode = !this.isOpenDecode;
+      }
     },
     created(){
     },

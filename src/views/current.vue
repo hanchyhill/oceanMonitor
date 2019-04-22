@@ -5,13 +5,13 @@
   </Col>
   <Col span="22">
     <Row>
-      
       <card-pic :dial="speedDial.activeTCinSSD"></card-pic>
       <card-pic :dial="speedDial.tropicaltidbits"></card-pic>
       <card-pic :dial="speedDial.colostate"></card-pic>
       <card-pic :dial="speedDial.wisc"></card-pic>
       <card-pic :dial="speedDial.digitalTY"></card-pic>
       <card-pic :dial="speedDial.nrlNavy"></card-pic>
+      <card-pic :dial="speedDial.fnmoc"></card-pic>
       <card-pic :dial="speedDial.hurZone"></card-pic>
     </Row>
 

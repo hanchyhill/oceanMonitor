@@ -212,7 +212,7 @@
       getBulletin(gt,lt,dateFormat){
         // lt = Date.now();
         // gt = lt - 1000*60*60*24*30;
-        axios.get(`/api/?gt=${gt}&lt=${lt}&ins=${this.selectIns.join(',')}&dateFormat=${dateFormat}`)
+        axios.get(`/api?interface=bulletin&gt=${gt}&lt=${lt}&ins=${this.selectIns.join(',')}&dateFormat=${dateFormat}`)
           .then(res=>{
             if(res.data.success){
               const data = res.data.data;

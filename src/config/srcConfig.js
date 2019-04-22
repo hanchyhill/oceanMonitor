@@ -81,12 +81,12 @@ const envSrc = {
       local:'/static/remote-img/env/wgmsir.GIF',},
     ],
     wiscSteer:[
-      {name:'700-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm1.GIF', note:'中心气压>1000hPa / 最大风力<23m/s', local:'/static/remote-img/env/wgmsdlm1.GIF'},
-      {name:'500-850hPa',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm2.GIF', note:'中心气压(990-999hPa) / 最大风力23-31m/s', local:'/static/remote-img/env/wgmsdlm2.GIF'},
-      {name:'400-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm3.GIF', note:'中心气压970-989hPa / 最大风力31-46m/s', local:'/static/remote-img/env/wgmsdlm3.GIF'},
-      {name:'300-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm4.GIF', note:'中心气压950-969hPa / 最大风力46-57m/s', local:'/static/remote-img/env/wgmsdlm4.GIF'},
-      {name:'250-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm5.GIF', note:'中心气压940-949hPa / 最大风力57-63m/s', local:'/static/remote-img/env/wgmsdlm5.GIF'},
-      {name:'200-700mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm6.GIF', note:'中心气压<940hPa / 最大风力>63m/s', local:'/static/remote-img/env/wgmsdlm6.GIF'},
+      {name:'700-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm1.GIF', note:'中心气压>1000hPa / 最大风力<18m/s', local:'/static/remote-img/env/wgmsdlm1.GIF'},
+      {name:'500-850hPa',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm2.GIF', note:'中心气压(990-999hPa) / 最大风力18-23m/s', local:'/static/remote-img/env/wgmsdlm2.GIF'},
+      {name:'400-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm3.GIF', note:'中心气压970-989hPa / 最大风力23-30m/s', local:'/static/remote-img/env/wgmsdlm3.GIF'},
+      {name:'300-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm4.GIF', note:'中心气压950-969hPa / 最大风力30-42m/s', local:'/static/remote-img/env/wgmsdlm4.GIF'},
+      {name:'250-850mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm5.GIF', note:'中心气压940-949hPa / 最大风力42-50m/s', local:'/static/remote-img/env/wgmsdlm5.GIF'},
+      {name:'200-700mb',origin:'http://tropic.ssec.wisc.edu/real-time/westpac/winds/wgmsdlm6.GIF', note:'中心气压<940hPa / 最大风力>50m/s', local:'/static/remote-img/env/wgmsdlm6.GIF'},
     ],
     probability:[
       {name:'0-48h 生成概率',origin:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/wp_rCUMP_048.gif',
@@ -267,7 +267,7 @@ const bulletinSrc = {
       notes:'',
     },
     jmaWIS:{
-      link:'https://www.wis-jma.go.jp/cms/warning/category/tropical_cyclone_information/',
+      link:'https://www.wis-jma.go.jp/d/o/',
       imgSrc:'/static/thumbnails/jma-wis.jpg',
       headInfo:'JMA WIS',
       head2:'日本气象厅报文分发系统',
@@ -326,11 +326,19 @@ const currentSrc = {
       notes:'提供当前和历史台风卫星云图数据',
     },
     nrlNavy:{
-      link:'https://www.nrlmry.navy.mil/TC.html',
+      link:'http://nrltc.gdmo.gq/TC.html',
       imgSrc:'/static/thumbnails/nrl.jpg',
-      headInfo:'NRL TC',
-      head2:'美国海军热带气旋监测',
-      notes:`It's blocked`,
+      headInfo:'NRL镜像',
+      head2:'源地址nrlmry.navy.mil/TC.html',
+      notes:`用户名:ocean; 密码:typhoon
+      镜像站带宽有限请勿传播账号密码`,
+    },
+    fnmoc:{
+      link:'http://fnmoc.gdmo.gq/tcweb/cgi-bin/tc_home.cgi',
+      imgSrc:'/static/thumbnails/nrl.jpg',
+      headInfo:'fnmoc镜像',
+      head2:'源地址www.fnmoc.navy.mil',
+      notes:`用户名:ocean; 密码:typhoon 镜像站带宽有限请勿传播账号密码`,
     },
     hurZone:{
       link:'https://www.hurricanezone.net/',
@@ -364,7 +372,11 @@ const refSrc = {
       {name:'百度台风吧', url:'https://tieba.baidu.com/f?kw=%E5%8F%B0%E9%A3%8E'},
       {name:'台风论坛', url:'http://bbs.typhoon.org.cn/index.php?c=thread&amp;fid=79'},
       {name:'ECMWF 二进制报文解析', url:'http://apps.ecmwf.int/codes/bufr/validator/'},
-      
+      {name:'海洋局海洋预报网', url:'http://g.hyyb.org/systems/HyybServices/SF/'},
+      {name:'海洋局数值预报', url:'http://g.hyyb.org/systems/HyybServices/SF/'},
+      {name:'ECMWF GTS数据', url:'ftp://dissemination.ecmwf.int/'},
+      //http://121.33.201.243/systems/HyybData/DataDB/ObsSOA_Buoy/
+      // ftp://dissemination.ecmwf.int/
     ],
   },
 }

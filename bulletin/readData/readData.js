@@ -9,6 +9,7 @@ const MD5 = require('md5');
 const mongoose = require('mongoose');
 let Bulletin = mongoose.model('Bulletin');
 const {config} = require('./bulletinConfig.js');
+const {pushBulletin} = require('./pushBul');
 // console.log(typeof readFile);
 
 const util = {
@@ -48,7 +49,7 @@ const scanMeta = (bulletin='')=>{
       let iHour = Number(iTime.slice(2,4));
       let iMinute = Number(iTime.slice(4,6));
       let initTime = new Date(Date.UTC(utc[0],utc[1],iDay,iHour,iMinute));
-      let md5 = MD5(bulletin.replace(/ZCZC.*?\d{3}/,'').replace(/\s/g,'').replace(/NNNN/g,''));//去除ZCZC开头，去除所有空白字符
+      let md5 = MD5(bulletin.replace(/ZCZC.*?\d{3}/,'').replace(/ZCZC/,'').replace(/\s/g,'').replace(/NNNN/g,''));//去除ZCZC开头，去除所有空白字符
       if(initTime.getTime()-today.getTime()>0){
         initTime = new Date(Date.UTC(utc[0],utc[1]-1,iDay,iHour,iMinute));
         //fulltime = utc[0].toString() + number2(utc[1]) + number2(iDay) + number2(iHour) + number2(iMinute);
@@ -66,7 +67,7 @@ const scanMeta = (bulletin='')=>{
       date = initTime;
       timeStamp = initTime.toUTCString();
       title = result[0] + ' ' + fulltime;
-      data = {content:bulletin,name,cn,date,timeStamp,fulltime, title,md5:md5,ins:iReg.ins}
+      data = {content:bulletin,name,cn,date,timeStamp,fulltime, title,md5:md5,ins:iReg.ins};
       break;
     }
   }
@@ -101,16 +102,25 @@ async function saveBulletin(item){
     let transItem = Object.assign({},item,{content:[item.content],md5:[item.md5]});
     bulletin = new Bulletin(transItem);
     await bulletin.save()
-      .catch(err=>{
-        console.log('储存错误');
-        console.error(err);
-      });
+    .then(()=>{
+      pushBulletin(item);
+      //检测报文是否需要推送      
+    })
+    .catch(err=>{
+      console.log('储存错误');
+      console.error(err);
+    })
+    
   }
   else{// 存在判断md5是否一致
     if(!bulletin.md5.includes(item.md5)){
       bulletin.content.push(item.content);
       bulletin.md5.push(item.md5);
       await bulletin.save()
+        .then(()=>{
+          pushBulletin(item);
+          //检测报文是否需要推送      
+         })
         .catch(err=>{
           console.log('储存错误');
           console.error(err);
@@ -118,6 +128,7 @@ async function saveBulletin(item){
     }
     else{
       console.log(item.title+'已存在');
+      //pushBulletin(item);
       return '数据已存在';
     };
   }

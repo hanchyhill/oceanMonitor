@@ -13,6 +13,18 @@
     {
         "type": "node",
         "request": "launch",
+        "name": "tyExpress",
+        "program": "${workspaceFolder}/bulletin/push/ty-express.js"
+    },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "getBJbulletin",
+        "program": "${workspaceFolder}/bulletin/push/getBJbulletin.js"
+    },
+    {
+        "type": "node",
+        "request": "launch",
         "name": "readOthers",
         "program": "${workspaceFolder}/bulletin/readData/readOthers.js"
     },

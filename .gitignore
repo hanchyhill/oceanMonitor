@@ -1,6 +1,9 @@
 *.pptx
 dist*.zip
 *.bak
+*private*
+*private
+private*
 .idea
 .idea/
 .DS_Store
@@ -19,5 +22,8 @@ remote-img
 remote-img/
 remote-img/*
 /static/remote-img/*
+*.pdf
+yarn.lock
+yarn-error.log
 
 
