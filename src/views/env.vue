@@ -46,6 +46,9 @@
         生成概率 & 潜在强度
       </a>
     </h2>
+    <h3>ECMWF 集合预报热带风暴强度以上概率</h3>
+    <ec-pro></ec-pro>
+    <h3>NCEP热带气旋概率</h3>
     <Tabs type="card" :animated="false">
       <TabPane v-for="(item, index) of probability" :key="index" :label="item.name">
         <img :src="item.src" :alt="item.name">
@@ -113,10 +116,10 @@
   import AscatView from './comps/ascatView.vue';
   import {envSrc, ascatImg} from '../config/srcConfig.js';
   import CardPic from './comps/cardPic.vue';
-  
+  import EcPro from './comps/ecPro.vue';
   export default {
     name: 'env-analysis',
-    components:{CardPic, AscatView},
+    components:{CardPic, AscatView, EcPro},
     props:{
 
     },

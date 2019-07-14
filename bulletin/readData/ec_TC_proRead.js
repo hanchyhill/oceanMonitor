@@ -6,19 +6,10 @@ const fs = require('fs');
 const {pMakeDir, isExists} = require('../../crawler/lib/util.js');
 const path = require('path');
 const schedule = require('node-schedule');
+const config = require('./../config/private.ec.token.js').ecConfig;
 
 // https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=2019071200,72,2019071500&projection=classical_wnp&layer_name=genesis_ts&token=83a1eeb52164da924afe55b2d253517c&email=ql.li@siat.ac.cn
-const config = {
-  token:'83a1eeb52164da924afe55b2d253517c',
-  urlExp:['https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=',
-          '&projection=classical_wnp&layer_name=genesis_ts&token=',
-          '&email='],
-  email:'ql.li@siat.ac.cn',
-  timeList:[72,96,120,144,168,192,216,240,264,288,],
-  leastFile : '2019.png',
-}
-
-
+config.leastFile = '2019.png';
 function gen_TC_proUrl (initDate,fcHour,finalDate,token,email){
   return `https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=${initDate},${fcHour},${finalDate}&projection=classical_wnp&layer_name=genesis_ts&token=${token}&email=${email}`;
 
@@ -41,9 +32,9 @@ async function getPro() {
   let nHour = now.hour();
   let fitTime;
   let fitYear;
-  if(nHour>8&&nHour<=20){
+  if(nHour>=7&&nHour<19){
     fitTime = now.format('YYYYMMDD')+'00';
-  }else if(nHour>20){
+  }else if(nHour>=19){
     fitTime = now.format('YYYYMMDD')+'12';
   }else{
     fitTime = moment(now).subtract(1,'days').format('YYYYMMDD')+'12';
@@ -86,7 +77,9 @@ async function getPro() {
         }
       });
     }catch(err){
-      console.error(err)
+      console.error(err.statusCode);
+      console.error('下载发生错误');
+      break;
     }
   }
   return moment().format('YYYY-MM-DD HH:mm:ss')
