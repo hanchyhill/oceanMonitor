@@ -1,5 +1,11 @@
 # todo
 
+## new
+
+* 报文轮询缺少jtwx jtwc.gdmo.gq/jtwc/rss/jtwc.rss
+* koa.index 在无法连接mongod时有未handle的promise
+* https://www.ssd.noaa.gov/PS/TROP/DATA/ATCF/JTWC/
+
 * https://www.ecmwf.int/en/forecasts/charts/tcyclone/tc_strike_probability
 * https://www.ecmwf.int/en/forecasts/charts/tcyclone/
 * https://weather.us/

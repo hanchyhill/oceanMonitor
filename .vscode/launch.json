@@ -7,6 +7,12 @@
     {
         "type": "node",
         "request": "launch",
+        "name": "ec_read",
+        "program": "${workspaceFolder}/bulletin/readData/ec_TC_proRead.js"
+    },
+    {
+        "type": "node",
+        "request": "launch",
         "name": "ftpRead",
         "program": "${workspaceFolder}/bulletin/readData/ftpread.js"
     },

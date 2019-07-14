@@ -42,7 +42,7 @@
     </div>
     <div class="cyc-main" v-show="selectedTC">
       <div class="map-div">
-        <div class="relative-container">
+        <div class="relative-container map-container">
           <div id="map-container"></div>
           <div class="legend">
             <div style="background-color:rgb(85,85,79)">LOW</div>
@@ -53,8 +53,12 @@
             <div style="background-color:rgb(153,20,8)">STY</div>
             <div style="background-color:rgb(128,0,255)">SuperTY</div>
           </div>
+          <div class="lonlat">
+            <div>Lon:<span class="lon"></span></div>
+            <div>Lat:<span class="lat"></span></div>
+          </div>
         </div>
-        <div class="relative-container">
+        <div class="relative-container map-container2">
           <div id="map-container2"></div>
           <div class="legend hour">
             <div style="color:rgb(0,0,0)">      {{timeLegend[0]}}</div>
@@ -67,6 +71,10 @@
             <div style="color:rgb(0,255,255)">  {{timeLegend[7]}}</div>
             <div style="color:rgb(255,0,255)">  {{timeLegend[8]}}</div>
             <div style="color:rgb(178,178,178)">{{timeLegend[9]}}</div>
+          </div>
+          <div class="lonlat">
+            <div>Lon:<span class="lon"></span></div>
+            <div>Lat:<span class="lat"></span></div>
           </div>
         </div>
       </div>
@@ -161,7 +169,7 @@ async function d3Map(tcRaw) {
   // 清除全部
   d3.select("#map-container .map-svg").remove();
   // console.log('d3Map');
-  let projection = await drawMap("#map-container",center);
+  let projection = await drawMap("map-container",center);
 
   let baseMap = d3.select("#map-container .base-map");
 
@@ -239,6 +247,7 @@ async function d3Map(tcRaw) {
     // });
 
 // 确定性预报
+  if(!tcRaw.detTrack.track) return;
   let detArr = (()=>{
       let track = tcRaw.detTrack.track
       let twoPointLineArr = [];
@@ -279,7 +288,7 @@ async function d3Map(tcRaw) {
     .enter()
     .append("path")
     .attr("d", d => path(d.line))
-    .attr("class", d => `track-line ${d.nextCat}`)
+    .attr("class", d => `track-line-det ${d.nextCat}`)
     .style("stroke", d => d.nextColor);
   
   const detPointSvg = baseMap.append("g");
@@ -306,7 +315,7 @@ async function d3Map2(tcRaw) {
   center[1] += 5;
   // 清除全部
   d3.select("#map-container2 .map-svg").remove();
-  let projection = await drawMap("#map-container2",center);
+  let projection = await drawMap("map-container2",center);
 
   let baseMap = d3.select("#map-container2 .base-map");
 
@@ -381,13 +390,77 @@ async function d3Map2(tcRaw) {
     .attr("cx", d => d.project[0])
     .attr("cy", d => d.project[1])
     .attr("r", 1.5)
+    .style("fill", d => d.timeColor);
+// TODO tcRaw.detTrack is undefined
+  // 确定性预报
+  if(!tcRaw.detTrack.track) return;
+  let detArr = (()=>{
+      let track = tcRaw.detTrack.track
+      let twoPointLineArr = [];
+      for (let i = 0; i < track.length - 1; i++) {
+        let point0 = track[i][1];
+        let point1 = track[i + 1][1];
+        let nextWind = track[i + 1][3];
+        let nextCat = tcUtil.wind2cat(nextWind);
+        let nextColor = tcUtil.tcColor[nextCat];
+        let time0 = track[i][0];
+        let time1 = track[i+1][0];
+        let point1Step = track[i + 1][0];
+        let timeColor = tcUtil.matchTimeColor(point1Step);
+        if(time1 - time0 > 6) continue;
+        twoPointLineArr.push({
+          line: { type: "LineString", coordinates: [point0, point1] },
+          nextCat,
+          nextColor,
+          curCat: tcUtil.wind2cat(track[i][3]),
+          timeColor
+        });
+      }
+      return twoPointLineArr;
+    })();
+
+  const detPoints = tcRaw.detTrack.track
+    .map(point => {
+      let cat = tcUtil.wind2cat(point[3]);
+      let step = point[0];
+      let timeColor = tcUtil.matchTimeColor(step);
+      return {
+        point: point[1],
+        project: projection(point[1]),
+        color: tcUtil.tcColor[cat],
+        cat,
+        timeColor
+      };
+    });
+
+  const detTrackSvg = baseMap.append("g").attr("class", "tc-svg");
+  detTrackSvg
+    .selectAll("path")
+    .data(detArr)
+    .enter()
+    .append("path")
+    .attr("d", d => path(d.line))
+    .attr("class", d => `track-line-det ${d.nextCat}`)
+    .style("stroke", d => d.timeColor);
+  
+  const detPointSvg = baseMap.append("g");
+  detPointSvg.attr("class", "point-g");
+  detPointSvg
+    .selectAll("circle")
+    .data(detPoints)
+    .enter()
+    .append("circle")
+    .attr("class", "point")
+    .attr("cx", d => d.project[0])
+    .attr("cy", d => d.project[1])
+    .attr("r", 1.5)
     .style("fill", d => d.timeColor)
 }
 
 /**
  * 绘制地图底图
  */
-async function drawMap(container = "#map-container2",center=[140,21],worldGeo) {
+async function drawMap(container = "map-container2",center=[140,21],worldGeo) {
   //请求china.geojson
   // console.log('drawMap');
   if(!worldGeo){// 没有参数则尝试加载util中的地图
@@ -404,7 +477,7 @@ async function drawMap(container = "#map-container2",center=[140,21],worldGeo) {
     height = 450;
 
   var mapSvg = d3
-    .select(container)
+    .select('#'+container)
     .append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -470,8 +543,25 @@ async function drawMap(container = "#map-container2",center=[140,21],worldGeo) {
   
   
   function zoomed() {
+    // console.log(d3.event.transform);
     baseMap.attr("transform", d3.event.transform);
   }
+// TODO latlon error
+// var transform = d3.event.transform
+// transform.x = <width> * (1 - transform.k) / 2 // To keep center fixed.
+// transform.y = <height> * (1 - transform.k) / 2 // To keep center fixed.
+// var x = (d3.mouse(this)[0] - transform.x) / transform.k
+// var y = (d3.mouse(this)[1] - transform.y) / transform.k
+// var p = projection.invert([x, y])
+  let latlonContainer = d3.select(`.${container} .lonlat`);
+  mapSvg.on("mousemove",function(){
+    var transform = d3.zoomTransform(this);
+    var xy = transform.invert(d3.mouse(this));
+    let lonlat = projection.invert(xy);
+    latlonContainer.select('.lon').text(lonlat[0].toFixed(2));
+    latlonContainer.select('.lat').text(lonlat[1].toFixed(2));
+    // console.log(projection.invert(d3.mouse(this)));
+  })
   return projection;
 }
 
@@ -937,6 +1027,11 @@ svg circle {
   stroke: #333;
   stroke-width: 1px;
 }
+.track-line-det{
+  fill: none;
+  stroke: #333;
+  stroke-width: 3px;
+}
 
 .overlay {
   fill: none;
@@ -964,6 +1059,15 @@ svg circle {
   border: solid 1px;
   font-weight: bold;
   background-color: white;
+}
+
+.lonlat{
+  position: absolute;
+  bottom: 0px;
+  background: white;
+}
+.lonlat > div {
+    display: inline;
 }
 .relative-container{
   position: relative;

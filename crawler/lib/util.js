@@ -243,6 +243,14 @@ function myDebug(message, isError){
   }
 }
 
+const isExists = (path='')=>{
+  return new Promise((resolve,reject)=>{
+    fs.exists(path,(isExists)=>{
+      resolve(isExists);
+    })
+  });
+}
+
 module.exports = {
-  requestMeothods, myLogger, myDebug, pMakeDir
+  requestMeothods, myLogger, myDebug, pMakeDir, isExists
 };

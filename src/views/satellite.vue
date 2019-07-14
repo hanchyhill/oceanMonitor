@@ -4,14 +4,15 @@
    <div>&nbsp;</div><!--左侧空白-->
   </Col>
   <Col span="22">
+    <!--<iframe class="fy4-iframe" height="900px" width="100%" src="http://10.148.114.72:4000/satelliteview"></iframe>-->
     <Row>
+      <card-pic :dial="speedDial.fy4Direct"></card-pic>
       <card-pic :dial="speedDial.colSlider"></card-pic>
       <card-pic :dial="speedDial.colTropics"></card-pic>
       <card-pic :dial="speedDial.nictHim8"></card-pic>
       <card-pic :dial="speedDial.jmaSat"></card-pic>
       <card-pic :dial="speedDial.h8target"></card-pic>
       <card-pic :dial="speedDial.swap2"></card-pic>
-      <card-pic :dial="speedDial.gdWeb"></card-pic>
       <card-pic :dial="speedDial.gdSat"></card-pic>
     </Row>
 
@@ -103,7 +104,9 @@
   };
 </script>
 <style scoped>
-
+.fy4-iframe{
+  margin-top:10px;
+}
 </style>
 
 <style>

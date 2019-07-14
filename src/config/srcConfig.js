@@ -106,7 +106,7 @@ const envSrc = {
     ],
   },
   imgs:{
-    jtwc:{name:'JTWC热带气旋警报图',origin:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwsair.jpg',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
+    jtwc:{name:'JTWC热带气旋警报图',origin:'http://jtwc.gdmo.gq/jtwc/jtwc.html',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
     local:'/static/remote-img/env/abpwsair.jpg',},
     tropicOutlook:{name:'2周热带天气展望',origin:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/gth_full.png',
     local:'/static/remote-img/env/gth_full.png',},
@@ -203,10 +203,10 @@ const bulletinSrc = {
       notes:'负责有关世界气象组织对国际换日线以西的北太平洋洋面上生成的热带气旋达热带风暴或以上级别给予国际编号及命名工作。',
     },
     jtwc:{
-      link:'https://pzal.ndbc.noaa.gov/collab/jtwc/',
+      link:'http://jtwc.gdmo.gq/jtwc/jtwc.html',
       imgSrc:'/static/thumbnails/jtwc.jpg',
       orginLink:'http://www.metoc.navy.mil/jtwc/jtwc.html',
-      headInfo:'美国JTWC',
+      headInfo:'美国JTWC镜像',
       head2:'联合台风警报中心',
       notes:'美国海军位于夏威夷珍珠港的海军太平洋气象及海洋中心。该中心负责为太平洋、印度洋等海域的热带气旋发出警报。',
     },
@@ -427,6 +427,13 @@ const satSrc = {
       headInfo:'业务网卫星图像',
       head2:'生态中心',
       notes:'提供风云、葵花系列卫星云图',
+    },
+    fy4Direct:{
+      link:'http://10.148.114.72:4000/satelliteview',
+      imgSrc:'/static/thumbnails/FY4-direct.jpg',
+      headInfo:'风云4号卫星直收站',
+      head2:'卫星站',
+      notes:'提供风云4号卫星各波段数据',
     },
     gdSat:{
       link:'http://10.12.12.211/satellite/',

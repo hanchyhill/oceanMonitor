@@ -5,13 +5,12 @@
   </Col>
   <Col span="22">
     <Row>
-    <card-pic :dial="speedDial.steer"></card-pic>
-    <card-pic :dial="speedDial.oceanHeatContent"></card-pic>
-    <card-pic :dial="speedDial.cyclonephase"></card-pic>
-    <card-pic :dial="speedDial.mtcswa"></card-pic>
-    <card-pic :dial="speedDial.eTRaP"></card-pic>
+      <card-pic :dial="speedDial.steer"></card-pic>
+      <card-pic :dial="speedDial.oceanHeatContent"></card-pic>
+      <card-pic :dial="speedDial.cyclonephase"></card-pic>
+      <card-pic :dial="speedDial.mtcswa"></card-pic>
+      <card-pic :dial="speedDial.eTRaP"></card-pic>
     </Row>
-
     <h2 id="sst">海温 & 浪高</h2>
     <Tabs class="tabs-style" type="card" :animated="false">
       <TabPane v-for="(item, index) of sst" :key="index" :label="item.name">
@@ -69,22 +68,25 @@
           <img :src="tropicOutlook.src" :alt="tropicOutlook.name" width="80%">
         </a>
       </TabPane>
-      <TabPane label="热带季内振荡(MJO)">
+      <TabPane v-for="(item, index) of mjo" :key="index" :label="item.name">
+          <img :src="item.src" :alt="item.name">
+      </TabPane>
+<!--       <TabPane label="热带季内振荡(MJO)">
         <Tabs type="card" :animated="false">
           <TabPane v-for="(item, index) of mjo" :key="index" :label="item.name">
           <img :src="item.src" :alt="item.name">
           </TabPane>
         </Tabs>
-      </TabPane>
+      </TabPane> -->
       <TabPane label="南海夏季风爆发指数">
         <a :href="scs2idx.origin"  target="_blank">
           <img :src="scs2idx.src" :alt="scs2idx.name" width="80%">
         </a>
       </TabPane>
     </Tabs>
-  
-    <br>
-    <h2 id="ascat">ASCAT风场扫描</h2>
+    
+
+        <h2 id="ascat">ASCAT风场扫描</h2>
     <Tabs type="card" :animated="false">
       <TabPane label="上升A">
         <ascat-view :imgList="ascat.ascend"></ascat-view>
@@ -99,7 +101,7 @@
         <ascat-view :imgList="ascat.descendB"></ascat-view>
       </TabPane>
     </Tabs>
-    
+
   </Col>
   
   <Col span="1"><!--右侧空白-->
