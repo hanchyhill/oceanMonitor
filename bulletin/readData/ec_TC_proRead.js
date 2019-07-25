@@ -12,7 +12,9 @@ const config = require('./../config/private.ec.token.js').ecConfig;
 config.leastFile = '2019.png';
 function gen_TC_proUrl (initDate,fcHour,finalDate,token,email){
   return `https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=${initDate},${fcHour},${finalDate}&projection=classical_wnp&layer_name=genesis_ts&token=${token}&email=${email}`;
-
+}
+function gen_TD_proUrl (initDate,fcHour,finalDate,token,email){
+  return `https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=${initDate},${fcHour},${finalDate}&projection=classical_wnp&layer_name=genesis_td&token=${token}&email=${email}`;
 }
 
 function gen_TC_proList(initDate='2019071200'){
@@ -24,6 +26,17 @@ function gen_TC_proList(initDate='2019071200'){
     timeList.push(timeFormat);
   }
   let urlList = timeList.map(vT=>gen_TC_proUrl(vT[0],vT[1],vT[2],config.token,config.email));
+  return urlList;
+}
+function gen_TD_proList(initDate='2019071200'){
+  let initT = moment.utc(initDate,'YYYYMMDDHH');
+  let timeList = [];
+  for(let fcHour of config.timeList){
+    let fcTime = moment(initT).add(fcHour,'hours');
+    let timeFormat = [initDate,fcHour,fcTime.format('YYYYMMDDHH')];
+    timeList.push(timeFormat);
+  }
+  let urlList = timeList.map(vT=>gen_TD_proUrl(vT[0],vT[1],vT[2],config.token,config.email));
   return urlList;
 }
 
@@ -43,7 +56,7 @@ async function getPro() {
   let dirPath = path.resolve(__dirname+'./../../../data/img/tc_ec_pro/',fitYear+'/'+fitTime);
   await pMakeDir(dirPath);//创建不存在的目录
   let urlList = gen_TC_proList(fitTime);
-
+  let tdUrlList = gen_TD_proList(fitTime);
   // TODO 查找盘符中是否存在
   let downloadList = [];
   for(let url of urlList){
@@ -57,9 +70,25 @@ async function getPro() {
       continue;
     }
   }
+  for(let url of tdUrlList){
+    let fileName = 'ecTcPro' + url.match(/time=(.*?)&/)[1]+'.td.png';
+    const filePath = path.resolve(dirPath, fileName);
+    let isFileExists = await isExists(filePath);// 判断文件是否存在
+    if(!isFileExists){
+      downloadList.push(url);
+    }else{
+      // myDebug(`文件已存在${RegArr[2]}`);
+      continue;
+    }
+  }
   console.log(`需要下载${downloadList.length}个文件`);
   for(let url of downloadList){
-    let fileName = 'ecTcPro' + url.match(/time=(.*?)&/)[1]+'.png';
+    let fileName = 'ecTcPro' + url.match(/time=(.*?)&/)[1];//+'.png';
+    if(url.includes('genesis_td')){
+      fileName += '.td.png';
+    }else{
+      fileName += '.png';
+    }
     let opt = {
       uri:url,
       encoding: null,

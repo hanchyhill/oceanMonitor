@@ -16,6 +16,14 @@
             {{ item.label }}
           </i-option>
       </i-select>
+      <span>强度选择</span><i-select v-model="tcType" style="width:200px">
+          <i-option  value="td" >
+            热带低压TD以上强度
+          </i-option>
+          <i-option  value="ts" >
+            热带风暴TS以上强度
+          </i-option>
+      </i-select>
       <Button type="primary" icon="ios-search" @click="switchShowTime">检索</Button>
     </div>
     <div clas="sel-btn-group">
@@ -83,6 +91,7 @@
         selectedHour,
         hourList: [{value:'00',label:'00:00UTC'},{value:'12',label:'12:00UTC'}],
         urlPrefix: config.getUrlPrefix(),
+        tcType:'td',
       };
     },
     mounted() {
@@ -118,7 +127,7 @@
           let timeFormat = [this.fitTime,fcHour,fcTime.format('YYYYMMDDHH')];
           timeList.push(timeFormat);
         }
-        let fileArr = timeList.map(tF=>`ecTcPro${tF[0]},${tF[1]},${tF[2]}.png`);
+        let fileArr = timeList.map(tF=>`ecTcPro${tF[0]},${tF[1]},${tF[2]}${this.tcType==='td'?'.td':''}.png`);
         let urlArr = fileArr.map(fileName=>`${urlPrefix}${fitYear}/${this.fitTime}/${fileName}`);
         return urlArr;
       },

@@ -46,7 +46,7 @@
         生成概率 & 潜在强度
       </a>
     </h2>
-    <h3>ECMWF 集合预报热带风暴强度以上概率</h3>
+    <h3>ECMWF 集合预报概率</h3>
     <ec-pro></ec-pro>
     <h3>NCEP热带气旋概率</h3>
     <Tabs type="card" :animated="false">

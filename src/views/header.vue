@@ -80,6 +80,9 @@ export default {
     margin: 0 auto;
     margin-right: 20px;
 }
+.layout-nav li{
+  background: #515a6e;
+}
 /* .header{
   background-color: #7e57c2;
 } */

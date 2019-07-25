@@ -27,7 +27,7 @@ const config = {
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_024.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://www.ssd.noaa.gov/PS/TROP/TCFP/data/current/', name:'wp_rTCFP_048.gif', lastModified:'', dir:'env/'},
     {urlBase:'http://wxmaps.org/pix/'                            , name:'wpacpot.png'     , lastModified:'', dir:'env/'},
-    {urlBase:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/'},//, retry:'any'},
+    {urlBase:'http://jtwc.gdmo.gq/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/'},//, retry:'any'},
     {urlBase:'http://models.weatherbell.com/sst/', name:'tcheat_wpac_2017.png', lastModified:'', dir:'env/'},
     {urlBase:'http://models.weatherbell.com/sst/', name:'wpac_cdas1.png', lastModified:'', dir:'env/'},
     {urlBase:'http://models.weatherbell.com/sst/', name:'wpac_cdas1_anom.png', lastModified:'', dir:'env/'},
