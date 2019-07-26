@@ -106,9 +106,15 @@ async function getPro() {
         }
       });
     }catch(err){
-      console.error(err.statusCode);
-      console.error('下载发生错误');
-      break;
+      console.error(err.message);
+      if(err.statusCode==404){
+        console.error('图像未生成'+fileName);
+        break;
+      }else{
+        console.error('下载发生错误'+fileName);
+        continue;
+      }
+      
     }
   }
   return moment().format('YYYY-MM-DD HH:mm:ss')
