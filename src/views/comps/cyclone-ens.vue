@@ -1,7 +1,9 @@
 <template>
   <div id="app">
+    <h2>热带气旋集合预报</h2>
     <div class="button-container">
-      <DatePicker
+      <Button @click="searchTC" type="primary" icon="ios-search">检索TC集合预报</Button>
+      选择日期<DatePicker
         type="daterange"
         split-panels
         placeholder="Select date"
@@ -9,16 +11,37 @@
         @on-change="timeChange"
         :value="timeRange"
       ></DatePicker>
-      <i-select disabled v-model="selectedBasin" style="width:100px">
+      选择机构<i-select  multiple v-model="selectedModel" style="width:550px">
+        <OptionGroup label="WMO数据源">
+          <i-option  v-for="item in modelListOffice" :value="item.value" :key="item.value">
+          {{ item.label }}
+        </i-option>
+        </OptionGroup>
+        <OptionGroup label="RUC源">
+          <i-option  v-for="item in modelListRuc" :value="item.value" :key="item.value">
+          {{ item.label }}
+          </i-option>
+        </OptionGroup>
+        <OptionGroup label="EMC源">
+          <i-option  v-for="item in modelListEmc" :value="item.value" :key="item.value">
+          {{ item.label }}
+          </i-option>
+        </OptionGroup>
+      </i-select>
+      选择海区<i-select v-model="selectedBasin" style="width:100px">
         <i-option  v-for="item in basinList" :value="item.value" :key="item.value">
           {{ item.label }}
         </i-option>
       </i-select>
-      <i-select disabled v-model="tcFilter" style="width:150px">
-        <i-option  value="removeNoControl" >
-          剔除无控制场
+      筛选设置<i-select disabled v-model="tcFilter" style="width:150px">
+        <i-option  value="removeEcNoControl" >
+          剔除EC冗余
+        </i-option>
+        <i-option  value="all" >
+          无筛选
         </i-option>
       </i-select>
+      
     </div>
     <div class="select-tc-wrap">
       <div class="time-row">
@@ -87,6 +110,10 @@
   </div>
 </template>
 <script>
+// TODO: 强度分类增加TD以下
+// TODO: 点击名称可显示总览
+// TODO: 更改地图为更高分辨率
+// TODO: 鼠标定经纬度防抖
 // import privateConfig from "./config/private.config.js";
 import * as d3 from "d3";
 const topojson = require("topojson-client");
@@ -146,14 +173,37 @@ let tcUtil = {
   model: {
     ecmwf: {
       enNumber: 51,
+      interval:6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       }
     },
     NCEP: {
       enNumber: 21,
+      interval:6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
+      }
+    },
+    "ncep-R":{
+      enNumber: 21,
+      interval:12,
+      timeRange() {
+        return Array.from(new Array(30), (val, index) => index * 12);
+      }
+    },
+    "ukmo-R":{
+      enNumber: 35,
+      interval:12,
+      timeRange() {
+        return Array.from(new Array(30), (val, index) => index * 12);
+      }
+    },
+    "ecmwf-R":{
+      enNumber: 35,
+      interval:12,
+      timeRange() {
+        return Array.from(new Array(30), (val, index) => index * 12);
       }
     },
     UKMO: {}
@@ -165,6 +215,7 @@ let tcUtil = {
  */
 async function d3Map(tcRaw) {
   let center = calCenter(tcRaw);
+  let timeInterval = tcUtil.model[tcRaw.ins].interval;// 设置时间间隔
   center[1] += 5;
   // 清除全部
   d3.select("#map-container .map-svg").remove();
@@ -191,7 +242,7 @@ async function d3Map(tcRaw) {
         let nextColor = tcUtil.tcColor[nextCat];
         let time0 = track[i][0];
         let time1 = track[i+1][0];
-        if(time1 - time0 > 6) continue;
+        if(time1 - time0 > timeInterval) continue;
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -247,7 +298,7 @@ async function d3Map(tcRaw) {
     // });
 
 // 确定性预报
-  if(!tcRaw.detTrack.track) return;
+  if(!tcRaw.detTrack||!tcRaw.detTrack.track) return;//不存在退出
   let detArr = (()=>{
       let track = tcRaw.detTrack.track
       let twoPointLineArr = [];
@@ -259,7 +310,7 @@ async function d3Map(tcRaw) {
         let nextColor = tcUtil.tcColor[nextCat];
         let time0 = track[i][0];
         let time1 = track[i+1][0];
-        if(time1 - time0 > 6) continue;
+        if(time1 - time0 > timeInterval) continue;// 大于时间间隔跳过连线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -312,6 +363,7 @@ async function d3Map(tcRaw) {
  */
 async function d3Map2(tcRaw) {
   let center = calCenter(tcRaw);
+  let timeInterval = tcUtil.model[tcRaw.ins].interval;
   center[1] += 5;
   // 清除全部
   d3.select("#map-container2 .map-svg").remove();
@@ -337,7 +389,7 @@ async function d3Map2(tcRaw) {
         let timeColor = tcUtil.matchTimeColor(point1Step);
         let time0 = track[i][0];
         let time1 = track[i+1][0];
-        if(time1 - time0 > 6) continue; // 如果有跳点则断线
+        if(time1 - time0 > timeInterval) continue; // 如果有跳点则断线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -393,7 +445,7 @@ async function d3Map2(tcRaw) {
     .style("fill", d => d.timeColor);
 // TODO tcRaw.detTrack is undefined
   // 确定性预报
-  if(!tcRaw.detTrack.track) return;
+  if(!tcRaw.detTrack||!tcRaw.detTrack.track) return;
   let detArr = (()=>{
       let track = tcRaw.detTrack.track
       let twoPointLineArr = [];
@@ -407,7 +459,7 @@ async function d3Map2(tcRaw) {
         let time1 = track[i+1][0];
         let point1Step = track[i + 1][0];
         let timeColor = tcUtil.matchTimeColor(point1Step);
-        if(time1 - time0 > 6) continue;
+        if(time1 - time0 > timeInterval) continue;
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -567,7 +619,9 @@ async function drawMap(container = "map-container2",center=[140,21],worldGeo) {
 
 async function drawPlotyBox(tcRaw, ins = "NCEP") {
   // let tcRaw = await d3.json("/source/2019022414_Wutip_02WP_GEFS.json");
+  // ins = ins.replace('-','_');
   let tracks = tcRaw.tracks;
+  // console.log(tcUtil.model);
   let timeRange = tcUtil.model[ins].timeRange(); //生成等差序列
   let initTime = moment(tcRaw.initTime);
   let traceArr = [];
@@ -758,10 +812,13 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       })
       .filter(member => member.point); //去除空值
 
-    let [TD, TS, STS, TY, STY, SuperTY] = [0, 0, 0, 0, 0, 0];
+    let [LOW, TD, TS, STS, TY, STY, SuperTY] = [0, 0, 0, 0, 0, 0];
     for (let member of currentTimePoint) {
       let wind = member.point[3];
-      if (wind >= 10.8 && wind < 17.2) {
+      if (wind < 10.8) {
+        LOW += 1;
+      }
+      else if (wind >= 10.8 && wind < 17.2) {
         TD += 1;
       } else if (wind >= 17.2 && wind < 24.5) {
         TS += 1;
@@ -778,6 +835,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     let iTime = step2time(initTime,step);
     stackArr.push({
       time: moment(iTime).format('DD日HH时'),//step,
+      LOW,
       TD,
       TS,
       STS,
@@ -792,9 +850,10 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     TY: "rgb(255,0,0)",
     STS: "rgb(255,128,0)",
     TS: "rgb(0,0,255)",
-    TD: "rgb(105,163,74)"
+    TD: "rgb(105,163,74)",
+    LOW: "rgb(144,144,145)",
   };
-  let stackData = ["SuperTY", "STY", "TY", "STS", "TS", "TD"].map(type => {
+  let stackData = ["SuperTY", "STY", "TY", "STS", "TS", "TD", "LOW"].map(type => {
     return {
       x: stackArr.map(tc => tc.time),
       y: stackArr.map(tc => tc[type]),
@@ -833,14 +892,15 @@ export default {
   data() {
     let now = moment(new Date());
     let endTime = now.format('YYYY-MM-DD');
-    let startTime = moment(now).subtract(3,'days').format('YYYY-MM-DD');
+    let startTime = moment(now).subtract(2,'days').format('YYYY-MM-DD');
     return {
       tcOpenPanel: "1",
       allTC:[],
       selectedTC:null,
       timeRange:[startTime, endTime],
       selectedTimeIndex: -1,
-      selectedBasin: 'global',
+      selectedBasin: 'WPAC',
+      selectedModel: ['ecmwf','NCEP','ncep-R','ukmo-R','ecmwf-R'],
       basinList:[
         {
           value:'global',
@@ -851,7 +911,19 @@ export default {
           label:'西北太平洋'
         },
       ],
-      tcFilter:'removeNoControl',
+      modelListOffice:[
+        {value:'ecmwf',label:'ECMWF'},
+        {value:'NCEP',label:'NCEP'},
+      ],
+      modelListRuc:[
+        {value:'ncep-R',label:'NCEP-R'},
+        {value:'ecmwf-R',label:'ECMWF-R'},
+        {value:'ukmo-R',label:'ukmo-R'},
+      ],
+      modelListEmc:[
+        {value:'ncep-N',label:'NCEP-EMC'},
+      ],
+      tcFilter:'all',
     };
   },
   mounted() {
@@ -873,9 +945,14 @@ export default {
     },
     timeChange(date) {
       // console.log(date);
-      let sTime = date[0] + ' 00:00';
-      let eTime = date[1] + ' 23:59';
-      this.getTC([sTime, eTime]);
+      this.timeRange[0] = date[0];
+      this.timeRange[1] = date[1];
+      return this.searchTC();
+    },
+    searchTC(){
+      let sTime = this.timeRange[0] + ' 00:00';
+      let eTime = this.timeRange[1] + ' 23:59';
+      return this.getTC([sTime, eTime]);
     },
     showTC(tcRaw){
       this.selectedTC = tcRaw;
@@ -887,7 +964,7 @@ export default {
         //.get("/source/2019032400_21S_VERONICA_ECEP.json")
       this.$Message.info('正在查询数据...');
       axios
-        .get(`/api?interface=tc-ens&gt=${times[0]}&lt=${times[1]}&dateFormat=YYYY-MM-DD HH:mm&ins=ecmwf,NCEP`)
+        .get(`/api?interface=tc-ens&gt=${times[0]}&lt=${times[1]}&dateFormat=YYYY-MM-DD HH:mm&ins=${this.selectedModel.join(',')}&basin=${this.selectedBasin}&spe=${this.tcFilter}`)
         .then(response => {
           let raw = response.data;
           // console.log(raw);

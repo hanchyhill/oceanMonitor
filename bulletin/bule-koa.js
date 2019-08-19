@@ -61,14 +61,20 @@ router.get('/api/',async(ctx,next)=>{
   }else if(interface == 'tc-ens'){
     let minTime,maxTime;
     const ins = ctx.query.ins?ctx.query.ins.split(','):['NCEP','ecmwf'];
+    const basin = ctx.query.basin;
+    let basinList = [];
+    if(basin==='WPAC') basinList = [{ basinShort2: 'WP' }, { basinShort: 'W' }]
     minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
     maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
     if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
-      const cyclones = await Cyclone.find({}).
-        where('initTime').gt(new Date(minTime)).lt(new Date(maxTime)).
-        where('ins').in(ins).
-        where('controlIndex').ne(-1).
-        select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2').exec();
+      let query = Cyclone.find({}).
+      where('initTime').gt(new Date(minTime)).lt(new Date(maxTime)).
+      where('ins').in(ins).      // where('controlIndex').ne(-1).
+      select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2')
+      if(basinList.length!=0){
+        query = query.or(basinList);
+      }
+      const cyclones = await query.exec()//.exec();
       ctx.body = {
         data: cyclones,
         success: true

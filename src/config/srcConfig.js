@@ -450,7 +450,7 @@ const satSrc = {
       notes:'提供target Area /2.5min BD增强云图',
     },
     swap2:{
-      link:'http://rsapp.nsmc.org.cn/geofy/swap2.jsp',
+      link:'http://rsapp.nsmc.org.cn/geofy/',
       imgSrc:'/static/thumbnails/swap2.jpg',
       headInfo:'风云4 swap',
       head2:'提供风云4各通道和合成云图',
