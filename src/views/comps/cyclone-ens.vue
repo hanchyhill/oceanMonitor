@@ -107,6 +107,9 @@
         <div id="box-pressure"></div>
       </div>
     </div>
+    <div class="tc-overview">
+      <div id="map-overview"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -1074,6 +1077,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#map-overview{
+  height: 450px;
+  width: 1000px;
+  border: 1px solid black;
 }
 
 #map-container,
