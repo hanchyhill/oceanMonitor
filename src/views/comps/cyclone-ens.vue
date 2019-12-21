@@ -124,9 +124,11 @@ import * as Plotly from "plotly.js/dist/plotly";
 import Util from '../../libs/util';
 const axios = Util.ajax;
 import * as moment from "moment";
+import { async } from 'q';
 
 let tcUtil = {
   worldGeo: null,
+  geoMap: [],
   tcColor: {
     SuperTY: "rgb(128,0,255)",
     STY: "rgb(153,20,8)",
@@ -361,6 +363,14 @@ async function d3Map(tcRaw) {
     return projection;
 }
 
+
+/**
+ * 
+ */
+async function d3OverViewMap(tcRaw){
+  let projection = await drawMap('map-overview');
+}
+
 /**
  * 按照时间填色
  */
@@ -515,15 +525,15 @@ async function d3Map2(tcRaw) {
 /**
  * 绘制地图底图
  */
-async function drawMap(container = "map-container2",center=[140,21],worldGeo) {
+async function drawMap(container = "map-container2",center=[140,21],geoMap) {
   //请求china.geojson
   // console.log('drawMap');
-  if(!worldGeo){// 没有参数则尝试加载util中的地图
-    if(tcUtil.worldGeo){
-      worldGeo = tcUtil.worldGeo;
+  if(!geoMap){// 没有参数则尝试加载util中的地图
+    if(tcUtil.geoMap){
+      geoMap = tcUtil.geoMap;
     }else{// 都没有地图则自行加载
       let worldTopo = await d3.json("/source/110m.json")
-      worldGeo = topojson.feature(worldTopo, worldTopo.objects.land);
+      geoMap = topojson.feature(worldTopo, worldTopo.objects.land).features;
     } 
   }
   //let root = await d3.json("http://localhost:8080/source/china.geojson");
@@ -575,7 +585,7 @@ async function drawMap(container = "map-container2",center=[140,21],worldGeo) {
     .append("g")
     .attr("class", "world-map")
     .selectAll("path")
-    .data(worldGeo.features)
+    .data(geoMap)
     .enter()
     .append("path")
     .attr("d", path)
@@ -900,6 +910,9 @@ export default {
       tcOpenPanel: "1",
       allTC:[],
       selectedTC:null,
+      overViewTC:null,
+      selectedDateModelList:[],
+      selectedOverView:[null,null],
       timeRange:[startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: 'WPAC',
@@ -934,7 +947,14 @@ export default {
     d3.json("/source/110m.json")
       .then(worldTopo=>{
         let worldGeo = topojson.feature(worldTopo, worldTopo.objects.land);
-        tcUtil.worldGeo = worldGeo;
+        tcUtil.geoMap = tcUtil.geoMap.concat(worldGeo.features);
+      });
+      
+    d3.json("/source/bou2_4l.topo.simplify.json")
+      .then(chinaTopo=>{
+        let chinaGeo = topojson.feature(chinaTopo, chinaTopo.objects.bou2_4l);
+        tcUtil.geoMap = tcUtil.geoMap.concat(chinaGeo.features);
+        // console.log(chinaGeo);
       });
   // console.log(worldTopo);
   
@@ -962,6 +982,7 @@ export default {
       d3Map2(tcRaw);
       drawPlotyBox(tcRaw,tcRaw.ins);
       d3Map(tcRaw);
+      d3OverViewMap(tcRaw);
     },
     getTC(times=['20190407 00:00','2019-04-08 23:59']) {
         //.get("/source/2019032400_21S_VERONICA_ECEP.json")
@@ -1080,8 +1101,8 @@ export default {
 }
 
 #map-overview{
-  height: 450px;
-  width: 1000px;
+  height: 700px;
+  width: 90%;
   border: 1px solid black;
 }
 
