@@ -7,8 +7,13 @@
 1. 环境 node.js >= 8.0
 2. npm install  or  cnpm install or yarn install
 3. npm run dev
-4. cd crawler & node prSprider.js
-5. cd bulletin & node bule-koa.js & node index.js
+4. 图像获取 cd ./crawler & node prSprider.js
+5. 报文获取 cd ./bulletin & node bule-koa.js & node index.js
+6. EC集合预报概率 cd  ./bulletin/readData/ & node ec_TC_proRead.js
+
+## 配置项(需要自行配置)
+
+TODO
 
 ## 海洋监测网页
 
