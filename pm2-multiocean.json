@@ -1,6 +1,6 @@
 {"apps": [{
   "name"        : "oceanMonitorSpider",  // 应用名称
-  "script"      : "./crawler/prSpider.js",  // 实际启动脚本
+  "script"      : "./prSpider.js",  // 实际启动脚本
   "cwd"         : "./crawler/",  // 当前工作路径
   "watch": [  // 监控变化的目录，一旦变化，自动重启
     "."
@@ -24,7 +24,7 @@
 },
 {
   "name"        : "ocean-bulletin",  // 应用名称
-  "script"      : "./bulletin/index.js",  // 实际启动脚本
+  "script"      : "./index.js",  // 实际启动脚本
   "cwd"         : "./bulletin/",  // 当前工作路径
   "watch": [  // 监控变化的目录，一旦变化，自动重启
     "."
@@ -72,7 +72,7 @@
 },
 {
   "name"        : "ocean-koa",  // 应用名称
-  "script"      : "./bulletin/bule-koa.js",  // 实际启动脚本
+  "script"      : "./bule-koa.js",  // 实际启动脚本
   "cwd"         : "./bulletin/",  // 当前工作路径
   "watch": [  // 监控变化的目录，一旦变化，自动重启
     "."
@@ -96,7 +96,7 @@
 },
 {
   "name"        : "ocean-push",  // 应用名称
-  "script"      : "./bulletin/push/ty-express.js",  // 实际启动脚本
+  "script"      : "./ty-express.js",  // 实际启动脚本
   "cwd"         : "./bulletin/push/",  // 当前工作路径
   "watch": [  // 监控变化的目录，一旦变化，自动重启
     "."
