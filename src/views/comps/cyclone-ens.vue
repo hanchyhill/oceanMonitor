@@ -47,26 +47,30 @@
       <div class="time-row">
         <i-button v-for="(item,i) in allTC" 
         :key="item.time" :ghost="i!=selectedTimeIndex" @click="switchTimeTable(i)"
-         type="success" >
+        type="success" >
           {{item.time.slice(0, 13)}} UTC
         </i-button>
       </div>
       <div class="tc-table" v-if="allTC.length">
         <div v-for="(item,i) in allTC" :key="item.time" v-show="i==selectedTimeIndex">
           <div v-for="ins in item.ins" :key="ins.ins">
-            <span class="tc-ins">{{ins.ins}}</span>
-            <i-button v-for="tc in ins.tc" @click="showTC(tc)" :key="tc.tcID"
-            type="success">
+            <span class="tc-ins">
+              <i-button  @click="showAllTC(ins)" :ghost="i!=selectedInsIndex[0]||ins.ins!=selectedInsIndex[1]" type="success">
+                {{ins.ins}}
+              </i-button>
+            </span>
+            <i-button v-for="(tc, indexTc) in ins.tc" @click="showTC(tc)" :key="tc.tcID"
+            type="success" :ghost="!selectedTC||tc.tcID!=selectedTC.tcID">
               {{showTCName(tc)}}
             </i-button>
           </div>
         </div>
       </div>
     </div>
-    <div class="cyc-main" v-show="selectedTC">
-      <div class="map-div">
-        <div class="relative-container map-container">
-          <div id="map-container"></div>
+    <Tabs type="card" :animated="false" v-model="currentTCcard" class="tc-tabs-card">
+      <TabPane label="全局概览" name="overviewTC">
+        <div class="relative-container">
+          <div id="map-container3"></div>
           <div class="legend">
             <div style="background-color:rgb(85,85,79)">LOW</div>
             <div style="background-color:rgb(105,163,74)">TD</div>
@@ -76,40 +80,55 @@
             <div style="background-color:rgb(153,20,8)">STY</div>
             <div style="background-color:rgb(128,0,255)">SuperTY</div>
           </div>
-          <div class="lonlat">
-            <div>Lon:<span class="lon"></span></div>
-            <div>Lat:<span class="lat"></span></div>
+        </div>
+      </TabPane>
+      <TabPane label="TC详情" name="singleTC">
+        <div class="cyc-main" v-show="selectedTC">
+          <div class="map-div">
+            <div class="relative-container map-container">
+              <div id="map-container"></div>
+              <div class="legend">
+                <div style="background-color:rgb(85,85,79)">LOW</div>
+                <div style="background-color:rgb(105,163,74)">TD</div>
+                <div style="background-color:rgb(0,0,255)">TS</div>
+                <div style="background-color:rgb(255,128,0)">STS</div>
+                <div style="background-color:rgb(255,0,0)">TY</div>
+                <div style="background-color:rgb(153,20,8)">STY</div>
+                <div style="background-color:rgb(128,0,255)">SuperTY</div>
+              </div>
+              <div class="lonlat">
+                <div>Lon:<span class="lon"></span></div>
+                <div>Lat:<span class="lat"></span></div>
+              </div>
+            </div>
+            <div class="relative-container map-container2">
+              <div id="map-container2"></div>
+              <div class="legend hour">
+                <div style="color:rgb(0,0,0)">      {{timeLegend[0]}}</div>
+                <div style="color:rgb(255,0,0)">    {{timeLegend[1]}}</div>
+                <div style="color:rgb(0,140,48)">   {{timeLegend[2]}}</div>
+                <div style="color:rgb(255,128,0)">  {{timeLegend[3]}}</div>
+                <div style="color:rgb(0,0,102)">    {{timeLegend[4]}}</div>
+                <div style="color:rgb(0,255,0)">    {{timeLegend[5]}}</div>
+                <div style="color:rgb(153,20,8)">   {{timeLegend[6]}}</div>
+                <div style="color:rgb(0,255,255)">  {{timeLegend[7]}}</div>
+                <div style="color:rgb(255,0,255)">  {{timeLegend[8]}}</div>
+                <div style="color:rgb(178,178,178)">{{timeLegend[9]}}</div>
+              </div>
+              <div class="lonlat">
+                <div>Lon:<span class="lon"></span></div>
+                <div>Lat:<span class="lat"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-div">
+            <div id="stacked-cat"></div>
+            <div id="box-wind"></div>
+            <div id="box-pressure"></div>
           </div>
         </div>
-        <div class="relative-container map-container2">
-          <div id="map-container2"></div>
-          <div class="legend hour">
-            <div style="color:rgb(0,0,0)">      {{timeLegend[0]}}</div>
-            <div style="color:rgb(255,0,0)">    {{timeLegend[1]}}</div>
-            <div style="color:rgb(0,140,48)">   {{timeLegend[2]}}</div>
-            <div style="color:rgb(255,128,0)">  {{timeLegend[3]}}</div>
-            <div style="color:rgb(0,0,102)">    {{timeLegend[4]}}</div>
-            <div style="color:rgb(0,255,0)">    {{timeLegend[5]}}</div>
-            <div style="color:rgb(153,20,8)">   {{timeLegend[6]}}</div>
-            <div style="color:rgb(0,255,255)">  {{timeLegend[7]}}</div>
-            <div style="color:rgb(255,0,255)">  {{timeLegend[8]}}</div>
-            <div style="color:rgb(178,178,178)">{{timeLegend[9]}}</div>
-          </div>
-          <div class="lonlat">
-            <div>Lon:<span class="lon"></span></div>
-            <div>Lat:<span class="lat"></span></div>
-          </div>
-        </div>
-      </div>
-      <div class="bar-div">
-        <div id="stacked-cat"></div>
-        <div id="box-wind"></div>
-        <div id="box-pressure"></div>
-      </div>
-    </div>
-    <div class="tc-overview">
-      <div id="map-overview"></div>
-    </div>
+      </TabPane>
+    </Tabs>
   </div>
 </template>
 <script>
@@ -225,7 +244,7 @@ async function d3Map(tcRaw) {
   // 清除全部
   d3.select("#map-container .map-svg").remove();
   // console.log('d3Map');
-  let projection = await drawMap("map-container",center);
+  let projection = await drawMap("#map-container",center);
 
   let baseMap = d3.select("#map-container .base-map");
 
@@ -248,6 +267,8 @@ async function d3Map(tcRaw) {
         let time0 = track[i][0];
         let time1 = track[i+1][0];
         if(time1 - time0 > timeInterval) continue;
+        const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+        if(distance>9) continue; // 如果大于9个经纬度则断线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -267,7 +288,9 @@ async function d3Map(tcRaw) {
     .append("path")
     .attr("d", d => path(d.line))
     .attr("class", d => `track-line ${d.nextCat}`)
-    .style("stroke", d => d.nextColor);
+    // .style("stroke", d => d.nextColor)
+    .style("stroke", d =>'gray')
+    .attr("opacity", 0.9);
 
   let pointArr = tcRaw.tracks
     .map(member => member.track)
@@ -295,8 +318,12 @@ async function d3Map(tcRaw) {
     .attr("class", "point")
     .attr("cx", d => d.project[0])
     .attr("cy", d => d.project[1])
-    .attr("r", 1.5)
-    .style("fill", d => d.color)
+    .attr("r", 3)
+    .attr("opacity", 0.8)
+    .style("stroke", d => d.color)
+    .style("stroke-width", 1)
+    .style("fill", 'none')
+    // .style("fill", d => d.color)
     // .on("mouseover", function() {
     //   console.log(this);
     //   d3.select(this).style("fill", () => "yellow");
@@ -316,6 +343,8 @@ async function d3Map(tcRaw) {
         let time0 = track[i][0];
         let time1 = track[i+1][0];
         if(time1 - time0 > timeInterval) continue;// 大于时间间隔跳过连线
+        const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+        if(distance>9) continue; // 如果大于9个经纬度则断线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -357,8 +386,10 @@ async function d3Map(tcRaw) {
     .attr("class", "point")
     .attr("cx", d => d.project[0])
     .attr("cy", d => d.project[1])
-    .attr("r", 1.5)
+    .attr("r", 3.5)
     .style("fill", d => d.color)
+    .style("stroke", d => d.color)
+    .style("stroke-width", 1.0)
 
     return projection;
 }
@@ -367,9 +398,9 @@ async function d3Map(tcRaw) {
 /**
  * 
  */
-async function d3OverViewMap(tcRaw){
-  let projection = await drawMap('map-overview');
-}
+// async function d3OverViewMap(tcRaw){
+//   let projection = await drawMap('#map-overview');
+// }
 
 /**
  * 按照时间填色
@@ -380,7 +411,7 @@ async function d3Map2(tcRaw) {
   center[1] += 5;
   // 清除全部
   d3.select("#map-container2 .map-svg").remove();
-  let projection = await drawMap("map-container2",center);
+  let projection = await drawMap("#map-container2",center);
 
   let baseMap = d3.select("#map-container2 .base-map");
 
@@ -403,6 +434,8 @@ async function d3Map2(tcRaw) {
         let time0 = track[i][0];
         let time1 = track[i+1][0];
         if(time1 - time0 > timeInterval) continue; // 如果有跳点则断线
+        const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+        if(distance>9) continue; // 如果大于指定个经纬度则断线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -473,6 +506,8 @@ async function d3Map2(tcRaw) {
         let point1Step = track[i + 1][0];
         let timeColor = tcUtil.matchTimeColor(point1Step);
         if(time1 - time0 > timeInterval) continue;
+        const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+        if(distance>9) continue; // 如果大于指定个经纬度则断线
         twoPointLineArr.push({
           line: { type: "LineString", coordinates: [point0, point1] },
           nextCat,
@@ -518,14 +553,14 @@ async function d3Map2(tcRaw) {
     .attr("class", "point")
     .attr("cx", d => d.project[0])
     .attr("cy", d => d.project[1])
-    .attr("r", 1.5)
+    .attr("r", 3.5)
     .style("fill", d => d.timeColor)
 }
 
 /**
  * 绘制地图底图
  */
-async function drawMap(container = "map-container2",center=[140,21],geoMap) {
+async function drawMap(container = "#map-container2",center=[140,21],geoMap) {
   //请求china.geojson
   // console.log('drawMap');
   if(!geoMap){// 没有参数则尝试加载util中的地图
@@ -538,11 +573,14 @@ async function drawMap(container = "map-container2",center=[140,21],geoMap) {
   }
   //let root = await d3.json("http://localhost:8080/source/china.geojson");
 
-  let width = 700,
-    height = 450;
-
+  // let width = 700,
+  //   height = 450;
+  // 计算地图宽度和高度
+  let containerDom = document.querySelector(container);
+  let width = containerDom.offsetWidth,
+      height = containerDom.offsetHeight;
   var mapSvg = d3
-    .select('#'+container)
+    .select(container)
     .append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -618,7 +656,7 @@ async function drawMap(container = "map-container2",center=[140,21],geoMap) {
 // var x = (d3.mouse(this)[0] - transform.x) / transform.k
 // var y = (d3.mouse(this)[1] - transform.y) / transform.k
 // var p = projection.invert([x, y])
-  let latlonContainer = d3.select(`.${container} .lonlat`);
+  let latlonContainer = d3.select(`.${container.replace('#','')} .lonlat`);
   mapSvg.on("mousemove",function(){
     var transform = d3.zoomTransform(this);
     var xy = transform.invert(d3.mouse(this));
@@ -900,23 +938,213 @@ function calCenter(tcRaw){
 function step2time(initTime, step){
   return moment(initTime).add(step,'hours').toDate();
 }
+
+async function d3MapOverview(multiTC) {
+  // let center = calCenter(tcRaw);
+  // center[1] += 5;
+  // 清除全部
+  // console.log(multiTC);
+  // multiTC = [multiTC[0]];
+  d3.select("#map-container3 .map-svg").remove();
+  let timeInterval = tcUtil.model[multiTC[0].ins].interval;
+  let projection = await drawMap("#map-container3");
+
+  let baseMap = d3.select("#map-container3 .base-map");
+  // let width = 700,
+  //   height = 450;
+
+  //定义地图的投影
+  // const projection = d3
+  //   .geoMercator()
+  //   .center([center[0], center[1]])
+  //   .scale(800)
+  //   .translate([width / 2, height / 2]);
+
+  //定义地形路径生成器
+  //projection.rotate([180,0,0]);
+  let path = d3.geoPath().projection(projection);
+
+  // 地理路径
+  // let tcRaw = await d3.json("/source/2019022414_Wutip_02WP_GEFS.json");
+  let allCatArr = new Array();
+  for(let iTc=0; iTc<multiTC.length; iTc++){
+    let tcRaw = multiTC[iTc];
+    let catArr = tcRaw.tracks
+      .map(member => member.track)
+      .map(track => {
+        let twoPointLineArr = [];
+        for (let i = 0; i < track.length - 1; i++) {
+          let point0 = track[i][1];
+          let point1 = track[i + 1][1];
+          let nextWind = track[i + 1][3];
+          let nextCat = tcUtil.wind2cat(nextWind);
+          let nextColor = tcUtil.tcColor[nextCat];
+          let time0 = track[i][0];
+          let time1 = track[i+1][0];
+          if(time1 - time0 > timeInterval) continue;
+          const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+          if(distance>9) continue; // 如果大于9个经纬度则断线
+          twoPointLineArr.push({
+            line: { type: "LineString", coordinates: [point0, point1] },
+            nextCat,
+            nextColor,
+            curCat: tcUtil.wind2cat(track[i][3])
+          });
+        }
+        return twoPointLineArr;
+      })
+      .flat();
+      // console.log(catArr);
+    allCatArr.push(catArr);
+  }
+
+  allCatArr = allCatArr.flat();
+  // console.log(allCatArr);
+  let tcSvg = baseMap.append("g").attr("class", "tc-svg");
+  tcSvg
+    .selectAll("path")
+    .data(allCatArr)
+    .enter()
+    .append("path")
+    .attr("d", d => path(d.line))
+    .attr("class", d => `track-line ${d.nextCat}`)
+    .style("stroke", d => d.nextColor)
+        // .attr("opacity", 0.9)
+/*
+  let allPointArr = new Array();
+  for(let iTc=0; iTc<multiTC.length; iTc++){
+    let tcRaw = multiTC[iTc];
+    let pointArr = tcRaw.tracks
+      .map(member => member.track)
+      .map(track =>
+        track.map(point => {
+          let cat = tcUtil.wind2cat(point[3]);
+          return {
+            point: point[1],
+            project: projection(point[1]),
+            color: tcUtil.tcColor[cat],
+            cat
+          };
+        })
+      )
+      .flat();
+    // console.log(pointArr);
+    allPointArr = allPointArr.concat(pointArr);
+  }
+  // console.log(allPointArr);
+
+  let pointSvg = baseMap.append("g");
+  pointSvg.attr("class", "point-g");
+  pointSvg
+    .selectAll("circle")
+    .data(allPointArr)
+    .enter()
+    .append("circle")
+    .attr("class", "point")
+    .attr("cx", d => d.project[0])
+    .attr("cy", d => d.project[1])
+    .attr("r", 3)
+    .attr("opacity", 0.8)
+    .style("stroke", d => d.color)
+    .style("stroke-width", 1.0)
+    .style("fill", 'none');
+*/
+// 确定性预报
+  let allDetCatArr = new Array();
+  for(let iTc=0; iTc<multiTC.length; iTc++){
+    let tcRaw = multiTC[iTc];
+    if(!tcRaw.detTrack||!tcRaw.detTrack.track) continue;//不存在退出
+    let detArr = (()=>{
+      let track = tcRaw.detTrack.track
+      let twoPointLineArr = [];
+      for (let i = 0; i < track.length - 1; i++) {
+        let point0 = track[i][1];
+        let point1 = track[i + 1][1];
+        let nextWind = track[i + 1][3];
+        let nextCat = tcUtil.wind2cat(nextWind);
+        let nextColor = tcUtil.tcColor[nextCat];
+        let time0 = track[i][0];
+        let time1 = track[i+1][0];
+        if(time1 - time0 > timeInterval) continue;// 大于时间间隔跳过连线
+        const distance = Math.sqrt(Math.pow(point1[0]-point0[0],2) + Math.pow(point1[1]-point0[1],2));
+        if(distance>9) continue; // 如果大于9个经纬度则断线
+        twoPointLineArr.push({
+          line: { type: "LineString", coordinates: [point0, point1] },
+          nextCat,
+          nextColor,
+          curCat: tcUtil.wind2cat(track[i][3])
+        });
+      }
+      return twoPointLineArr;
+    })();
+    allDetCatArr.push(detArr);
+  }
+  allDetCatArr = allDetCatArr.flat();
+
+  let allDetPointArr = new Array();
+  for(let iTc=0; iTc<multiTC.length; iTc++){
+    let tcRaw = multiTC[iTc];
+    if(!tcRaw.detTrack||!tcRaw.detTrack.track) continue;//不存在退出
+    const detPoints = tcRaw.detTrack.track
+      .map(point => {
+        let cat = tcUtil.wind2cat(point[3]);
+        return {
+          point: point[1],
+          project: projection(point[1]),
+          color: tcUtil.tcColor[cat],
+          cat
+        };
+      });
+    allDetPointArr = allDetPointArr.concat(detPoints);
+  }
+
+  const detTrackSvg = baseMap.append("g").attr("class", "tc-svg");
+  detTrackSvg
+    .selectAll("path")
+    .data(allDetCatArr)
+    .enter()
+    .append("path")
+    .attr("d", d => path(d.line))
+    .attr("class", d => `track-line-det ${d.nextCat}`)
+    .style("stroke", d => d.nextColor);
+  
+  const detPointSvg = baseMap.append("g");
+  detPointSvg.attr("class", "point-g");
+  detPointSvg
+    .selectAll("circle")
+    .data(allDetPointArr)
+    .enter()
+    .append("circle")
+    .attr("class", "point")
+    .attr("cx", d => d.project[0])
+    .attr("cy", d => d.project[1])
+    .attr("r", 3)
+    .style("fill", d => d.color)
+    // .style("stroke", d => d.color)
+    // .style("stroke-width", 1.0)
+
+  return projection;
+}
+
 export default {
-  name: "d3-demo",
+  name: "d3-tc-ens",
   data() {
     let now = moment(new Date());
     let endTime = now.format('YYYY-MM-DD');
-    let startTime = moment(now).subtract(2,'days').format('YYYY-MM-DD');
+    let startTime = moment(now).subtract(1,'days').format('YYYY-MM-DD');
     return {
       tcOpenPanel: "1",
       allTC:[],
+      currentTCcard:'singleTC',
       selectedTC:null,
-      overViewTC:null,
+      // overViewTC:null,
+      selectedInsIndex: [-1, -1],
       selectedDateModelList:[],
       selectedOverView:[null,null],
       timeRange:[startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: 'WPAC',
-      selectedModel: ['ecmwf','NCEP','ncep-R','ukmo-R','ecmwf-R'],
+      selectedModel: ['ecmwf','NCEP',],
       basinList:[
         {
           value:'global',
@@ -978,11 +1206,28 @@ export default {
       return this.getTC([sTime, eTime]);
     },
     showTC(tcRaw){
+      this.currentTCcard = 'singleTC';
       this.selectedTC = tcRaw;
-      d3Map2(tcRaw);
-      drawPlotyBox(tcRaw,tcRaw.ins);
-      d3Map(tcRaw);
-      d3OverViewMap(tcRaw);
+      this.$nextTick(()=>{
+        d3Map2(tcRaw);
+        drawPlotyBox(tcRaw,tcRaw.ins);
+        d3Map(tcRaw);
+        this.jump('.tc-tabs-card', 75);
+      });
+      // d3OverViewMap(tcRaw);
+    },
+    showAllTC(insMultiTC){
+      let multiTC = insMultiTC.tc;
+      this.currentTCcard = 'overviewTC';
+      this.selectedInsIndex = [this.selectedTimeIndex, insMultiTC.ins];
+      this.$nextTick(
+        ()=>{
+          d3MapOverview(multiTC);
+          this.jump('.tc-tabs-card', 50);
+        }
+        
+      );
+      
     },
     getTC(times=['20190407 00:00','2019-04-08 23:59']) {
         //.get("/source/2019032400_21S_VERONICA_ECEP.json")
@@ -1000,15 +1245,20 @@ export default {
             this.$Message.info('查询完成...');
             this.allTC = this.catTC(tcArr);
             this.selectedTimeIndex = this.allTC.length - 1;
+            if(this.allTC.length){// 显示最新的TC概览
+              let leastTimeTC = this.allTC[this.allTC.length - 1].ins;
+              let ecLeastTimeTC = leastTimeTC.filter(ins=>ins.ins==='ecmwf');
+              if(ecLeastTimeTC.length){
+                this.showAllTC(ecLeastTimeTC[0]);
+              }  
+            }
           }else{
             this.$Notice.info({
               title: 'Empty',
               desc:'所选条件没有数据',
             });
           }
-          // d3Map2(raw);
-          // drawPlotyBox(raw, "ecmwf");
-          // d3Map(raw);
+
         })
         .catch((error)=> {
           this.$Notice.error({
@@ -1028,6 +1278,17 @@ export default {
         for(let iIns of insSet){
           let insWrap = {ins:iIns,tc:[]}
           let sameIns = sameTime.filter(tc=>tc.ins == iIns);
+          sameIns.sort((tc0, tc1)=>{
+            let number0 = tc0.cycloneNumber;
+            let number1 = tc1.cycloneNumber;
+            if(number0[0] =='9') number0 = '6' + number0;
+            if(number1[0] =='9') number1 = '6' + number1;
+            if(number0<number1){
+              return -1;
+            }else{
+              return 1;
+            }
+          });
           insWrap.tc = sameIns;
           timeWrap.ins.push(insWrap);
         }
@@ -1039,6 +1300,7 @@ export default {
     },
     switchTimeTable(i){
       this.selectedTimeIndex = i;
+      // this.selectedInsIndex[0] = selectedTimeIndex;
     },
     showTCName(tc){
       let fullName = '';
@@ -1053,6 +1315,12 @@ export default {
         fullName += ` ${basin}`;
       }
       return fullName;
+    },
+    jump(selector, offset = 0){
+      let jump = document.querySelector(selector);
+      let total = jump.offsetTop + offset;
+      // console.log(total);
+      document.documentElement.scrollTop = total;
     }
   },
   computed: {
@@ -1114,6 +1382,11 @@ export default {
   width: 700px;
   border: 1px solid black;
 }
+#map-container3{
+  height: 80vh;
+  width: 80vw;
+  border: 1px solid black;
+}
 .route {
   stroke: black;
   stroke-width: 3px;
@@ -1166,6 +1439,7 @@ svg circle {
   border: solid 1px;
   font-weight: bold;
   background-color: white;
+  font-size: 15px;
 }
 
 .lonlat{
