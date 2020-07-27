@@ -9,7 +9,7 @@
       <card-pic :dial="speedDial.typhoon2000"></card-pic>
       <card-pic :dial="speedDial.ruc"></card-pic>
       <card-pic :dial="speedDial.emc"></card-pic>
-      <card-pic :dial="speedDial.gd121"></card-pic>
+      <card-pic :dial="speedDial.easterlywave"></card-pic>
       <card-pic :dial="speedDial.gefs"></card-pic>
       <card-pic :dial="speedDial.hkoTrack"></card-pic>
       <card-pic :dial="speedDial.nullschool"></card-pic>
