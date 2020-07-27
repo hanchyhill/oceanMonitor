@@ -8,7 +8,14 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-    <script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Array.prototype.find%2Cdefault%2CArray.prototype.findIndex%2CArray.prototype.includes%2CArray.prototype.flat%2Cfetch"></script>
+    <script>
+    (function(){
+      var userAgent = navigator.userAgent;
+      var isIE = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1;
+      var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1;
+      if(isIE||isIE11) alert('不兼容IE,请用最新Firefox/Chrome/极速模式打开');
+    })();
+    </script>
     <style type="text/css">
         .ivu-tabs, .ivu-tabs-tab{font-size: 18px;}
     </style>
@@ -16,7 +23,7 @@
 
 <body>
     <div id="app"></div>
-    <script type="text/javascript" src="/dist/main.0e56da97dccd30e6d56c.js"></script>
+    <script type="text/javascript" src="/dist/main.4284b4aa181fbd1b1a3a.js"></script>
 </body>
 
 </html>
