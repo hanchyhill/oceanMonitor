@@ -152,6 +152,14 @@ const nwpSrc = {
       head2:'广东12121',
       notes:'提供EC集合预报相关产品',
     },
+    easterlywave:{
+      link: 'https://www.easterlywave.com/typhoon/ensemble/',
+      imgSrc: '/static/thumbnails/easterlywave.com.jpg',
+      headInfo:'EC集合预报',
+      head2:'easterlywave',
+      notes:'提供台风预报相关产品',
+    },
+    
     gefs:{
       link:'https://www.tropicaltidbits.com/storminfo/',
       imgSrc:'/static/thumbnails/gefs_latest.png',
