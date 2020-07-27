@@ -10,7 +10,7 @@
     "extends": "eslint:recommended",
     "plugins": ["html"],
     "rules": {
-        "indent": ["error", 4, {
+        "indent": ["error", 2, {
             "SwitchCase": 1
         }],
         "quotes": ["error", "single"],
