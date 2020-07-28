@@ -3,4 +3,6 @@ const key = {
   privateKey:'kGeqK9MsnaI4PTOvMAD8w9dSV6sYBvsIeISGpx9NIEE'
 }
 
+const serverChanKey = 'SCU70365Tac8d1645ed4d716bdc01c890677770ac5dfdc08061751';
 exports.key = key;
+exports.serverChanKey = serverChanKey;
