@@ -5,20 +5,20 @@
       <Icon type="md-settings" />
       <span>设置</span>
     </MenuItem>
-    <MenuItem name="1-2">
+    <!-- <MenuItem name="1-2">
       <a href="https://github.com/hanchyhill/oceanMonitor" target="_blank" style="color:black"><Icon type="md-code-download" />
       <span>代码仓库</span></a>
-    </MenuItem>
+    </MenuItem> -->
     <MenuItem name="1-3">
       <Icon type="md-help-circle" />
       <span>帮助WIKI</span>
     </MenuItem>
-    <MenuItem name="1-4">
+    <!-- <MenuItem name="1-4">
       <a href="https://github.com/hanchyhill/oceanMonitor/issues" target="_blank" style="color:black">
       <Icon type="ios-bug" />
       <span>提交BUG</span>
       </a>
-    </MenuItem>
+    </MenuItem> -->
   </Menu>
   <popup-setting :isSettingOpen="isSettingOpen"></popup-setting>
 </div>
