@@ -85,39 +85,53 @@
       <TabPane label="TC详情" name="singleTC">
         <div class="cyc-main" v-show="selectedTC">
           <div class="map-div">
-            <div class="relative-container map-container">
-              <div id="map-container"></div>
-              <div class="legend">
-                <div style="background-color:rgb(85,85,79)">LOW</div>
-                <div style="background-color:rgb(105,163,74)">TD</div>
-                <div style="background-color:rgb(0,0,255)">TS</div>
-                <div style="background-color:rgb(255,128,0)">STS</div>
-                <div style="background-color:rgb(255,0,0)">TY</div>
-                <div style="background-color:rgb(153,20,8)">STY</div>
-                <div style="background-color:rgb(128,0,255)">SuperTY</div>
-              </div>
-              <div class="lonlat">
-                <div>Lon:<span class="lon"></span></div>
-                <div>Lat:<span class="lat"></span></div>
+            <div class="typhoon-info" v-if="selectedTC">
+              当前台风：{{selectedTC?selectedTC.cycloneNumber:''}} {{selectedTC?selectedTC.cycloneName:''}}<br>
+              起报时间: {{selectedTC?selectedTC.initTime.slice(0,13):''}}<br>
+              机构: {{selectedTC?selectedTC.ins:''}}<br>
+              集合预报跟踪数量:{{selectedTC.tracks.length}}/{{tcMeta[selectedTC.ins].enNumber}}
+              <div>
+                袭击概率:
+                <div v-for="city in hitCityList", :key="city.lon">
+                  {{'city.name'}}
+                </div>
               </div>
             </div>
-            <div class="relative-container map-container2">
-              <div id="map-container2"></div>
-              <div class="legend hour">
-                <div style="color:rgb(0,0,0)">      {{timeLegend[0]}}</div>
-                <div style="color:rgb(255,0,0)">    {{timeLegend[1]}}</div>
-                <div style="color:rgb(0,140,48)">   {{timeLegend[2]}}</div>
-                <div style="color:rgb(255,128,0)">  {{timeLegend[3]}}</div>
-                <div style="color:rgb(0,0,102)">    {{timeLegend[4]}}</div>
-                <div style="color:rgb(0,255,0)">    {{timeLegend[5]}}</div>
-                <div style="color:rgb(153,20,8)">   {{timeLegend[6]}}</div>
-                <div style="color:rgb(0,255,255)">  {{timeLegend[7]}}</div>
-                <div style="color:rgb(255,0,255)">  {{timeLegend[8]}}</div>
-                <div style="color:rgb(178,178,178)">{{timeLegend[9]}}</div>
+            <div>
+              <div class="relative-container map-container">
+                <div id="map-container"></div>
+                <div class="legend">
+                  <div style="background-color:rgb(85,85,79)">LOW</div>
+                  <div style="background-color:rgb(105,163,74)">TD</div>
+                  <div style="background-color:rgb(0,0,255)">TS</div>
+                  <div style="background-color:rgb(255,128,0)">STS</div>
+                  <div style="background-color:rgb(255,0,0)">TY</div>
+                  <div style="background-color:rgb(153,20,8)">STY</div>
+                  <div style="background-color:rgb(128,0,255)">SuperTY</div>
+                </div>
+                <div class="lonlat">
+                  <div>Lon:<span class="lon"></span></div>
+                  <div>Lat:<span class="lat"></span></div>
+                </div>
               </div>
-              <div class="lonlat">
-                <div>Lon:<span class="lon"></span></div>
-                <div>Lat:<span class="lat"></span></div>
+              <div class="relative-container map-container2">
+                <div id="map-container2"></div>
+                <div class="legend hour">
+                  <div style="color:rgb(0,0,0)">      {{timeLegend[0]}}</div>
+                  <div style="color:rgb(255,0,0)">    {{timeLegend[1]}}</div>
+                  <div style="color:rgb(0,140,48)">   {{timeLegend[2]}}</div>
+                  <div style="color:rgb(255,128,0)">  {{timeLegend[3]}}</div>
+                  <div style="color:rgb(0,0,102)">    {{timeLegend[4]}}</div>
+                  <div style="color:rgb(0,255,0)">    {{timeLegend[5]}}</div>
+                  <div style="color:rgb(153,20,8)">   {{timeLegend[6]}}</div>
+                  <div style="color:rgb(0,255,255)">  {{timeLegend[7]}}</div>
+                  <div style="color:rgb(255,0,255)">  {{timeLegend[8]}}</div>
+                  <div style="color:rgb(178,178,178)">{{timeLegend[9]}}</div>
+                </div>
+                <div class="lonlat">
+                  <div>Lon:<span class="lon"></span></div>
+                  <div>Lat:<span class="lat"></span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -144,6 +158,7 @@ import Util from '../../libs/util';
 const axios = Util.ajax;
 import * as moment from "moment";
 import { async } from 'q';
+import cityInfo from '../../config/coastalCity.json';
 
 let tcUtil = {
   worldGeo: null,
@@ -1145,6 +1160,8 @@ export default {
       selectedTimeIndex: -1,
       selectedBasin: 'WPAC',
       selectedModel: ['ecmwf','NCEP',],
+      tcMeta:tcUtil.model,
+      cityInfo:cityInfo,
       basinList:[
         {
           value:'global',
@@ -1324,6 +1341,10 @@ export default {
     }
   },
   computed: {
+    hitCityList(){
+      let info = this.cityInfo;
+      return cityInfo;
+    },
     timeLegend(){
       let legend = [
         '24h',
@@ -1374,6 +1395,11 @@ export default {
   border: 1px solid black;
 }
 
+.map-div{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #map-container,
 #map-container2,
 #stacked-Bar,
@@ -1387,6 +1413,10 @@ export default {
   width: 80vw;
   border: 1px solid black;
 }
+.typhoon-info{
+  width: 250px;
+}
+
 .route {
   stroke: black;
   stroke-width: 3px;
