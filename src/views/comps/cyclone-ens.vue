@@ -167,6 +167,22 @@ import * as moment from "moment";
 import { async } from 'q';
 import cityInfo from '../../config/coastalCity.json';
 
+// if(!window.fetch){
+//   console.log('IE');
+//   window.fetch = (url)=>{
+//   return new Promise((resolve, reject)=>{
+//     console.log(url);
+//     axios.get(url,{baseURL: location.host})
+//       .then(res=>{
+//         resolve(res);
+//       })
+//       .catch(err=>{
+//         reject(err);
+//       })
+//     })
+//   }
+// }
+
 let tcUtil = {
   worldGeo: null,
   geoMap: [],
