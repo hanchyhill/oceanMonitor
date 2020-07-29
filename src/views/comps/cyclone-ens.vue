@@ -89,13 +89,18 @@
               当前台风：{{selectedTC?selectedTC.cycloneNumber:''}} {{selectedTC?selectedTC.cycloneName:''}}<br>
               起报时间: {{selectedTC?selectedTC.initTime.slice(0,13):''}}<br>
               机构: {{selectedTC?selectedTC.ins:''}}<br>
-              集合预报跟踪数量:{{selectedTC.tracks.length}}/{{tcMeta[selectedTC.ins].enNumber}}
-              <div>
-                袭击概率:
-                <span v-for="city in hitCityList", :key="city.lon">
-                  {{'city.name'}}
-                </span>
+              追踪成员:{{selectedTC.tracks.length}}/{{tcMeta[selectedTC.ins].enNumber}}
+              <br>
+              袭击概率:<br>
+              <div class="hit-pro-panel">
+                <div v-for="(city, index) in hitCityList" 
+                  :key="city.name"
+                  :style="'background-color:'+city.color"
+                >
+                  {{city.name}}: {{city.hit.toFixed(1)}}%
+                </div>
               </div>
+              
             </div>
             <div>
               <div class="relative-container map-container">
@@ -134,12 +139,13 @@
                 </div>
               </div>
             </div>
+            <div class="bar-div">
+              <div id="stacked-cat"></div>
+              <div id="box-wind"></div>
+              <div id="box-pressure"></div>
+            </div>
           </div>
-          <div class="bar-div">
-            <div id="stacked-cat"></div>
-            <div id="box-wind"></div>
-            <div id="box-pressure"></div>
-          </div>
+          
         </div>
       </TabPane>
     </Tabs>
@@ -155,6 +161,7 @@ import * as d3 from "d3";
 const topojson = require("topojson-client");
 import * as Plotly from "plotly.js/dist/plotly";
 import Util from '../../libs/util';
+import {calTChitProbility} from '../../libs/util';
 const axios = Util.ajax;
 import * as moment from "moment";
 import { async } from 'q';
@@ -1150,6 +1157,10 @@ export default {
     return {
       tcOpenPanel: "1",
       allTC:[],
+      hitCityList2:[
+        {lon:1,name:123},
+        {lon:2,name:122}
+      ],
       currentTCcard:'singleTC',
       selectedTC:null,
       // overViewTC:null,
@@ -1342,8 +1353,36 @@ export default {
   },
   computed: {
     hitCityList(){
+      if(!this.selectedTC) return;
       let info = this.cityInfo;
-      return cityInfo;
+      // return cityInfo;
+      let pointList = info.map(city=>{
+        return {x:city.lon, y:city.lat}; 
+      });
+
+      let probilityList = pointList.map(point=>{
+        return calTChitProbility(point, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber)
+      });
+      // console.log(probilityList);
+      info.forEach((city,i)=>{
+        let iP = probilityList[i];
+        city.hit = iP * 100;
+        if(iP>0.75){
+          city.color = 'rgb(199,50,104)';
+        }else if(iP>=0.5){
+          city.color = 'rgb(253,91,91)';
+        }else if(iP>=0.25){
+          city.color = 'rgb(253,253,104)';
+        }else if(iP>=0.1){
+          city.color = 'rgb(186,253,186)';
+        }else{
+          city.color = 'white';
+        }
+      });
+      info = info
+        .filter(city=>city.hit>0)
+        .sort((pre, next)=>next.hit - pre.hit);
+      return info;
     },
     timeLegend(){
       let legend = [
@@ -1414,7 +1453,7 @@ export default {
   border: 1px solid black;
 }
 .typhoon-info{
-  width: 250px;
+  width: 230px;
 }
 
 .route {
@@ -1469,7 +1508,7 @@ svg circle {
   border: solid 1px;
   font-weight: bold;
   background-color: white;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .lonlat{
@@ -1496,6 +1535,18 @@ svg circle {
     border: solid green;
     padding: 3px;
     margin: 3px 2px;
+}
+
+/*袭击概率面板 */
+.hit-pro-panel{
+  width: 155px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.hit-pro-panel div{
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
 }
 /*
 #stacked-cat .hovertext > path{
