@@ -6,7 +6,7 @@ import Vuex from 'vuex';
 import Util from './libs/util';
 import App from './app.vue';
 import {registerSW,testPush,subscribePush,isSubscribe} from './libs/push.js';
-import polify from './libs/polify.js';
+import polify from './libs/polyfill.js';
 import 'iview/dist/styles/iview.css';
 // import urlBase64ToUint8Array from './libs/base64util';
 // import runtime from 'serviceworker-webpack-plugin/lib/runtime';
