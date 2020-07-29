@@ -92,9 +92,9 @@
               集合预报跟踪数量:{{selectedTC.tracks.length}}/{{tcMeta[selectedTC.ins].enNumber}}
               <div>
                 袭击概率:
-                <div v-for="city in hitCityList", :key="city.lon">
+                <span v-for="city in hitCityList", :key="city.lon">
                   {{'city.name'}}
-                </div>
+                </span>
               </div>
             </div>
             <div>
