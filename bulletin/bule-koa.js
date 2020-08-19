@@ -1,4 +1,5 @@
 // TODO 设置机构
+process.env.NODE_ENV = 'production';
 const Koa = require('koa');
 const logger = require('koa-logger');
 // const {resolve} = require('path');

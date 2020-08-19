@@ -97,7 +97,7 @@
                   :key="city.name"
                   :style="'background-color:'+city.color"
                 >
-                  {{city.name}}: {{city.hit.toFixed(1)}}%
+                  <span>{{city.name}}: {{city.hit.toFixed(1)}}%</span>
                 </div>
               </div>
               
@@ -242,6 +242,13 @@ let tcUtil = {
     },
     NCEP: {
       enNumber: 21,
+      interval:6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      }
+    },
+    'TRAMS_TY': {
+      enNumber: 30,
       interval:6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
@@ -432,13 +439,6 @@ async function d3Map(tcRaw) {
     return projection;
 }
 
-
-/**
- * 
- */
-// async function d3OverViewMap(tcRaw){
-//   let projection = await drawMap('#map-overview');
-// }
 
 /**
  * 按照时间填色
@@ -685,7 +685,14 @@ async function drawMap(container = "#map-container2",center=[140,21],geoMap) {
   
   function zoomed() {
     // console.log(d3.event.transform);
+    var scale = d3.event.transform.k;
+    console.log(scale);
     baseMap.attr("transform", d3.event.transform);
+    baseMap.selectAll('circle')
+      .attr("r", 3.5*1/scale);
+    baseMap.selectAll('.track-line')
+      .style("stroke-width", 1/scale);
+      
   }
 // TODO latlon error
 // var transform = d3.event.transform
@@ -1186,7 +1193,7 @@ export default {
       timeRange:[startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: 'WPAC',
-      selectedModel: ['ecmwf','NCEP',],
+      selectedModel: ['ecmwf','TRAMS_TY','NCEP',],
       tcMeta:tcUtil.model,
       cityInfo:cityInfo,
       basinList:[
@@ -1201,6 +1208,7 @@ export default {
       ],
       modelListOffice:[
         {value:'ecmwf',label:'ECMWF'},
+        {value:'TRAMS_TY',label:'华南台风模式'},
         {value:'NCEP',label:'NCEP'},
       ],
       modelListRuc:[
@@ -1555,7 +1563,7 @@ svg circle {
 
 /*袭击概率面板 */
 .hit-pro-panel{
-  width: 155px;
+  width: 175px;
   max-height: 400px;
   overflow-y: auto;
 }
@@ -1563,6 +1571,10 @@ svg circle {
   padding-left: 5px;
   padding-right: 5px;
   text-align: center;
+}
+.hit-pro-panel div span{
+  color:white;
+  mix-blend-mode: difference;
 }
 /*
 #stacked-cat .hovertext > path{
