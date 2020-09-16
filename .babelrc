@@ -4,5 +4,5 @@
       "modules": false
     }],
   ],
-  "plugins": ["transform-regenerator"],
+  "plugins": ["transform-regenerator", "syntax-dynamic-import"],
 }
