@@ -12,7 +12,7 @@ const routers = [
       title: '环境分析'
     },
     name:'env',
-    component: () => import('./views/env.vue'),
+    component: () => import(/* webpackChunkName: "env" */'./views/env.vue'),
   },
   {
     path:'/current',
@@ -20,7 +20,7 @@ const routers = [
       title: '当前台风'
     },
     name:'current',
-    component: () => import('./views/current.vue'),
+    component: () => import(/* webpackChunkName: "current" */'./views/current.vue'),
   },
   {
     path:'/nwp',
@@ -28,7 +28,7 @@ const routers = [
       title: '数值/路径'
     },
     name:'nwp',
-    component: () => import('./views/nwp.vue'),
+    component: () => import(/* webpackChunkName: "nwp" */'./views/nwp.vue'),
   },
   {
     path:'/bullet',
@@ -36,7 +36,7 @@ const routers = [
       title: '报文'
     },
     name:'bullet',
-    component: () => import('./views/bulletin.vue'),
+    component: () => import(/* webpackChunkName: "vbull" */'./views/bulletin.vue'),
   },
   {
     path:'/satellite',
@@ -44,7 +44,7 @@ const routers = [
       title: '卫星'
     },
     name:'satellite',
-    component:() => import('./views/satellite.vue'),
+    component:() => import(/* webpackChunkName: "sat" */'./views/satellite.vue'),
   },
   {
     path:'/ref',
@@ -52,7 +52,7 @@ const routers = [
       title: '相关链接'
     },
     name:'ref',
-    component: () => import('./views/ref.vue'),
+    component: () => import(/* webpackChunkName: "ref" */'./views/ref.vue'),
   },
 ];
 export default routers;
