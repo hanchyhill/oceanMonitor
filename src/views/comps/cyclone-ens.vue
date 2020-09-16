@@ -53,13 +53,13 @@
       </div>
       <div class="tc-table" v-if="allTC.length">
         <div v-for="(item,i) in allTC" :key="item.time" v-show="i==selectedTimeIndex">
-          <div v-for="ins in item.ins" :key="ins.ins">
+          <div v-for="ins in item.ins" :key="ins.ins" v-show="ins.tc.length">
             <span class="tc-ins">
               <i-button  @click="showAllTC(ins)" :ghost="i!=selectedInsIndex[0]||ins.ins!=selectedInsIndex[1]" type="success">
                 {{ins.ins}}
               </i-button>
             </span>
-            <i-button v-for="(tc, indexTc) in ins.tc" @click="showTC(tc)" :key="tc.tcID"
+            <i-button v-for="(tc, indexTc) in ins.tc" @click="showTC(tc)" :key="tc.tcID+indexTc"
             type="success" :ghost="!selectedTC||tc.tcID!=selectedTC.tcID">
               {{showTCName(tc)}}
             </i-button>
@@ -94,7 +94,7 @@
               袭击概率:<br>
               <div class="hit-pro-panel">
                 <div v-for="(city, index) in hitCityList" 
-                  :key="city.name"
+                  :key="city.name+index"
                   :style="'background-color:'+city.color"
                 >
                   <span>{{city.name}}: {{city.hit.toFixed(1)}}%</span>
@@ -256,23 +256,37 @@ let tcUtil = {
     },
     "ncep-R":{
       enNumber: 21,
-      interval:12,
+      interval:6,
       timeRange() {
-        return Array.from(new Array(30), (val, index) => index * 12);
+        return Array.from(new Array(40), (val, index) => index * 6);
       }
     },
     "ukmo-R":{
       enNumber: 35,
-      interval:12,
+      interval:6,
       timeRange() {
-        return Array.from(new Array(30), (val, index) => index * 12);
+        return Array.from(new Array(40), (val, index) => index * 6);
       }
     },
     "ecmwf-R":{
-      enNumber: 35,
-      interval:12,
+      enNumber: 51,
+      interval:6,
       timeRange() {
-        return Array.from(new Array(30), (val, index) => index * 12);
+        return Array.from(new Array(40), (val, index) => index * 6);
+      }
+    },
+    "fnmoc-R":{
+      enNumber: 20,
+      interval:6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      }
+    },
+    "cmc-R":{
+      enNumber: 21,
+      interval:6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
       }
     },
     UKMO: {}
@@ -908,7 +922,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       })
       .filter(member => member.point); //去除空值
 
-    let [LOW, TD, TS, STS, TY, STY, SuperTY] = [0, 0, 0, 0, 0, 0];
+    let [LOW, TD, TS, STS, TY, STY, SuperTY] = [0, 0, 0, 0, 0, 0, 0];
     for (let member of currentTimePoint) {
       let wind = member.point[3];
       if (wind < 10.8) {
@@ -927,7 +941,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       } else if (wind >= 51.0) {
         SuperTY += 1;
       }
-    }
+    };
     let iTime = step2time(initTime,step);
     stackArr.push({
       time: moment(iTime).format('DD日HH时'),//step,
@@ -1193,7 +1207,7 @@ export default {
       timeRange:[startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: 'WPAC',
-      selectedModel: ['ecmwf','TRAMS_TY','NCEP',],
+      selectedModel: ['ecmwf','ncep-R','ukmo-R','fnmoc-R','cmc-R'],
       tcMeta:tcUtil.model,
       cityInfo:cityInfo,
       basinList:[
@@ -1214,7 +1228,9 @@ export default {
       modelListRuc:[
         {value:'ncep-R',label:'NCEP-R'},
         {value:'ecmwf-R',label:'ECMWF-R'},
-        {value:'ukmo-R',label:'ukmo-R'},
+        {value:'ukmo-R',label:'UKMO'},
+        {value:'fnmoc-R',label:'FNMOC'},
+        {value:'cmc-R',label:'CMC'},
       ],
       modelListEmc:[
         {value:'ncep-N',label:'NCEP-EMC'},
