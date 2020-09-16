@@ -12,7 +12,7 @@ const routers = [
       title: '环境分析'
     },
     name:'env',
-    component:(resolve) => require(['./views/env.vue'], resolve)
+    component: () => import('./views/env.vue'),
   },
   {
     path:'/current',
@@ -20,7 +20,7 @@ const routers = [
       title: '当前台风'
     },
     name:'current',
-    component:(resolve) => require(['./views/current.vue'], resolve)
+    component: () => import('./views/current.vue'),
   },
   {
     path:'/nwp',
@@ -28,7 +28,7 @@ const routers = [
       title: '数值/路径'
     },
     name:'nwp',
-    component:(resolve) => require(['./views/nwp.vue'], resolve)
+    component: () => import('./views/nwp.vue'),
   },
   {
     path:'/bullet',
@@ -36,7 +36,7 @@ const routers = [
       title: '报文'
     },
     name:'bullet',
-    component:(resolve) => require(['./views/bulletin.vue'], resolve)
+    component: () => import('./views/bulletin.vue'),
   },
   {
     path:'/satellite',
@@ -44,7 +44,7 @@ const routers = [
       title: '卫星'
     },
     name:'satellite',
-    component:(resolve) => require(['./views/satellite.vue'], resolve)
+    component:() => import('./views/satellite.vue'),
   },
   {
     path:'/ref',
@@ -52,7 +52,7 @@ const routers = [
       title: '相关链接'
     },
     name:'ref',
-    component:(resolve) => require(['./views/ref.vue'], resolve)
+    component: () => import('./views/ref.vue'),
   },
 ];
 export default routers;
