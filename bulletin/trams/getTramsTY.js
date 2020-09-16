@@ -8,14 +8,14 @@ const moment = require('moment');
 const {connect,initSchemas} = require('../database/initDBCyclone.js');
 let save2DB;
 const schedule = require('node-schedule');
-
+// GZRD
 let config = {
   lastDataList: [],
   insList:['TRAMS_TY01','TRAMS_TY02','TRAMS_TY03','TRAMS_TY04', 'TRAMS_TY05', 'TRAMS_TY06',
   'TRAMS_TY07','TRAMS_TY08','TRAMS_TY09','TRAMS_TY10','TRAMS_TY11','TRAMS_TY12','TRAMS_TY13',
   'TRAMS_TY14','TRAMS_TY15','TRAMS_TY16','TRAMS_TY17','TRAMS_TY18','TRAMS_TY19','TRAMS_TY20',
   'TRAMS_TY21','TRAMS_TY22','TRAMS_TY23','TRAMS_TY24','TRAMS_TY25','TRAMS_TY26','TRAMS_TY27',
-  'TRAMS_TY28','TRAMS_TY29','TRAMS_TY30'],
+  'TRAMS_TY28','TRAMS_TY29','TRAMS_TY30','GZRD'],
   runningList:[],
 }
 
@@ -37,7 +37,7 @@ async function getCurrentTYlist(){
 
 async function main(){
   let currentTYlist = await getCurrentTYlist()
-    .catch(err=>{throw err});
+    .catch(err=>{throw err});// 获取当前活动台风
   // console.log(currentTYlist);
   for(let tc of currentTYlist){
     let obsUrlList = config.insList.map(ins=>{
@@ -92,7 +92,10 @@ async function main(){
             ele.DDATETIME == leastData.DDATETIME;
       return isTheSame;
     })
-    if(sameIndex>-1) continue;
+    if(sameIndex>-1) {
+      console.log('与上次相同 '+leastData.TSID);
+      continue;
+    };
     
     let fcUrlList = config.insList.map(ins=>{
       return `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonFst4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}&ymdhms=${moment(leastData.DDATETIME).format('YYYYMMDDHHmmss')}`;
@@ -110,13 +113,23 @@ async function main(){
       "basinShort": "W",
       tracks:[]
     }
-    let allForecaseList = await Promise.all(fcUrlList.map(url=>getTyForecast(url))).catch(err=>{throw err});
-    for(let index = 0; index<config.insList.length; index++){
+    let allForecastList = await Promise.all(fcUrlList.map(url=>getTyForecast(url))).catch(err=>{throw err});
+    for(let index = 0; index<config.insList.length-1; index++){// 除了确定性预报以外的数据
       let member = {
         "ensembleNumber": parseInt(config.insList[index].slice(-2)),
-        track: allForecaseList[index],
+        track: allForecastList[index],
       }
-      tcInfo.tracks.push(member);
+      if(!member.track.length){
+        tcInfo.tracks.push(member);
+      }
+    }
+    // TODO 添加确定性预报
+    let detTC = {
+      track: allForecastList[allForecastList.length - 1],
+      fcType:0,
+    };
+    if(detTC.track.length!==0){
+      tcInfo.detTrack = detTC;
     }
     save2DB(tcInfo)
       .catch(err=>{
@@ -158,10 +171,10 @@ async function getTyObs(url){
         DDATETIME: nearestData.DDATETIME,
         FCID: nearestData.FCID,
         TSID: nearestData.TSID,
-        lat: nearestData.LATITUDE,
-        lon: nearestData.LONGITUDE,
-        pres: nearestData.PRESSURE,
-        wind: nearestData.WINDSPEED,
+        lat: parseFloat(nearestData.LATITUDE),
+        lon: parseFloat(nearestData.LONGITUDE),
+        pres: parseFloat(nearestData.PRESSURE),
+        wind: parseFloat(nearestData.WINDSPEED),
       };
     
   }else{
