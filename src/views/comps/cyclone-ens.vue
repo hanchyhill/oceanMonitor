@@ -262,7 +262,7 @@ let tcUtil = {
       }
     },
     "ukmo-R":{
-      enNumber: 35,
+      enNumber: 36,
       interval:6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
