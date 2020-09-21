@@ -2,10 +2,11 @@
 <div>
   <div class="ascat-wrap">
     <!--<div style="width:740px; display:inline-block;" ></div>-->
-    <span v-for="(list, index) of mosaicList" :key="index">
-      <img v-for="imgItem of list" :src="imgItem.src" :alt="imgItem.name" :key="imgItem.src">
-      <br>
-    </span>
+    <div class="ascat-row-wrap" v-for="(list, index) of mosaicList" :key="index">
+      <span class="ascat-img-wrap" v-for="imgItem of list" :key="imgItem.src">
+        <img :src="imgItem.src" :alt="imgItem.name">
+      </span>
+    </div>
   </div>
 </div>
 </template>
@@ -63,6 +64,22 @@
   width:100%;
   max-height: 900px;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+.ascat-row-wrap{
+  line-height: 0;
+}
+.ascat-img-wrap{
+  position: relative;
+  display: inline-block;
+  height: 390px;
+  width: 434px;
+}
+.ascat-img-wrap img{
+  position:absolute;
+  height: 390px;
+  left: -10px;
 }
 </style>
 
