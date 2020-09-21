@@ -52,10 +52,10 @@
         </i-button>
       </div>
       <div class="tc-table" v-if="allTC.length">
-        <div v-for="(item,i) in allTC" :key="item.time" v-show="i==selectedTimeIndex">
-          <div v-for="ins in item.ins" :key="ins.ins" v-show="ins.tc.length">
+        <div class="tc-table-time-wrap" v-for="(item,i) in allTC" :key="item.time" v-show="i==selectedTimeIndex">
+          <div class="tc-table-ins-wrap" v-for="ins in item.ins" :key="ins.ins" v-show="ins.tc.length">
             <span class="tc-ins">
-              <i-button  @click="showAllTC(ins)" :ghost="i!=selectedInsIndex[0]||ins.ins!=selectedInsIndex[1]" type="success">
+              <i-button  @click="showAllTC(ins)" :ghost="i!=selectedInsIndex[0]||ins.ins!=selectedInsIndex[1]" type="primary">
                 {{ins.ins}}
               </i-button>
             </span>
@@ -69,6 +69,10 @@
     </div>
     <Tabs type="card" :animated="false" v-model="currentTCcard" class="tc-tabs-card">
       <TabPane label="全局概览" name="overviewTC">
+        <div class="overview-typhoon-info" v-if="selectedIns">
+              起报时间: {{selectedIns?selectedIns.tc[0].initTime.slice(0,13):''}} 
+              机构: {{selectedIns?selectedIns.ins:''}}<br>
+        </div>
         <div class="relative-container">
           <div id="map-container3"></div>
           <div class="legend">
@@ -1200,6 +1204,7 @@ export default {
       ],
       currentTCcard:'singleTC',
       selectedTC:null,
+      selectedIns:null,
       // overViewTC:null,
       selectedInsIndex: [-1, -1],
       selectedDateModelList:[],
@@ -1286,6 +1291,7 @@ export default {
     },
     showAllTC(insMultiTC){
       let multiTC = insMultiTC.tc;
+      this.selectedIns = insMultiTC;
       this.currentTCcard = 'overviewTC';
       this.selectedInsIndex = [this.selectedTimeIndex, insMultiTC.ins];
       this.$nextTick(
@@ -1566,9 +1572,23 @@ svg circle {
   margin: 0px 2px 0px 2px;
 }
 .tc-table .tc-ins {
-    font-size: 20px;
-    margin: 0px 8px 0px 2px;
+    margin: 0px 0px 0px 2px;
     color: green;
+}
+.tc-ins .ivu-btn{
+  font-size: 0.9rem;
+}
+.tc-ins::after {
+  content: "";
+  display: inline-block;
+  border: 8px solid transparent;
+  border-left-color: transparent;
+  border-left-style: solid;
+  border-left-width: 8px;
+  border-left: 8px solid #AFABAB;
+  position: relative;
+  top: 2px;
+  left: 5px;
 }
 .tc-table {
     background-color: rgb(240, 240, 250);
@@ -1576,6 +1596,18 @@ svg circle {
     padding: 3px;
     margin: 3px 2px;
 }
+.tc-table-time-wrap{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.tc-table-ins-wrap{
+  border: 3px solid royalblue;
+  margin: 5px;
+  padding: 5px;
+  flex-shrink: 0;
+}
+
 
 /*袭击概率面板 */
 .hit-pro-panel{
