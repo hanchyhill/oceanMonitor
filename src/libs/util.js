@@ -64,6 +64,12 @@ function isHit(point={x:0,y:0}, endpoint0={x:0,y:0}, endpoint1={x:0,y:0}){
   return distance<=1? true : false;
 }
 
+/**
+ * 
+ * @param {Array} targetPoint 目标坐标点 
+ * @param {Array} trackList 台风路径
+ * @param {Number} totalMembers 成员数
+ */
 function calTChitProbility(targetPoint, trackList, totalMembers = 51){
   
   // let trackList = rpRaw.data[0].tracks;
@@ -108,5 +114,27 @@ function calTChitProbility(targetPoint, trackList, totalMembers = 51){
   return hitProbility;
 }
 
+/**
+ * 判断点是否在多边形中
+ * @param {Array} point 坐标点
+ * @param {Array} polygon 多边形
+ */
+function pointInPoly(point, polygon) {
+	var x = point[0], y = point[1];
+
+	var inside = false;
+	for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+		var xi = polygon[i][0], yi = polygon[i][1];
+		var xj = polygon[j][0], yj = polygon[j][1];
+
+		var intersect = ((yi > y) !== (yj > y)) &&
+			(x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+		if (intersect) {
+			inside = !inside;
+		}
+	}
+	return inside;
+}
+
 export default util;
-export {calTChitProbility};
+export {calTChitProbility, pointInPoly};
