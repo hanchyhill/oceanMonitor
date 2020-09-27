@@ -69,11 +69,11 @@
     </div>
     <Tabs type="card" :animated="false" v-model="currentTCcard" class="tc-tabs-card">
       <TabPane label="全局概览" name="overviewTC">
-        <div class="overview-typhoon-info" v-if="selectedIns">
-              起报时间: {{selectedIns?selectedIns.tc[0].initTime.slice(0,13):''}} 
+        <div class="overview-typhoon-info" v-if="selectedIns&&selectedIns.tc[0]">
+              起报时间: {{selectedIns&&selectedIns.tc[0]?selectedIns.tc[0].initTime.slice(0,13):''}} 
               机构: {{selectedIns?selectedIns.ins:''}}<br>
         </div>
-        <div class="relative-container">
+        <div class="relative-container" v-if="selectedIns&&selectedIns.tc[0]">
           <div id="map-container3"></div>
           <div class="legend">
             <div style="background-color:rgb(85,85,79)">LOW</div>
@@ -165,7 +165,7 @@ import * as d3 from "d3";
 const topojson = require("topojson-client");
 import * as Plotly from "plotly.js/dist/plotly";
 import Util from '../../libs/util';
-import {calTChitProbility} from '../../libs/util';
+import {calTChitProbility, calPointHitProbilityTimeSeries} from '../../libs/util.js';
 const axios = Util.ajax;
 import * as moment from "moment";
 import { async } from 'q';
@@ -1008,6 +1008,7 @@ async function d3MapOverview(multiTC) {
   // 清除全部
   // console.log(multiTC);
   // multiTC = [multiTC[0]];
+  if(!multiTC[0]) return;
   d3.select("#map-container3 .map-svg").remove();
   let timeInterval = tcUtil.model[multiTC[0].ins].interval;
   let projection = await drawMap("#map-container3");
@@ -1395,7 +1396,38 @@ export default {
       let total = jump.offsetTop + offset;
       // console.log(total);
       document.documentElement.scrollTop = total;
-    }
+    },
+    getAllTcHitTimeSeries(point={x:153,y:32}){
+      const allTC = this.selectedIns.tc;
+      let hitArr = allTC.map(tc=>{
+        calPointHitProbilityTimeSeries(point, tc.tracks, this.tcMeta[this.selectedIns.ins].enNumber);
+      });
+      let timeList = this.tcMeta[this.selectedIns.ins].timeRange();
+      let hitTimeArr = timeList.map(iTime=>{
+        iSetArr = hitArr.filter(tcMap=>tcMap.has(iTme)).map(tcMap=>tcMap.get(iTime).member);
+        let iAllMember = [];
+        iSetArr.forEach(iSet=>iAllMember = iAllMember.concat(...iSet));
+        let iUnionSet = new Set(iAllMember);
+        return {
+          count: iUnionSet.size,
+          member: iUnionSet,
+        }
+      });
+      return hitTimeArr;
+    },
+    getTcHitTimeSeries(point={x:153,y:32}){
+      let hitMap = allTC.map(tc=>{
+        calPointHitProbilityTimeSeries(point, this.selectedTC.tracks, this.tcMeta[this.selectedIns.ins].enNumber);
+      });
+      let timeList = this.tcMeta[this.selectedIns.ins].timeRange();
+      let hitTimeArr = timeList.map(iTime=>{
+        return {
+          count: hitMap.has(iTime)?hitMap.get(iTime).value:0,
+          member: hitMap.has(iTime)?hitMap.get(iTime).member:new Set(),
+        }
+      });
+      return hitTimeArr;
+    },
   },
   computed: {
     hitCityList(){
@@ -1407,8 +1439,9 @@ export default {
       });
 
       let probilityList = pointList.map(point=>{
-        return calTChitProbility(point, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber)
+        return calTChitProbility(point, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber);
       });
+      console.log(calPointHitProbilityTimeSeries({x:153,y:32}, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber));
       // console.log(probilityList);
       info.forEach((city,i)=>{
         let iP = probilityList[i];
@@ -1606,6 +1639,7 @@ svg circle {
   margin: 5px;
   padding: 5px;
   flex-shrink: 0;
+  background-color: #f4dfed;
 }
 
 
