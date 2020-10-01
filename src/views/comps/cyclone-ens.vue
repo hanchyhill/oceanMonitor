@@ -124,20 +124,24 @@
           }}
           机构: {{ selectedIns ? selectedIns.ins : "" }}<br />
         </div>
-        <div class="relative-container" v-if="selectedIns && selectedIns.tc[0]">
-          <div class="typhoon-info">
-            袭击概率:<br />
-            <div class="hit-pro-panel">
-              <div
-                v-for="(city, index) in hitCityList"
-                :key="city.name + index"
-                :style="'background-color:' + city.color"
-                @click="showHitProSeries(city)"
-              >
-                <span>{{ city.name }}: {{ city.hit.toFixed(1) }}%</span>
-              </div>
+        <div class="typhoon-info">
+          袭击概率:<br />
+          <div class="hit-pro-panel">
+            <div
+              v-for="(city, index) in allTcHitCityList"
+              :key="city.name + index"
+              :style="'background-color:' + city.color"
+              @click="showAllTcHitProSeries(city)"
+            >
+              <span>{{ city.name }}: {{ city.hit.toFixed(1) }}%</span>
             </div>
           </div>
+        </div>
+        <div id="alltc-hit-time-series">
+
+        </div>
+        <div class="relative-container" v-if="selectedIns && selectedIns.tc[0]">
+          
           <div id="map-container3"></div>
           <div class="legend">
             <div style="background-color: rgb(85, 85, 79)">LOW</div>
@@ -1488,11 +1492,12 @@ export default {
     },
     getAllTcHitTimeSeries(point = { x: 153, y: 32 }) {
       const allTC = this.selectedIns.tc;
+      const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
       let hitArr = allTC.map((tc) => {
         calPointHitProbilityTimeSeries(
           point,
           tc.tracks,
-          this.tcMeta[this.selectedIns.ins].enNumber
+          memberNumber,
         );
       });
       let timeList = this.tcMeta[this.selectedIns.ins].timeRange();
@@ -1506,6 +1511,7 @@ export default {
         return {
           count: iUnionSet.size,
           member: iUnionSet,
+          prob: iUnionSet.size/memberNumber,
         };
       });
       return hitTimeArr;
@@ -1596,6 +1602,75 @@ export default {
         {displayModeBar: false,},
       );
     },
+        /**
+     * 显示所有台风袭击概率序列
+     */
+    showAllTcHitProSeries(city = { name: "东沙", lon: "116.83", lat: "20.68" }) {
+      const point = {
+        x: Number(city.lon),
+        y: Number(city.lat),
+      };
+      const hitSeries = this.getAllTcHitTimeSeries(point);
+      // console.log(hitSeries);
+
+      const layout = {
+        title:'热带气旋综合袭击概率',
+        yaxis: {
+          title: "Hit Probality 袭击概率%",
+          range: [0, 102],
+          zeroline: false,
+          showline: true,
+          showticklabels: true,
+          linecolor: "rgb(204,204,204)",
+          linewidth: 2,
+          ticks: "outside",
+          tickcolor: "rgb(204,204,204)",
+          tickwidth: 2,
+          ticklen: 5,
+        },
+        showlegend: false,
+        margin: {
+          l: 60,
+          r: 20,
+          t: 40,
+          b: 40,
+        },
+        xaxis: {
+          showgrid: true,
+          showline: true,
+          showticklabels: true,
+          linecolor: "rgb(204,204,204)",
+          linewidth: 2,
+          // autotick: false,
+          ticks: "outside",
+          tickcolor: "rgb(204,204,204)",
+          tickwidth: 2,
+          ticklen: 5,
+          tickmode: "linear",
+          dtick: 4,
+        },
+      };
+      //* 生成日期序列
+      let timeRange = tcUtil.model[this.selectedTC.ins].timeRange(); //生成等差序列
+      let initTime = moment(this.selectedTC.initTime);
+      let TimeArr = timeRange.map(step=>moment(step2time(initTime, step)).format("DD日HH时"));
+      //*//
+      const trace0 = {
+        y: hitSeries.map(iHit=>iHit.prob*100),
+        x: TimeArr,
+        mode: 'lines+markers',
+        name: '袭击概率',
+        // line: {shape: 'spline'},
+      };
+      const plotData = [trace0];
+      console.log(plotData);
+      Plotly.newPlot(
+        "alltc-hit-time-series",
+        plotData,
+        layout,
+        {displayModeBar: false,},
+      );
+    },
   },
   computed: {
     /**
@@ -1644,18 +1719,18 @@ export default {
     allTcHitCityList() {
       if (!this.selectedIns && !this.selectedIns.tc[0]) return [];// 没有选中则退出
       let info = this.cityInfo;
-      // return cityInfo;
+      const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
       let pointList = info.map((city) => {
         return { x: city.lon, y: city.lat };
       });
 
-      let probilityList = pointList.map((point) => {
-        return calTChitProbility(
-          point,
-          this.selectedTC.tracks,
-          this.tcMeta[this.selectedTC.ins].enNumber
-        );
+      const pointsTimeList = pointList.map((point) => {
+        return this.getAllTcHitTimeSeries(point);
       });
+
+      let probilityList = pointsTimeList.map(timeList=>
+        timeList.reduce((pV, cV)=>pV.concat(...cV), [])
+      ).map(memberList=>(new Set(memberList)).size/memberNumber);
       // console.log(calPointHitProbilityTimeSeries({x:153,y:32}, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber));
       // console.log(probilityList);
       info.forEach((city, i) => {
