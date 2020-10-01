@@ -125,6 +125,19 @@
           机构: {{ selectedIns ? selectedIns.ins : "" }}<br />
         </div>
         <div class="relative-container" v-if="selectedIns && selectedIns.tc[0]">
+          <div class="typhoon-info">
+            袭击概率:<br />
+            <div class="hit-pro-panel">
+              <div
+                v-for="(city, index) in hitCityList"
+                :key="city.name + index"
+                :style="'background-color:' + city.color"
+                @click="showHitProSeries(city)"
+              >
+                <span>{{ city.name }}: {{ city.hit.toFixed(1) }}%</span>
+              </div>
+            </div>
+          </div>
           <div id="map-container3"></div>
           <div class="legend">
             <div style="background-color: rgb(85, 85, 79)">LOW</div>
@@ -1585,8 +1598,51 @@ export default {
     },
   },
   computed: {
+    /**
+     * 单个台风袭击概率
+     */
     hitCityList() {
-      if (!this.selectedTC) return;
+      if (!this.selectedTC) return [];
+      let info = this.cityInfo;
+      // return cityInfo;
+      let pointList = info.map((city) => {
+        return { x: city.lon, y: city.lat };
+      });
+
+      let probilityList = pointList.map((point) => {
+        return calTChitProbility(
+          point,
+          this.selectedTC.tracks,
+          this.tcMeta[this.selectedTC.ins].enNumber
+        );
+      });
+      // console.log(calPointHitProbilityTimeSeries({x:153,y:32}, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber));
+      // console.log(probilityList);
+      info.forEach((city, i) => {
+        let iP = probilityList[i];
+        city.hit = iP * 100;
+        if (iP > 0.75) {
+          city.color = "rgb(199,50,104)";
+        } else if (iP >= 0.5) {
+          city.color = "rgb(253,91,91)";
+        } else if (iP >= 0.25) {
+          city.color = "rgb(253,253,104)";
+        } else if (iP >= 0.1) {
+          city.color = "rgb(186,253,186)";
+        } else {
+          city.color = "white";
+        }
+      });
+      info = info
+        .filter((city) => city.hit > 0)
+        .sort((pre, next) => next.hit - pre.hit);
+      return info;
+    },
+    /**
+     * 所有台风袭击概率
+     */
+    allTcHitCityList() {
+      if (!this.selectedIns && !this.selectedIns.tc[0]) return [];// 没有选中则退出
       let info = this.cityInfo;
       // return cityInfo;
       let pointList = info.map((city) => {
