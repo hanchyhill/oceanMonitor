@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="ascat-wrap">
+  <div class="ascat-wrap"  @click="triggerZoom" :class="{'shrink':!isOriginSize}">
     <!--<div style="width:740px; display:inline-block;" ></div>-->
     <div class="ascat-row-wrap" v-for="(list, index) of mosaicList" :key="index">
       <span class="ascat-img-wrap" v-for="imgItem of list" :key="imgItem.src">
@@ -42,9 +42,13 @@
     data () {
       return {
         mosaicImg,
+        isOriginSize:false,
       }
     },
     methods: {
+      triggerZoom(){
+        this.isOriginSize = !this.isOriginSize;
+      }
     },
     created(){
     },
@@ -70,17 +74,18 @@
 .ascat-row-wrap{
   line-height: 0;
 }
-.ascat-img-wrap{
+.shrink .ascat-img-wrap{
   position: relative;
   display: inline-block;
   height: 390px;
   width: 434px;
 }
-.ascat-img-wrap img{
+.shrink .ascat-img-wrap img{
   position:absolute;
   height: 390px;
   left: -10px;
 }
+
 </style>
 
 <style>
