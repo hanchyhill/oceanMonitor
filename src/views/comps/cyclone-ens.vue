@@ -130,12 +130,12 @@
           袭击概率:<br />
             <div class="hit-pro-panel">
               <div
-                v-for="(city, index) in allTcHitCityList"
-                :key="city.name + index"
-                :style="'background-color:' + city.color"
-                @click="showAllTcHitProSeries(city)"
+                v-for="(cityA, indexA) in allTcHitCityList"
+                :key="cityA.name + indexA"
+                :style="'background-color:' + cityA.color"
+                @click="showAllTcHitProSeries(cityA)"
               >
-                <span>{{ city.name }}: {{ city.hit.toFixed(1) }}%</span>
+                <span>{{ cityA.name }}: {{ cityA.hit.toFixed(1) }}%</span>
               </div>
             </div>
             <div class="hit-time-series-wrap" v-show="showAllHitTime">
@@ -1346,8 +1346,10 @@ export default {
       hitTimeLocName:'',
       AllHitTimeLocName:'',
       allTcHitCityList:[],
+      hitCityList:[],
       showAllTcHit:false,
       showAllHitTime:false,
+      
     };
   },
   mounted() {
@@ -1383,7 +1385,9 @@ export default {
       return this.getTC([sTime, eTime]);
     },
     showTC(tcRaw) {
+      
       this.showHitTime = false;
+      // this.showAllTcHit = false;
       this.currentTCcard = "singleTC";
       this.selectedTC = tcRaw;
       this.$nextTick(() => {
@@ -1391,6 +1395,7 @@ export default {
         drawPlotyBox(tcRaw, tcRaw.ins);
         d3Map(tcRaw);
         this.jump(".tc-tabs-card", 75);
+        this.calHitCityList();
       });
       // d3OverViewMap(tcRaw);
     },
@@ -1698,7 +1703,8 @@ export default {
     calAllTcHitCityList() {
       this.showAllTcHit = true;
       if (!this.selectedIns || !this.selectedIns.tc[0]) return [];// 没有选中则退出
-      let info = this.cityInfo;
+      let info = JSON.parse(JSON.stringify(cityInfo));
+      console.log(info);
       const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
       let pointList = info.map((city) => {
         return { x: city.lon, y: city.lat };
@@ -1733,14 +1739,13 @@ export default {
         .sort((pre, next) => next.hit - pre.hit);
       return this.allTcHitCityList = info;
     },
-  },
-  computed: {
-    /**
+        /**
      * 单个台风袭击概率
      */
-    hitCityList() {
+    calHitCityList() {
+      // return [];
       if (!this.selectedTC) return [];
-      let info = this.cityInfo;
+      let info = JSON.parse(JSON.stringify(cityInfo));
       // return cityInfo;
       let pointList = info.map((city) => {
         return { x: city.lon, y: city.lat };
@@ -1773,48 +1778,12 @@ export default {
       info = info
         .filter((city) => city.hit > 0)
         .sort((pre, next) => next.hit - pre.hit);
-      return info;
+      console.log(info);
+      this.hitCityList = info;
     },
-    /**
-     * 所有台风袭击概率
-     */
-    // allTcHitCityList() {
-    //   if (!this.selectedIns || !this.selectedIns.tc[0]) return [];// 没有选中则退出
-    //   let info = this.cityInfo;
-    //   const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
-    //   let pointList = info.map((city) => {
-    //     return { x: city.lon, y: city.lat };
-    //   });
+  },
+  computed: {
 
-    //   const pointsTimeList = pointList.map((point) => {
-    //     return this.getAllTcHitTimeSeries(point);
-    //   });
-
-    //   let probilityList = pointsTimeList.map(timeList=>
-    //     timeList.reduce((pV, cV)=>pV.concat(...cV), [])
-    //   ).map(memberList=>(new Set(memberList)).size/memberNumber);
-    //   // console.log(calPointHitProbilityTimeSeries({x:153,y:32}, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber));
-    //   // console.log(probilityList);
-    //   info.forEach((city, i) => {
-    //     let iP = probilityList[i];
-    //     city.hit = iP * 100;
-    //     if (iP > 0.75) {
-    //       city.color = "rgb(199,50,104)";
-    //     } else if (iP >= 0.5) {
-    //       city.color = "rgb(253,91,91)";
-    //     } else if (iP >= 0.25) {
-    //       city.color = "rgb(253,253,104)";
-    //     } else if (iP >= 0.1) {
-    //       city.color = "rgb(186,253,186)";
-    //     } else {
-    //       city.color = "white";
-    //     }
-    //   });
-    //   info = info
-    //     .filter((city) => city.hit > 0)
-    //     .sort((pre, next) => next.hit - pre.hit);
-    //   return info;
-    // },
     timeLegend() {
       let legend = [
         "24h",
