@@ -175,6 +175,7 @@ function calPointHitProbilityTimeSeries(targetPoint, trackList, totalMembers = 5
         // break;
       }
     }
+    // console.log(singleMemberHit);
     for (let [key, iData] of singleMemberHit) {
       if(hitMemberMap.get(key)){
         hitMemberMap.set(key,{
@@ -184,7 +185,7 @@ function calPointHitProbilityTimeSeries(targetPoint, trackList, totalMembers = 5
       }else{// 无键
         hitMemberMap.set(key, {
           value: iData.value,
-          member: new Set(iData.member),
+          member: new Set().add(iData.member),
         })
       }
     }
@@ -238,7 +239,7 @@ function calPolygonHitTimeSeries(polygon, trackList, totalMembers = 51, interval
       }else{// 无键
         hitMemberMap.set(key, {
           value: iData.value,
-          member: new Set(iData.member),
+          member: new Set().add(iData.member),
         })
       }
     }
