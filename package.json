@@ -1,6 +1,6 @@
 {
   "name": "ocean-monitor",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "海洋台风相关页面集合",
   "main": "index.js",
   "scripts": {
