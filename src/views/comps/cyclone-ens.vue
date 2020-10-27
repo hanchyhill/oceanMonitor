@@ -803,10 +803,15 @@ async function drawMap(
 
   function zoomed() {
     // console.log(d3.event.transform);
+    // console.log(container);
+    let originR = 3;
+    if(container == '#map-container2'){
+      originR = 1.5;
+    }
     var scale = d3.event.transform.k;
     console.log(scale);
     baseMap.attr("transform", d3.event.transform);
-    baseMap.selectAll("circle").attr("r", (3.5 * 1) / scale);
+    baseMap.selectAll("circle").attr("r", (originR * 1) / scale);
     baseMap.selectAll(".track-line").style("stroke-width", 1 / scale);
   }
   // TODO latlon error
@@ -1704,7 +1709,7 @@ export default {
       this.showAllTcHit = true;
       if (!this.selectedIns || !this.selectedIns.tc[0]) return [];// 没有选中则退出
       let info = JSON.parse(JSON.stringify(cityInfo));
-      console.log(info);
+      // console.log(info);
       const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
       let pointList = info.map((city) => {
         return { x: city.lon, y: city.lat };
@@ -1778,7 +1783,7 @@ export default {
       info = info
         .filter((city) => city.hit > 0)
         .sort((pre, next) => next.hit - pre.hit);
-      console.log(info);
+      // console.log(info);
       this.hitCityList = info;
     },
   },
