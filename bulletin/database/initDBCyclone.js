@@ -5,7 +5,7 @@ const glob = require('glob');
 const dbLink = 'mongodb://localhost:12345/cyclones';
 const dbLink2 = 'mongodb://10.148.16.20:20186/cyclones';
 // const dbConfig = {user:'rwTC', pass:'1FL4SvheFLETSZrXX5tj',useNewUrlParser: true, autoIndex: false, keepAlive: 120,};
-const dbConfig = {user:'readTC', pass:'aJvl1tl4kF16QWvgb6ZC',useNewUrlParser: true, autoIndex: false, keepAlive: 120,};
+const dbConfig = {user:'readTC', pass:'aJvl1tl4kF16QWvgb6ZC',useNewUrlParser: true, autoIndex: false, keepAlive: 120,useUnifiedTopology: true,};
 const {resolve} = require('path');
 const MAX_RECONNECTED = 10;
 
@@ -28,7 +28,7 @@ exports.connect = ()=>{
       // link = dbLink;
       // mongoose.connect(link,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,});
       link = dbLink;
-      mongoose.connect(link,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,});
+      mongoose.connect(link,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,useUnifiedTopology: true,});
     }
     else{
       link = dbLink2;
