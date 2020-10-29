@@ -19,8 +19,23 @@ let config = {
   runningList:[],
 }
 
+// async function getCurrentTYlist(){
+//   let cTyUrl = `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getSevpNewestTyphoonInfo&dataFormat=json`;
+//   let rp = await axios.get(cTyUrl)
+//     .catch(err=>{throw err});
+//   let tyList = rp.data.DATA;
+//   tyList = tyList.map(ty=>{
+//     return {
+//       INTLID: ty.INTLID,
+//       TSCNAME: ty.TSCNAME,
+//       TSENAME: ty.TSENAME,
+//       TSID: ty.TSID, 
+//     }
+//   });
+//   return tyList;
+// }
 async function getCurrentTYlist(){
-  let cTyUrl = `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getSevpNewestTyphoonInfo&dataFormat=json`;
+  let cTyUrl = `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonInfo&dataFormat=json`;
   let rp = await axios.get(cTyUrl)
     .catch(err=>{throw err});
   let tyList = rp.data.DATA;
@@ -30,8 +45,11 @@ async function getCurrentTYlist(){
       TSCNAME: ty.TSCNAME,
       TSENAME: ty.TSENAME,
       TSID: ty.TSID, 
+      CRTTIME: moment(ty.CRTTIME),
     }
   });
+  const tenDaysBefore = moment().subtract(10, 'days');;
+  tyList = tyList.filter(ty=>ty.CRTTIME.isAfter(tenDaysBefore))
   return tyList;
 }
 
@@ -39,11 +57,26 @@ async function main(){
   let currentTYlist = await getCurrentTYlist()
     .catch(err=>{throw err});// 获取当前活动台风
   // console.log(currentTYlist);
+  // let currentTYlist = [
+  //   {
+  //       INTLID: "2018",
+  //       TSCNAME: "莫拉菲",
+  //       TSENAME: "molave",
+  //       TSID: "636",
+  //     },
+  //     {
+  //       INTLID: "****",
+  //       TSCNAME: "",
+  //       TSENAME: "",
+  //       TSID: "637",
+  //     },
+  // ];
   for(let tc of currentTYlist){
     let obsUrlList = config.insList.map(ins=>{
       return `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonObs4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}`;
     });
-    let allObsList = await Promise.all(obsUrlList.map(url=>getTyObs(url)));
+    let allObsList = await Promise.all(obsUrlList.map(url=>getTyObs(url)))
+      .catch(err=>{throw err});
     let leastData = allObsList.reduce((acc,cv)=>{
       if(cv.empty){
         return acc;
@@ -89,7 +122,7 @@ async function main(){
     let sameIndex = config.lastDataList.findIndex((ele)=>{//找相同元素
       const isTheSame =  ele.TSID == leastData.TSID &&
             ele.CRTTIME == leastData.CRTTIME &&
-            ele.DDATETIME == leastData.DDATETIME;
+            ele.DDATETIME == leastData.DDATETIME;// TODO 需要更复杂的判断,加入MD5或者数组判断
       return isTheSame;
     })
     if(sameIndex>-1) {
@@ -119,8 +152,9 @@ async function main(){
         "ensembleNumber": parseInt(config.insList[index].slice(-2)),
         track: allForecastList[index],
       }
-      if(!member.track.length){
+      if(member.track.length){
         tcInfo.tracks.push(member);
+        // console.log(tcInfo.tracks);
       }
     }
     // TODO 添加确定性预报
@@ -141,6 +175,7 @@ async function main(){
     config.lastDataList = config.runningList;
     config.runningList = [];
   }
+  console.log('查询完毕');
 }
 // GZRD
 async function getTyForecast(url){
@@ -207,13 +242,14 @@ async function init(){
     main()
     .catch(err=>{
       console.error(err);
-      return nextTime();
+      return main();
     });
   });
+  console.log('轮询开始');
   main()
     .catch(err=>{
       console.error(err);
-      return nextTime();
+      return main();
     });
 }
 
