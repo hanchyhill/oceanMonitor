@@ -7,7 +7,7 @@ const {pMakeDir, isExists} = require('../../crawler/lib/util.js');
 const path = require('path');
 const schedule = require('node-schedule');
 const config = require('./../config/private.ec.token.js').ecConfig;
-
+// https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=2021011200,72,20210171500&projection=classical_wnp&layer_name=genesis_ts&token=18920751e5e946a4df04f1fc0553375c&email=ql.li@siat.ac.cn
 // https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=2019071200,72,2019071500&projection=classical_wnp&layer_name=genesis_ts&token=83a1eeb52164da924afe55b2d253517c&email=ql.li@siat.ac.cn
 config.leastFile = '2019.png';
 function gen_TC_proUrl (initDate,fcHour,finalDate,token,email){

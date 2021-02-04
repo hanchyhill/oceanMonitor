@@ -13,8 +13,8 @@ const {promisify} = require('util');
  * @param {function} callback - 回调函数
  */
 function mkdirsCall(dirname, callback) {
-  fs.exists(dirname, function (exists) {  
-    if (exists) {
+  fs.access(dirname, function (err) {  
+    if (!err) {
       callback();
     } else {  
       // console.log(path.dirname(dirname));  
