@@ -19,6 +19,18 @@ let config = {
   runningList:[],
 }
 
+const ideaConfig = {
+  username:'',
+  password:'',
+}
+if (process.env.NODE_ENV === 'production') {
+  ideaConfig.username = IDEA_config.production.username;
+  ideaConfig.password = IDEA_config.production.password;
+  } else {
+  ideaConfig.username = IDEA_config.development.username;
+  ideaConfig.password = IDEA_config.development.password;
+}
+console.log(ideaConfig);
 // async function getCurrentTYlist(){
 //   let cTyUrl = `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getSevpNewestTyphoonInfo&dataFormat=json`;
 //   let rp = await axios.get(cTyUrl)
@@ -35,7 +47,7 @@ let config = {
 //   return tyList;
 // }
 async function getCurrentTYlist(){
-  let cTyUrl = `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonInfo&dataFormat=json`;
+  let cTyUrl = `http://172.22.1.175/di/http.action?userId=${ideaConfig.username}&pwd=${ideaConfig.password}&interfaceId=getRACTyphoonInfo&dataFormat=json`;
   let rp = await axios.get(cTyUrl)
     .catch(err=>{throw err});
   let tyList = rp.data.DATA;
@@ -73,7 +85,7 @@ async function main(){
   // ];
   for(let tc of currentTYlist){
     let obsUrlList = config.insList.map(ins=>{
-      return `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonObs4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}`;
+      return `http://172.22.1.175/di/http.action?userId=${ideaConfig.username}&pwd=${ideaConfig.password}&interfaceId=getRACTyphoonObs4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}`;
     });
     let allObsList = await Promise.all(obsUrlList.map(url=>getTyObs(url)))
       .catch(err=>{throw err});
@@ -131,7 +143,7 @@ async function main(){
     };
     
     let fcUrlList = config.insList.map(ins=>{
-      return `http://172.22.1.175/di/http.action?userId=${IDEA_config.userId}&pwd=${IDEA_config.pwd}&interfaceId=getRACTyphoonFst4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}&ymdhms=${moment(leastData.DDATETIME).format('YYYYMMDDHHmmss')}`;
+      return `http://172.22.1.175/di/http.action?userId=${ideaConfig.username}&pwd=${ideaConfig.password}&interfaceId=getRACTyphoonFst4Tsid&dataFormat=json&tsid=${tc.TSID}&fcid=${ins}&ymdhms=${moment(leastData.DDATETIME).format('YYYYMMDDHHmmss')}`;
     });
     let cycloneNumber = tc.INTLID.replace(/\*/g,'');
     let cycloneName = tc.TSENAME;
