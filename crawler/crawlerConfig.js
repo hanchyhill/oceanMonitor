@@ -5,6 +5,9 @@ const dirConfig ={
 
 const config = {
   i20: [
+    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'ASAS_COLOR.pdf' , lastModified:'', dir:'env/'},
+    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'FSAS24_COLOR_ASIA.pdf' , lastModified:'', dir:'env/'},
+    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'FSAS48_COLOR_ASIA.pdf' , lastModified:'', dir:'env/'},
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_sst_wpac_1.png', lastModified:'', dir:'env/'},//'last-modified'
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_ssta_wpac_1.png', lastModified:'', dir:'env/'},
     {urlBase:'https://www.tropicaltidbits.com/analysis/ocean/', name:'cdas-sflux_ssta_global_1.png', lastModified:'', dir:'env/'},
@@ -85,9 +88,6 @@ const config = {
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas233.png' , lastModified:'', dir:'ascat/B-'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas245.png' , lastModified:'', dir:'ascat/B-'},
     {urlBase:'http://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/', name:'WMBas257.png' , lastModified:'', dir:'ascat/B-'},
-    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'ASAS_COLOR.pdf' , lastModified:'', dir:'env/'},
-    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'FSAS24_COLOR_ASIA.pdf' , lastModified:'', dir:'env/'},
-    {urlBase:'https://www.data.jma.go.jp/fcd/yoho/data/wxchart/quick/', name:'FSAS48_COLOR_ASIA.pdf' , lastModified:'', dir:'env/'},
   ],
   i6:[
     {urlBase:'http://tropic.ssec.wisc.edu/real-time/westpac/images/kml/', name:'irbdgmskml.GIF', lastModified:'', dir:'sat/'},// 这个是不是有问题?
