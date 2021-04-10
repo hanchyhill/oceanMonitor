@@ -130,7 +130,7 @@ function createTaskList(taskConfig) {
 
 }
 
-async function handleImgDownload(taskConfig, basetime, validtime, projection, layerName) {
+async function handleImgDownload({taskConfig, basetime, validtime, projection, layerName}={}) {
   try {
     let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
     let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/`);
@@ -167,24 +167,38 @@ async function getEcImg(taskConfig) {
     let timeList = currentInfo.timeList;
 
     // TODO: for 循环改成并发控制
-    for (let fc of timeList) {
-      let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/`);
-      validtime = fc;
-      let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
-      let filePath = path.resolve(dirPath, imgFileName);
-      let isFileExists = await isExists(filePath);
-      if (!isFileExists) {
-        let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName);
-        // imgUrl = "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png";
 
-        let response = await storeImg(imgUrl, dirPath, imgFileName);
-        console.log(response.message);
+    taskList = timeList.map(fc=>{
+      return {
+        taskConfig,
+        basetime,
+        validtime:fc,
+        projection,
+        layerName,
       }
-      else {
-        console.log(`文件已存在${imgFileName}`);
-        continue;
-      }
+    });
+    try{
+      const result = await pMap(taskList, handleImgDownload, {stopOnError:false, concurrency:5});
+      console.log(result);
+    }catch(err){
+      throw err;
     }
+    // for (let fc of timeList) {
+    //   let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/`);
+    //   validtime = fc;
+    //   let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
+    //   let filePath = path.resolve(dirPath, imgFileName);
+    //   let isFileExists = await isExists(filePath);
+    //   if (!isFileExists) {
+    //     let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName);
+    //     let response = await storeImg(imgUrl, dirPath, imgFileName);
+    //     console.log(response.message);
+    //   }
+    //   else {
+    //     console.log(`文件已存在${imgFileName}`);
+    //     continue;
+    //   }
+    // }
   }
 }
 
