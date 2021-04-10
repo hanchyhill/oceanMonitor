@@ -1,0 +1,2244 @@
+{
+  "subtitle": [
+    "High resolution forecast"
+  ],
+  "description": "\n\n\n\n\n A revised set of Simulated Forecast Image web products (SIM) was introduced with the model upgrade on 8th March 2016. The old SIM products for satellites GOES-15,\n GOES-13, MET-7 and MTSAT-2 were discontinued and effectively replaced by a single product with global coverage. This global view product is now based solely on the\n sensor characteristics of the Meteosat-10 satellite. For every pixel the satellite is now assumed to be overhead (nadir view). Images on this web page are now\n cut-outs from this global product. The regions displayed have not changed, and so continue to reflect the areas seen by different geostationary satellites around\n the world.\n\n\n\n Simulated infra-red and water vapour images for geostationary satellites Simulated satellite images are generated from the model forecast fields using the same\n radiative transfer algorithm (RTTOV) as in the ECMWF operational data assimilation. The forecast brightness temperature can then be used to produce pictures\n equivalent to the infra-red and water vapour images available from geostationary satellites. The model-simulated satellite images are now produced for leads up\nto five days.\n\n\n\n\n These products display cloud-related fields from the model in a format that is very familiar to forecasters, that they are used to interpreting, and that can\n easily be compared to actual satellite imagery. The user may find that interpretation can be aided by using browser tabs to toggle between the WV and IR\n products.\n\n\n\n",
+  "title": "Simulated images - Infrared",
+  "package": {
+    "facets": [
+      "Range",
+      "Type",
+      "Component",
+      "Product type",
+      "Parameters",
+      "Product group"
+    ],
+    "children": [
+      "medium",
+      "mofc_new",
+      "extended-range",
+      "seasonal_system5"
+    ],
+    "name": "opencharts",
+    "title": "Charts catalogue"
+  },
+  "name": "medium-simulated-ir",
+  "tracker": "tracker-398659ee04a449d6a2a0891c1e459519",
+  "values": {
+    "base_time": "202104100000",
+    "projection": "opencharts_europe",
+    "valid_time": "202104100000",
+    "expver": "0001",
+    "step": 0,
+    "layer_name": "sim_image_ir"
+  },
+  "uid": "",
+  "axis": [
+    {
+      "name": "base_time",
+      "title": "Base time",
+      "linked_axis_title": "Valid time",
+      "values": [
+        {
+          "linked_values": [
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100300",
+              "label": "Sat 10 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104100900",
+              "label": "Sat 10 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101500",
+              "label": "Sat 10 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104102100",
+              "label": "Sat 10 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104171800",
+              "label": "Sat 17 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104180000",
+              "label": "Sun 18 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104180600",
+              "label": "Sun 18 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104181200",
+              "label": "Sun 18 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104181800",
+              "label": "Sun 18 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104190000",
+              "label": "Mon 19 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104190600",
+              "label": "Mon 19 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104191200",
+              "label": "Mon 19 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104191800",
+              "label": "Mon 19 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104200000",
+              "label": "Tue 20 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104100000",
+          "label": "Sat 10 Apr 2021 00 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091500",
+              "label": "Fri 09 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104092100",
+              "label": "Fri 09 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100300",
+              "label": "Sat 10 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104100900",
+              "label": "Sat 10 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104171800",
+              "label": "Sat 17 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104180000",
+              "label": "Sun 18 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104180600",
+              "label": "Sun 18 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104181200",
+              "label": "Sun 18 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104181800",
+              "label": "Sun 18 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104190000",
+              "label": "Mon 19 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104190600",
+              "label": "Mon 19 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104191200",
+              "label": "Mon 19 Apr 2021 12 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104091200",
+          "label": "Fri 09 Apr 2021 12 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090300",
+              "label": "Fri 09 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104090900",
+              "label": "Fri 09 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091500",
+              "label": "Fri 09 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104092100",
+              "label": "Fri 09 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104171800",
+              "label": "Sat 17 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104180000",
+              "label": "Sun 18 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104180600",
+              "label": "Sun 18 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104181200",
+              "label": "Sun 18 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104181800",
+              "label": "Sun 18 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104190000",
+              "label": "Mon 19 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104090000",
+          "label": "Fri 09 Apr 2021 00 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081500",
+              "label": "Thu 08 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104082100",
+              "label": "Thu 08 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090300",
+              "label": "Fri 09 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104090900",
+              "label": "Fri 09 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104171800",
+              "label": "Sat 17 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104180000",
+              "label": "Sun 18 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104180600",
+              "label": "Sun 18 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104181200",
+              "label": "Sun 18 Apr 2021 12 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104081200",
+          "label": "Thu 08 Apr 2021 12 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080300",
+              "label": "Thu 08 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104080900",
+              "label": "Thu 08 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081500",
+              "label": "Thu 08 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104082100",
+              "label": "Thu 08 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104171800",
+              "label": "Sat 17 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104180000",
+              "label": "Sun 18 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104080000",
+          "label": "Thu 08 Apr 2021 00 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071500",
+              "label": "Wed 07 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104072100",
+              "label": "Wed 07 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080300",
+              "label": "Thu 08 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104080900",
+              "label": "Thu 08 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104170600",
+              "label": "Sat 17 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104171200",
+              "label": "Sat 17 Apr 2021 12 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104071200",
+          "label": "Wed 07 Apr 2021 12 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104070000",
+              "label": "Wed 07 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104070300",
+              "label": "Wed 07 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104070600",
+              "label": "Wed 07 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104070900",
+              "label": "Wed 07 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071500",
+              "label": "Wed 07 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104072100",
+              "label": "Wed 07 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104161800",
+              "label": "Fri 16 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104170000",
+              "label": "Sat 17 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104070000",
+          "label": "Wed 07 Apr 2021 00 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104061200",
+              "label": "Tue 06 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104061500",
+              "label": "Tue 06 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104061800",
+              "label": "Tue 06 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104062100",
+              "label": "Tue 06 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104070000",
+              "label": "Wed 07 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104070300",
+              "label": "Wed 07 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104070600",
+              "label": "Wed 07 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104070900",
+              "label": "Wed 07 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104160600",
+              "label": "Fri 16 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104161200",
+              "label": "Fri 16 Apr 2021 12 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104061200",
+          "label": "Tue 06 Apr 2021 12 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104060000",
+              "label": "Tue 06 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104060300",
+              "label": "Tue 06 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104060600",
+              "label": "Tue 06 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104060900",
+              "label": "Tue 06 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104061200",
+              "label": "Tue 06 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104061500",
+              "label": "Tue 06 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104061800",
+              "label": "Tue 06 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104062100",
+              "label": "Tue 06 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104070000",
+              "label": "Wed 07 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104070600",
+              "label": "Wed 07 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104151800",
+              "label": "Thu 15 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104160000",
+              "label": "Fri 16 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104060000",
+          "label": "Tue 06 Apr 2021 00 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104051200",
+              "label": "Mon 05 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104051500",
+              "label": "Mon 05 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104051800",
+              "label": "Mon 05 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104052100",
+              "label": "Mon 05 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104060000",
+              "label": "Tue 06 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104060300",
+              "label": "Tue 06 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104060600",
+              "label": "Tue 06 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104060900",
+              "label": "Tue 06 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104061200",
+              "label": "Tue 06 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104061800",
+              "label": "Tue 06 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104070000",
+              "label": "Wed 07 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104070600",
+              "label": "Wed 07 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104150600",
+              "label": "Thu 15 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104151200",
+              "label": "Thu 15 Apr 2021 12 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104051200",
+          "label": "Mon 05 Apr 2021 12 UTC"
+        },
+        {
+          "linked_values": [
+            {
+              "value": "202104050000",
+              "label": "Mon 05 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104050300",
+              "label": "Mon 05 Apr 2021 03 UTC"
+            },
+            {
+              "value": "202104050600",
+              "label": "Mon 05 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104050900",
+              "label": "Mon 05 Apr 2021 09 UTC"
+            },
+            {
+              "value": "202104051200",
+              "label": "Mon 05 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104051500",
+              "label": "Mon 05 Apr 2021 15 UTC"
+            },
+            {
+              "value": "202104051800",
+              "label": "Mon 05 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104052100",
+              "label": "Mon 05 Apr 2021 21 UTC"
+            },
+            {
+              "value": "202104060000",
+              "label": "Tue 06 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104060600",
+              "label": "Tue 06 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104061200",
+              "label": "Tue 06 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104061800",
+              "label": "Tue 06 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104070000",
+              "label": "Wed 07 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104070600",
+              "label": "Wed 07 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104071200",
+              "label": "Wed 07 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104071800",
+              "label": "Wed 07 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104080000",
+              "label": "Thu 08 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104080600",
+              "label": "Thu 08 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104081200",
+              "label": "Thu 08 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104081800",
+              "label": "Thu 08 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104090000",
+              "label": "Fri 09 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104090600",
+              "label": "Fri 09 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104091200",
+              "label": "Fri 09 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104091800",
+              "label": "Fri 09 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104100000",
+              "label": "Sat 10 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104100600",
+              "label": "Sat 10 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104101200",
+              "label": "Sat 10 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104101800",
+              "label": "Sat 10 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104110000",
+              "label": "Sun 11 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104110600",
+              "label": "Sun 11 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104111200",
+              "label": "Sun 11 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104111800",
+              "label": "Sun 11 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104120000",
+              "label": "Mon 12 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104120600",
+              "label": "Mon 12 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104121200",
+              "label": "Mon 12 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104121800",
+              "label": "Mon 12 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104130000",
+              "label": "Tue 13 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104130600",
+              "label": "Tue 13 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104131200",
+              "label": "Tue 13 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104131800",
+              "label": "Tue 13 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104140000",
+              "label": "Wed 14 Apr 2021 00 UTC"
+            },
+            {
+              "value": "202104140600",
+              "label": "Wed 14 Apr 2021 06 UTC"
+            },
+            {
+              "value": "202104141200",
+              "label": "Wed 14 Apr 2021 12 UTC"
+            },
+            {
+              "value": "202104141800",
+              "label": "Wed 14 Apr 2021 18 UTC"
+            },
+            {
+              "value": "202104150000",
+              "label": "Thu 15 Apr 2021 00 UTC"
+            }
+          ],
+          "animation": true,
+          "linked_axis": "valid_time",
+          "value": "202104050000",
+          "label": "Mon 05 Apr 2021 00 UTC"
+        }
+      ],
+      "type": "choice",
+      "animation": false,
+      "linked_axis": "valid_time"
+    },
+    {
+      "values": [
+        {
+          "value": "opencharts_europe",
+          "label": "Europe"
+        },
+        {
+          "value": "opencharts_global",
+          "label": "Global"
+        },
+        {
+          "value": "opencharts_central_europe",
+          "label": "Central Europe"
+        },
+        {
+          "value": "opencharts_north_west_europe",
+          "label": "North West Europe"
+        },
+        {
+          "value": "opencharts_north_east_europe",
+          "label": "North East Europe"
+        },
+        {
+          "value": "opencharts_south_west_europe",
+          "label": "South West Europe"
+        },
+        {
+          "value": "opencharts_south_east_europe",
+          "label": "South East Europe"
+        },
+        {
+          "value": "opencharts_northern_africa",
+          "label": "Northern Africa"
+        },
+        {
+          "value": "opencharts_north_atlantic",
+          "label": "North Atlantic"
+        },
+        {
+          "value": "opencharts_arctic",
+          "label": "Arctic"
+        },
+        {
+          "value": "opencharts_antarctic",
+          "label": "Antarctic"
+        },
+        {
+          "value": "opencharts_north_america",
+          "label": "North America"
+        },
+        {
+          "value": "opencharts_central_america",
+          "label": "Central America"
+        },
+        {
+          "value": "opencharts_south_america",
+          "label": "South America"
+        },
+        {
+          "value": "opencharts_eurasia",
+          "label": "Eurasia"
+        },
+        {
+          "value": "opencharts_southern_asia",
+          "label": "Southern Asia"
+        },
+        {
+          "value": "opencharts_western_asia",
+          "label": "Western Asia"
+        },
+        {
+          "value": "opencharts_eastern_asia",
+          "label": "Eastern Asia"
+        },
+        {
+          "value": "opencharts_south_east_asia_and_indonesia",
+          "label": "South East Asia & Indonesia"
+        },
+        {
+          "value": "opencharts_middle_east_and_india",
+          "label": "Middle East & India"
+        },
+        {
+          "value": "opencharts_africa",
+          "label": "Africa"
+        },
+        {
+          "value": "opencharts_southern_africa",
+          "label": "Southern Africa"
+        },
+        {
+          "value": "opencharts_australasia",
+          "label": "Australasia"
+        },
+        {
+          "value": "opencharts_west_tropic",
+          "label": "West Tropic"
+        },
+        {
+          "value": "opencharts_east_tropic",
+          "label": "East Tropic"
+        },
+        {
+          "value": "opencharts_equatorial_pacific",
+          "label": "Equatorial Pacific"
+        },
+        {
+          "value": "opencharts_pacific",
+          "label": "Pacific"
+        },
+        {
+          "value": "opencharts_south_atlantic_and_indian_ocean",
+          "label": "South Atlantic & Indian Ocean"
+        },
+        {
+          "value": "opencharts_north_pole",
+          "label": "North Pole"
+        },
+        {
+          "value": "opencharts_south_pole",
+          "label": "South Pole"
+        }
+      ],
+      "animation": false,
+      "type": "choice",
+      "name": "projection",
+      "title": "Area"
+    }
+  ]
+}
