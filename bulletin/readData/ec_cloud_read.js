@@ -24,14 +24,14 @@ const config = {
     },
     filePrefix: 'ec_tcc',
   },
-  mvImg: {
+  wvImg: {
     openUrl: 'https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/',
     preojectionList: ['opencharts_south_east_asia_and_indonesia', "opencharts_eastern_asia"],
     layerNameList: ['sim_image_wv', 'sim_image_wv_ch6'],
     fetchImgUrlBuilder(basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_south_east_asia_and_indonesia', layerName = 'sim_image_wv') {
       return `https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}&layer_name=${layerName}`;
     },
-    filePrefix: 'ec_mv',
+    filePrefix: 'ec_wv',
 
   }
 }
@@ -192,7 +192,7 @@ async function getCloudImgMain() {
   await getEcImg(config.tccImg).catch(err => {
     console.error(err);
   });
-  await getEcImg(config.mvImg).catch(err => {
+  await getEcImg(config.wvImg).catch(err => {
     console.error(err);
   });
   console.log('完成本次EC图像下载');

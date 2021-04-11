@@ -156,7 +156,7 @@ function ecCloudMainJob(){
     console.log('ecCloud轮询开始'+fireDate.toString());
     getEcmwfCloud()
       .then(data=>{
-        console.log('完成本次ecCloud下载 '+data);
+        console.log('完成本次ecCloud下载 ');
       })
       .catch(err=>{
       console.log(err);
