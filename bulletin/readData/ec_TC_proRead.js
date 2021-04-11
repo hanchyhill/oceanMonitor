@@ -7,6 +7,7 @@ const {pMakeDir, isExists} = require('../../crawler/lib/util.js');
 const path = require('path');
 const schedule = require('node-schedule');
 const config = require('./../config/private.ec.token.js').ecConfig;
+const {getEcmwfCloud} = require('./ec_cloud_read.js');
 // https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=2021011200,72,20210171500&projection=classical_wnp&layer_name=genesis_ts&token=18920751e5e946a4df04f1fc0553375c&email=ql.li@siat.ac.cn
 // https://apps.ecmwf.int/plots/product-download/catalogue/medium-tc-genesis/?time=2019071200,72,2019071500&projection=classical_wnp&layer_name=genesis_ts&token=83a1eeb52164da924afe55b2d253517c&email=ql.li@siat.ac.cn
 config.leastFile = '2019.png';
@@ -146,3 +147,23 @@ getPro()
   .catch(err=>{
   console.log(err);
   });
+
+/////////////////
+function ecCloudMainJob(){
+  let ruleI10 = new schedule.RecurrenceRule();
+  ruleI10.minute = [new schedule.Range(2, 59, 13)];// 13分钟轮询
+  let job10 = schedule.scheduleJob(ruleI10, (fireDate)=>{
+    console.log('ecCloud轮询开始'+fireDate.toString());
+    getEcmwfCloud()
+      .then(data=>{
+        console.log('完成本次ecCloud下载 '+data);
+      })
+      .catch(err=>{
+      console.log(err);
+      });
+  });
+  return job10;
+}
+
+ecCloudMainJob();
+

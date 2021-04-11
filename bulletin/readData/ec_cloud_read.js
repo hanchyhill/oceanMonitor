@@ -133,7 +133,7 @@ function createTaskList(taskConfig) {
 async function handleImgDownload({taskConfig, basetime, validtime, projection, layerName}={}) {
   try {
     let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
-    let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/`);
+    let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/${basetime.slice(0, 10)}/`);
     let filePath = path.resolve(dirPath, imgFileName);
     let isFileExists = await isExists(filePath);
     if (!isFileExists) {
@@ -166,8 +166,6 @@ async function getEcImg(taskConfig) {
     let basetime = currentInfo.basetime;
     let timeList = currentInfo.timeList;
 
-    // TODO: for 循环改成并发控制
-
     taskList = timeList.map(fc=>{
       return {
         taskConfig,
@@ -179,26 +177,11 @@ async function getEcImg(taskConfig) {
     });
     try{
       const result = await pMap(taskList, handleImgDownload, {stopOnError:false, concurrency:5});
-      console.log(result);
+      // console.log(result);
+      return result;
     }catch(err){
       throw err;
     }
-    // for (let fc of timeList) {
-    //   let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/`);
-    //   validtime = fc;
-    //   let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
-    //   let filePath = path.resolve(dirPath, imgFileName);
-    //   let isFileExists = await isExists(filePath);
-    //   if (!isFileExists) {
-    //     let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName);
-    //     let response = await storeImg(imgUrl, dirPath, imgFileName);
-    //     console.log(response.message);
-    //   }
-    //   else {
-    //     console.log(`文件已存在${imgFileName}`);
-    //     continue;
-    //   }
-    // }
   }
 }
 
@@ -212,7 +195,16 @@ async function getCloudImgMain() {
   await getEcImg(config.mvImg).catch(err => {
     console.error(err);
   });
+  console.log('完成本次EC图像下载');
+}
+
+if (require.main === module) {
+  console.log('called directly');
+} else {
+  console.log('required as a module');
+  exports.getEcmwfCloud = getCloudImgMain;
 }
 
 getCloudImgMain();
+
 // getEcImg(config.mvImg);

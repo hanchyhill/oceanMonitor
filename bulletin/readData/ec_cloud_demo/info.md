@@ -35,3 +35,7 @@ A "Rubik's cube" representation of the colour table used for the different categ
 This display method helps with the recognition of clouds of different layers, even when they overlap. As an example, active fronts in the forecast are easily seen, as dark grey bands.
 
 More information about the algorithm can be seen in ECMWF Newsletter No. 101
+
+模拟卫星云图以Meteosat-10卫星传感器特性为基础制作，假定卫星位于赤道上空，反映地球同步卫星所看到的影像。
+静止卫星模拟红外云图和水汽云图与ECMWF数据同化系统所用的辐射传输方案(radiative transfer algorithm-RTTOV)一致，模式预报的亮温数据可以用来推演静止卫星所观测到的红外和水汽图像。
+模拟卫星云图给预报员一个熟悉的观察地球的视角，预报员可以通过对比真实卫星云图与模拟卫星云图对天气系统进行解释应用。
