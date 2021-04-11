@@ -139,6 +139,7 @@ async function handleImgDownload({taskConfig, basetime, validtime, projection, l
     if (!isFileExists) {
       let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName);
       // imgUrl = "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png";
+      
       let response = await storeImg(imgUrl, dirPath, imgFileName);
       console.log(response.message);
       return response.message;
@@ -157,7 +158,6 @@ async function getEcImg(taskConfig) {
   // let basetime='202104100000', validtime='202104100000', projection = 'opencharts_south_east_asia_and_indonesia';
   let imgTypeList = createTaskList(taskConfig);
   for (let iType of imgTypeList) {
-
     let projection = iType.projection;
     let layerName = iType.layerName || null;
     let currentInfo = await openWebsite(taskConfig).catch(err => {
@@ -165,7 +165,6 @@ async function getEcImg(taskConfig) {
     });
     let basetime = currentInfo.basetime;
     let timeList = currentInfo.timeList;
-
     taskList = timeList.map(fc=>{
       return {
         taskConfig,
@@ -176,9 +175,9 @@ async function getEcImg(taskConfig) {
       }
     });
     try{
-      const result = await pMap(taskList, handleImgDownload, {stopOnError:false, concurrency:5});
+      await pMap(taskList, handleImgDownload, {stopOnError:false, concurrency:5});
       // console.log(result);
-      return result;
+      // return result;
     }catch(err){
       throw err;
     }
