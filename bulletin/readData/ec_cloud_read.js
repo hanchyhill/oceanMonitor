@@ -7,6 +7,8 @@ const stream = require('stream');
 const pMap = require('p-map');
 
 const pipeline = promisify(stream.pipeline);
+const pStat = promisify(fs.stat);
+const pDelete = promisify(fs.unlink);
 const config = {
   irImg: {
     openUrl: 'https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-ir/',
@@ -74,8 +76,10 @@ async function storeImg(imgUrl, dirPath, targetImgName) {// "https://apps.ecmwf.
         fs.createWriteStream(filePath)
       );
     } catch (err) {
+      console.log('下载图像发生错误, 正在尝试删除');
       let isErrorFileExists = await isExists(filePath);
-      if (isErrorFileExists) fs.deleteFile(filePath, err => { console.error(err) });
+      console.log('是否存在错误数据: ' + isErrorFileExists);
+      if (isErrorFileExists) await pDelete(filePath);
       feedback = {
         error: true,
         fileName: targetImgName,
@@ -130,25 +134,38 @@ function createTaskList(taskConfig) {
 
 }
 
-async function handleImgDownload({taskConfig, basetime, validtime, projection, layerName}={}) {
+async function handleImgDownload({ taskConfig, basetime, validtime, projection, layerName } = {}) {
   try {
     let imgFileName = `${taskConfig.filePrefix}_${projection}_${layerName ? layerName + '_' : ''}base${basetime}_valid${validtime}.png`;
     let dirPath = path.resolve(basePath, `./${basetime.slice(0, 6)}/${basetime.slice(0, 10)}/`);
     let filePath = path.resolve(dirPath, imgFileName);
     let isFileExists = await isExists(filePath);
     if (!isFileExists) {
-      let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName);
+      let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName)
+        .catch(err => { console.log('获取图像地址发生错误:' + imgFileName) });
       // imgUrl = "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png";
-      
+
       let response = await storeImg(imgUrl, dirPath, imgFileName);
       console.log(response.message);
       return response.message;
     }
     else {
-      console.log(`文件已存在${imgFileName}`);
-      return `文件已存在${imgFileName}`;
+      let fileStatus = await pStat(filePath);
+      if (fileStatus.size < 102400) {// 442302
+        console.log('删除异常文件重新下载' + imgFileName);
+        await pDelete(filePath);
+        let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName)
+          .catch(err => { console.log('获取图像地址发生错误:' + imgFileName) });
+        let response = await storeImg(imgUrl, dirPath, imgFileName);
+        console.log(response.message);
+        return response.message;
+      }else{
+        console.log(`文件已存在${imgFileName}`);
+        return `文件已存在${imgFileName}`;
+      }
     }
   } catch (e) {
+
     return e.message;
   }
 }
@@ -165,20 +182,20 @@ async function getEcImg(taskConfig) {
     });
     let basetime = currentInfo.basetime;
     let timeList = currentInfo.timeList;
-    taskList = timeList.map(fc=>{
+    taskList = timeList.map(fc => {
       return {
         taskConfig,
         basetime,
-        validtime:fc,
+        validtime: fc,
         projection,
         layerName,
       }
     });
-    try{
-      await pMap(taskList, handleImgDownload, {stopOnError:false, concurrency:5});
+    try {
+      await pMap(taskList, handleImgDownload, { stopOnError: false, concurrency: 5 });
       // console.log(result);
       // return result;
-    }catch(err){
+    } catch (err) {
       throw err;
     }
   }
