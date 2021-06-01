@@ -84,7 +84,7 @@ async function getFileList(opt){
     const fileName = $(tds[initTd+0]).text();
     const url = $(tds[initTd+0]).find('a').attr('href');
     const dateString = $(tds[initTd+1]).text();
-    date = moment(dateString.trim(), "DD-MMM-YYYY HH:mm")
+    const date = moment(dateString.trim(), "DD-MMM-YYYY HH:mm")
     fileArr.push({fileName,url,date,});
   });
 
