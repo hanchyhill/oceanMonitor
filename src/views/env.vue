@@ -157,6 +157,12 @@
         <TabPane label="下降B">
           <ascat-view :imgList="ascat.descendB"></ascat-view>
         </TabPane>
+        <TabPane label="上升C">
+          <ascat-view :imgList="ascat.ascendC"></ascat-view>
+        </TabPane>
+        <TabPane label="下降C">
+          <ascat-view :imgList="ascat.descendC"></ascat-view>
+        </TabPane>
       </Tabs>
     </Col>
 
@@ -243,6 +249,12 @@ export default {
         list.forEach((v) => (v.src = v[this.sourceFrom]))
       );
       ascatImg.ascendB.forEach((list) =>
+        list.forEach((v) => (v.src = v[this.sourceFrom]))
+      );
+      ascatImg.ascendC.forEach((list) =>
+        list.forEach((v) => (v.src = v[this.sourceFrom]))
+      );
+      ascatImg.descendC.forEach((list) =>
         list.forEach((v) => (v.src = v[this.sourceFrom]))
       );
       // console.log(ascatImg);
