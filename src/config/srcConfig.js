@@ -415,6 +415,13 @@ const satSrc = {
       head2:'NICT',
       notes:'提供葵花卫星的实时图像',
     },
+    zoomEarth:{
+      link:'https://zoom.earth/',
+      imgSrc:'/static/thumbnails/zoom-earth.png',
+      headInfo:'Zoom Earth',
+      head2:'全球静止卫星拼图',
+      notes:'提供葵花卫星的实时图像',
+    },
     jmaSat:{
       link:'http://www.data.jma.go.jp/mscweb/data/himawari/sat_img.php?area=se2',
       imgSrc:'/static/thumbnails/jma-sat.jpg',
@@ -458,11 +465,11 @@ const satSrc = {
       notes:'提供target Area /2.5min BD增强云图',
     },
     swap2:{
-      link:'http://rsapp.nsmc.org.cn/geofy/',
+      link:'http://rsapp.nsmc.org.cn/test_geofy/',
       imgSrc:'/static/thumbnails/swap2.jpg',
       headInfo:'风云4 swap',
       head2:'提供风云4各通道和合成云图',
-      notes:'脚本抄袭的RAMMB SILDER',
+      notes:'',
     },
   },
   tab:{
