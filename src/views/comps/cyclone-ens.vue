@@ -127,7 +127,7 @@
         </div>
         <div class="map-div">
           <div class="typhoon-info" v-show="showAllTcHit">
-          袭击概率:<br />
+            袭击概率:<br />
             <div class="hit-pro-panel">
               <div
                 v-for="(cityA, indexA) in allTcHitCityList"
@@ -139,23 +139,35 @@
               </div>
             </div>
             <div class="hit-time-series-wrap" v-show="showAllHitTime">
-              <div><Button icon="md-close" type="error" @click="showAllHitTime=false">关闭弹窗</Button>{{AllHitTimeLocName}}</div>
+              <div>
+                <Button
+                  icon="md-close"
+                  type="error"
+                  @click="showAllHitTime = false"
+                  >关闭弹窗</Button
+                ><span class="title">{{ AllHitTimeLocName }}</span>
+              </div>
               <div id="alltc-hit-time-series"></div>
-              <div class="annotation">说明: 由于不同路径袭击时间不同，时序显示的最大袭击概率会小于总袭击概率</div>
+              <div class="annotation">
+                说明:
+                由于不同路径袭击时间不同，时序显示的最大袭击概率会小于总袭击概率
+              </div>
             </div>
-            
           </div>
-          <div class="relative-container" v-show="selectedIns && selectedIns.tc[0]">
-          <div id="map-container3"></div>
-          <div class="legend">
-            <div style="background-color: rgb(85, 85, 79)">LOW</div>
-            <div style="background-color: rgb(105, 163, 74)">TD</div>
-            <div style="background-color: rgb(0, 0, 255)">TS</div>
-            <div style="background-color: rgb(255, 128, 0)">STS</div>
-            <div style="background-color: rgb(255, 0, 0)">TY</div>
-            <div style="background-color: rgb(153, 20, 8)">STY</div>
-            <div style="background-color: rgb(128, 0, 255)">SuperTY</div>
-          </div>
+          <div
+            class="relative-container"
+            v-show="selectedIns && selectedIns.tc[0]"
+          >
+            <div id="map-container3"></div>
+            <div class="legend">
+              <div style="background-color: rgb(85, 85, 79)">LOW</div>
+              <div style="background-color: rgb(105, 163, 74)">TD</div>
+              <div style="background-color: rgb(0, 0, 255)">TS</div>
+              <div style="background-color: rgb(255, 128, 0)">STS</div>
+              <div style="background-color: rgb(255, 0, 0)">TY</div>
+              <div style="background-color: rgb(153, 20, 8)">STY</div>
+              <div style="background-color: rgb(128, 0, 255)">SuperTY</div>
+            </div>
           </div>
         </div>
       </TabPane>
@@ -184,12 +196,22 @@
                 </div>
               </div>
               <div class="hit-time-series-wrap" v-show="showHitTime">
-                <div><Button icon="md-close" type="error" @click="showHitTime=false">关闭弹窗</Button>{{hitTimeLocName}}</div>
+                <div>
+                  <Button
+                    icon="md-close"
+                    type="error"
+                    @click="showHitTime = false"
+                    >关闭弹窗</Button
+                  ><span class="title">{{ hitTimeLocName }}</span>
+                </div>
                 <div id="hit-time-series"></div>
-                <div class="annotation">说明: 由于不同路径袭击时间不同，时序显示的最大袭击概率会小于总袭击概率</div>
+                <div class="annotation">
+                  说明:
+                  由于不同路径袭击时间不同，时序显示的最大袭击概率会小于总袭击概率
+                </div>
               </div>
             </div>
-            
+
             <div>
               <div class="relative-container map-container">
                 <div id="map-container"></div>
@@ -805,7 +827,7 @@ async function drawMap(
     // console.log(d3.event.transform);
     // console.log(container);
     let originR = 3;
-    if(container == '#map-container2'){
+    if (container == "#map-container2") {
       originR = 1.5;
     }
     var scale = d3.event.transform.k;
@@ -1320,7 +1342,7 @@ export default {
       timeRange: [startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: "WPAC",
-      selectedModel: ["ecmwf", "ncep-R", "ukmo-R", "fnmoc-R", "cmc-R"],
+      selectedModel: ["ecmwf", "ncep-R", "ukmo-R", "fnmoc-R", "cmc-R","TRAMS_TY"],
       tcMeta: tcUtil.model,
       cityInfo: cityInfo,
       basinList: [
@@ -1340,21 +1362,20 @@ export default {
       ],
       modelListRuc: [
         { value: "ncep-R", label: "NCEP-R" },
-        { value: "ecmwf-R", label: "ECMWF-R" },
-        { value: "ukmo-R", label: "UKMO" },
+        { value: "ecmwf-R", label: "EC-R" },
+        { value: "ukmo-R", label: "英国" },
         { value: "fnmoc-R", label: "FNMOC" },
-        { value: "cmc-R", label: "CMC" },
+        { value: "cmc-R", label: "加拿大" },
       ],
       modelListEmc: [{ value: "ncep-N", label: "NCEP-EMC" }],
       tcFilter: "all",
-      showHitTime:false,
-      hitTimeLocName:'',
-      AllHitTimeLocName:'',
-      allTcHitCityList:[],
-      hitCityList:[],
-      showAllTcHit:false,
-      showAllHitTime:false,
-      
+      showHitTime: false,
+      hitTimeLocName: "",
+      AllHitTimeLocName: "",
+      allTcHitCityList: [],
+      hitCityList: [],
+      showAllTcHit: false,
+      showAllHitTime: false,
     };
   },
   mounted() {
@@ -1390,7 +1411,6 @@ export default {
       return this.getTC([sTime, eTime]);
     },
     showTC(tcRaw) {
-      
       this.showHitTime = false;
       // this.showAllTcHit = false;
       this.currentTCcard = "singleTC";
@@ -1519,14 +1539,9 @@ export default {
     getAllTcHitTimeSeries(point = { x: 153, y: 32 }) {
       const allTC = this.selectedIns.tc;
       const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
-      
+
       let hitArr = allTC.map((tc) => {
-        
-        return calPointHitProbilityTimeSeries(
-          point,
-          tc.tracks,
-          memberNumber,
-        );
+        return calPointHitProbilityTimeSeries(point, tc.tracks, memberNumber);
       });
       // console.log(hitArr);
       let timeList = this.tcMeta[this.selectedIns.ins].timeRange();
@@ -1540,7 +1555,7 @@ export default {
         return {
           count: iUnionSet.size,
           member: iUnionSet,
-          prob: iUnionSet.size/memberNumber,
+          prob: iUnionSet.size / memberNumber,
         };
       });
       return hitTimeArr;
@@ -1567,7 +1582,7 @@ export default {
      */
     showHitProSeries(city = { name: "东沙", lon: "116.83", lat: "20.68" }) {
       this.showHitTime = true;
-      
+
       const point = {
         x: Number(city.lon),
         y: Number(city.lat),
@@ -1576,10 +1591,13 @@ export default {
       // console.log(hitSeries);
 
       const layout = {
-        title:'热带气旋袭击概率',
+        title: "热带气旋袭击概率",
         yaxis: {
           title: "Hit Probality 袭击概率%",
-          range: [0, Math.max(...hitSeries.map(iHit=>iHit.prob*100))+10],
+          range: [
+            0,
+            Math.max(...hitSeries.map((iHit) => iHit.prob * 100)) + 10,
+          ],
           zeroline: false,
           showline: true,
           showticklabels: true,
@@ -1615,29 +1633,31 @@ export default {
       //* 生成日期序列
       let timeRange = tcUtil.model[this.selectedTC.ins].timeRange(); //生成等差序列
       let initTime = moment(this.selectedTC.initTime);
-      let TimeArr = timeRange.map(step=>moment(step2time(initTime, step)).format("DD日HH时"));
+      let TimeArr = timeRange.map((step) =>
+        moment(step2time(initTime, step)).format("DD日HH时")
+      );
       //*//
       const trace0 = {
-        y: hitSeries.map(iHit=>iHit.prob*100),
+        y: hitSeries.map((iHit) => iHit.prob * 100),
         x: TimeArr,
-        mode: 'lines+markers',
-        name: '袭击概率',
-        // line: {shape: 'spline'},
+        mode: "lines+markers",
+        name: "袭击概率",
+        line: { shape: "spline" },
+        type: "scatter",
       };
       const plotData = [trace0];
       // console.log(plotData);
-      Plotly.newPlot(
-        "hit-time-series",
-        plotData,
-        layout,
-        {displayModeBar: false,},
-      );
+      Plotly.newPlot("hit-time-series", plotData, layout, {
+        displayModeBar: false,
+      });
       this.hitTimeLocName = city.name;
     },
-        /**
+    /**
      * 显示所有台风袭击概率序列
      */
-    showAllTcHitProSeries(city = { name: "东沙", lon: "116.83", lat: "20.68" }) {
+    showAllTcHitProSeries(
+      city = { name: "东沙", lon: "116.83", lat: "20.68" }
+    ) {
       const point = {
         x: Number(city.lon),
         y: Number(city.lat),
@@ -1647,10 +1667,13 @@ export default {
       // console.log(hitSeries);
 
       const layout = {
-        title:'热带气旋综合袭击概率',
+        title: "热带气旋综合袭击概率",
         yaxis: {
           title: "Hit Probality 袭击概率%",
-          range: [0, Math.max(...hitSeries.map(iHit=>iHit.prob*100))+10],
+          range: [
+            0,
+            Math.max(...hitSeries.map((iHit) => iHit.prob * 100)) + 10,
+          ],
           zeroline: false,
           showline: true,
           showticklabels: true,
@@ -1686,28 +1709,27 @@ export default {
       //* 生成日期序列
       let timeRange = tcUtil.model[this.selectedIns.ins].timeRange(); //生成等差序列
       let initTime = moment(this.selectedIns.tc[0].initTime);
-      let TimeArr = timeRange.map(step=>moment(step2time(initTime, step)).format("DD日HH时"));
+      let TimeArr = timeRange.map((step) =>
+        moment(step2time(initTime, step)).format("DD日HH时")
+      );
       //*//
       const trace0 = {
-        y: hitSeries.map(iHit=>iHit.prob*100),
+        y: hitSeries.map((iHit) => iHit.prob * 100),
         x: TimeArr,
-        mode: 'lines+markers',
-        name: '袭击概率',
-        // line: {shape: 'spline'},
+        mode: "lines+markers",
+        name: "袭击概率",
+        line: { shape: "spline" },
       };
       const plotData = [trace0];
       // console.log(plotData);
-      Plotly.newPlot(
-        "alltc-hit-time-series",
-        plotData,
-        layout,
-        {displayModeBar: false,},
-      );
+      Plotly.newPlot("alltc-hit-time-series", plotData, layout, {
+        displayModeBar: false,
+      });
       this.AllHitTimeLocName = city.name;
     },
     calAllTcHitCityList() {
       this.showAllTcHit = true;
-      if (!this.selectedIns || !this.selectedIns.tc[0]) return [];// 没有选中则退出
+      if (!this.selectedIns || !this.selectedIns.tc[0]) return []; // 没有选中则退出
       let info = JSON.parse(JSON.stringify(cityInfo));
       // console.log(info);
       const memberNumber = this.tcMeta[this.selectedIns.ins].enNumber;
@@ -1719,9 +1741,11 @@ export default {
         return this.getAllTcHitTimeSeries(point);
       });
       // console.log(pointsTimeList);
-      let probilityList = pointsTimeList.map(timeList=>
-        timeList.reduce((pV, cV)=>pV.concat(...cV.member), [])
-      ).map(memberList=>(new Set(memberList)).size/memberNumber);
+      let probilityList = pointsTimeList
+        .map((timeList) =>
+          timeList.reduce((pV, cV) => pV.concat(...cV.member), [])
+        )
+        .map((memberList) => new Set(memberList).size / memberNumber);
       // console.log(calPointHitProbilityTimeSeries({x:153,y:32}, this.selectedTC.tracks, this.tcMeta[this.selectedTC.ins].enNumber));
       // console.log(probilityList);
       info.forEach((city, i) => {
@@ -1742,9 +1766,9 @@ export default {
       info = info
         .filter((city) => city.hit > 0)
         .sort((pre, next) => next.hit - pre.hit);
-      return this.allTcHitCityList = info;
+      return (this.allTcHitCityList = info);
     },
-        /**
+    /**
      * 单个台风袭击概率
      */
     calHitCityList() {
@@ -1788,7 +1812,6 @@ export default {
     },
   },
   computed: {
-
     timeLegend() {
       let legend = [
         "24h",
@@ -2002,19 +2025,25 @@ svg circle {
 .axistext {
     z-index: 9999;
 }*/
-#hit-time-series, #alltc-hit-time-series {
+#hit-time-series,
+#alltc-hit-time-series {
   width: 900px;
   height: 500px;
 }
-.map-div .typhoon-info{
+.map-div .typhoon-info {
   position: relative;
 }
-.typhoon-info .hit-time-series-wrap{
+.typhoon-info .hit-time-series-wrap {
   position: absolute;
   left: 230px;
   top: 0px;
   z-index: 1;
   background-color: cornsilk;
-  box-shadow:2px 2px 5px #333333;
+  box-shadow: 2px 2px 5px #333333;
+}
+.hit-time-series-wrap .title {
+  text-align: center;
+  width: 80%;
+  display: inline-block;
 }
 </style>

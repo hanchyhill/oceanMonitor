@@ -8,6 +8,9 @@
     <MenuItem name="env">
         环境分析
     </MenuItem>
+    <MenuItem name="tcanalysis">
+        <a href="http://research.gdmo.gq/ocean/tcanalysis" style="color:#cbced4">台风诊断</a>
+    </MenuItem>
     <MenuItem name="current">
         当前台风
     </MenuItem>
@@ -42,8 +45,13 @@ export default {
     /**
     响应标签变化
      */
+    if(value == 'tcanalysis'){
+      return;
+    }else{
       this.activeTab = value;
       this.$router.push(value);
+    }
+      
     },
     openSilder(){//折叠侧边栏
       this.$emit('showSideBar');
@@ -76,7 +84,7 @@ export default {
     cursor:pointer;
 }
 .layout-nav{
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
     margin-right: 20px;
 }
