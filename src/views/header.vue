@@ -9,7 +9,7 @@
         环境分析
     </MenuItem>
     <MenuItem name="tcanalysis">
-        <a href="http://research.gdmo.gq/ocean/tcanalysis" style="color:#cbced4">台风诊断</a>
+        <a href="http://research.gdmo.gq/ocean/tcanalysis" style="color:#cbced4" target="_blank">台风诊断</a>
     </MenuItem>
     <MenuItem name="current">
         当前台风

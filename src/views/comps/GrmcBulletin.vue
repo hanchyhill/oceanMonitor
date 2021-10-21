@@ -9,7 +9,7 @@
   <h3>数据中心接口</h3>
   <div>
     <div class="row">
-      <a href="http://172.22.1.175/di/http.action?userId=sqxt&pwd=shengqxt123&interfaceId=getRACTyphoonInfo&dataFormat=html"  target="_blank">
+      <a href="http://research.gdmo.gq/api/di/http.action?interfaceId=getRACTyphoonInfo&dataFormat=html"  target="_blank">
         <Button size="large" type="success">查看数据中心TSID信息</Button>
       </a>
     </div>
@@ -54,8 +54,8 @@
         ],
         fcDate:new Date(Date.now() - 8*60*60*1000),
         hour,
-        obsUrl:'http://172.22.1.175/di/http.action?userId=sqxt&pwd=shengqxt123&interfaceId=getRACTyphoonObs4Tsid&dataFormat=html&tsid=%tsid&fcid=%ins',
-        fcUrl: 'http://172.22.1.175/di/http.action?userId=sqxt&pwd=shengqxt123&interfaceId=getRACTyphoonFst4Tsid&dataFormat=html&tsid=%tsid&fcid=%ins&ymdhms=%date',
+        obsUrl:'https://research.gdmo.gq/api/di/http.action?interfaceId=getRACTyphoonObs4Tsid&dataFormat=html&tsid=%tsid&fcid=%ins',
+        fcUrl: 'https://research.gdmo.gq/api/di/http.action?interfaceId=getRACTyphoonFst4Tsid&dataFormat=html&tsid=%tsid&fcid=%ins&ymdhms=%date',
       }
     },
     methods: {
