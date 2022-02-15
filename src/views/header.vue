@@ -18,7 +18,7 @@
         机构-报文
     </MenuItem>
     <MenuItem name="nwp">
-        数值路径
+        台风集合预报
     </MenuItem>
     <MenuItem name="satellite">
         卫星
