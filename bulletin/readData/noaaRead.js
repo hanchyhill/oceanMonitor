@@ -25,7 +25,7 @@ const config = {
       {reg:/wtss.*?vhhh/,name:'WTSS-VHHH',},
       {reg:/wtko.*?rksl/,name:'WTKO-RKSL',},
       {reg:/wtph0.*?rpmm/,name:'WTPH0-RPMM',},// PAGASA 警报
-      {reg:/wtph2.*?rpmm/,name:'WTPH2-RPMM',},// PAGASA 台风预报
+      // {reg:/wtph2.*?rpmm/,name:'WTPH2-RPMM',},// PAGASA 台风预报
     ],
   },
   ab:{
