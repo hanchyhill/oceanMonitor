@@ -172,6 +172,33 @@
         </div>
       </TabPane>
       <TabPane label="TC详情" name="singleTC">
+        <div v-show="selectedTC">
+          <i-button
+            :type="showEnsTrack ? 'success' : 'warning'"
+            @click="triggerMapOpt('showEnsTrack')"
+            >{{ showEnsTrack ? "隐藏集合路径" : "显示集合路径" }}</i-button
+          >
+
+          <i-button
+            :type="showDetTrack ? 'success' : 'warning'"
+            @click="triggerMapOpt('showDetTrack')"
+            >{{ showDetTrack ? "隐藏确定性预报" : "显示确定性预报" }}</i-button
+          >
+          <span class="wind-radius-panel">
+
+          
+          <i-button
+            :type="showWindRadius ? 'success' : 'warning'"
+            @click="triggerMapOpt('showWindRadius')"
+            >{{ showWindRadius ? "隐藏风圈" : "显示风圈" }}</i-button
+          >
+          风圈时间间隔<i-select :value="radiusTimeInterval" @on-change="(value)=>triggerMapOpt('radiusTimeInterval', value)" style="width: 100px">
+            <i-option :value="6">6小时</i-option>
+            <i-option :value="12">12小时</i-option>
+            <i-option :value="24">24小时</i-option>
+          </i-select>
+          </span>
+        </div>
         <div class="cyc-main" v-show="selectedTC">
           <div class="map-div">
             <div class="typhoon-info" v-if="selectedTC">
@@ -279,7 +306,6 @@ import {
 } from "../../libs/util.js";
 const axios = Util.ajax;
 import * as moment from "moment";
-import { async } from "q";
 import cityInfo from "../../config/coastalCity.json";
 
 // if(!window.fetch){
@@ -354,6 +380,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      containWindRadius: true,
     },
     NCEP: {
       enNumber: 21,
@@ -409,9 +436,83 @@ let tcUtil = {
 };
 
 /**
+ * 根据风圈半径计算风圈geojson数据
+ */
+function createWindRadiusPolygon(
+  center = [120, 40],
+  infoList = [0, 0, 0, 200000]
+) {
+  // console.log(`center${center}`);
+  const _Perimeter = 40030199.0; // 地球平均周长
+  let segInfoArr = infoList.map((r, index) => {
+    return {
+      r: r,
+      segIndex: index,
+      greaterThanLon: index < 2,
+      greaterThanLat: index % 3 === 0,
+      radius: (r / _Perimeter) * 360, // 球心角
+      reverse: index === 2,
+    };
+  });
+  const circleGen = d3.geoCircle().center(center).precision(0.5);
+
+  let segList = segInfoArr.map((item, index) => {
+    if (item.r == 0) {
+      return [center]; // 半径为0返回圆心
+    } else {
+      let circle = circleGen.radius(item.radius)();
+      let seg = circle.coordinates[0].filter((loc) => {
+        let logic0 = item.greaterThanLon
+          ? loc[0] >= center[0]
+          : loc[0] <= center[0];
+        let logic1 = item.greaterThanLat
+          ? loc[1] >= center[1]
+          : loc[1] <= center[1];
+        return logic0 && logic1;
+      });
+      if (index == 2) {
+        seg = seg.sort((a, b) => {
+          const vectorA = [a[0] - center[0], a[1] - center[1]];
+          const vectorB = [b[0] - center[0], b[1] - center[1]];
+          const vectorK = vectorA[0] * vectorB[1] - vectorA[1] * vectorB[0];
+          return vectorK > 0;
+        });
+      }
+      // seg = seg.sort((a,b)=>item.greaterThanLat?a[0]>b[0]:a[0]<b[0]);
+      // const segLength = seg.length;
+      // if(index%2==0){
+      //   seg[0][0] = center[0];
+      //   seg[segLength-1][1] = center[1];
+      // }else{
+      //   seg[0][1] = center[1];
+      //   seg[segLength-1][0] = center[0];
+      // }
+      return seg;
+      // return item.reverse?seg.reverse():seg;
+    }
+  });
+  //
+  let radiusCoord = segList.reduce((pV, cV) => pV.concat(cV), []);
+  radiusCoord.push(radiusCoord[0]); // 首尾相连
+  let geojson = {
+    type: "Polygon",
+    coordinates: [radiusCoord],
+  };
+  return geojson;
+}
+
+/**
  * 按照强度填色
  */
-async function d3Map(tcRaw) {
+async function d3Map(
+  tcRaw,
+  opt = {
+    showEnsTrack: true,
+    showDetTrack: true,
+    showWindRadius: true,
+    radiusTimeInterval: 24,
+  }
+) {
   let center = calCenter(tcRaw);
   let timeInterval = tcUtil.model[tcRaw.ins].interval; // 设置时间间隔
   center[1] += 5;
@@ -456,57 +557,55 @@ async function d3Map(tcRaw) {
       return twoPointLineArr;
     })
     .flat();
-  // console.log(catArr);
-  let tcSvg = baseMap.append("g").attr("class", "tc-svg");
-  tcSvg
-    .selectAll("path")
-    .data(catArr)
-    .enter()
-    .append("path")
-    .attr("d", (d) => path(d.line))
-    .attr("class", (d) => `track-line ${d.nextCat}`)
-    // .style("stroke", d => d.nextColor)
-    .style("stroke", (d) => "gray")
-    .attr("opacity", 0.9);
 
-  let pointArr = tcRaw.tracks
-    .map((member) => member.track)
-    .map((track) =>
-      track.map((point) => {
-        let cat = tcUtil.wind2cat(point[3]);
-        return {
-          point: point[1],
-          project: projection(point[1]),
-          color: tcUtil.tcColor[cat],
-          cat,
-        };
-      })
-    )
-    .flat();
+  if (opt.showEnsTrack) {
+    let tcSvg = baseMap.append("g").attr("class", "tc-svg");
+    tcSvg
+      .selectAll("path")
+      .data(catArr)
+      .enter()
+      .append("path")
+      .attr("d", (d) => path(d.line))
+      .attr("class", (d) => `track-line ${d.nextCat}`)
+      // .style("stroke", d => d.nextColor)
+      .style("stroke", (d) => "gray")
+      .attr("opacity", 0.5);
 
-  let pointSvg = baseMap.append("g");
-  pointSvg.attr("class", "point-g");
-  pointSvg
-    .selectAll("circle")
-    .data(pointArr)
-    .enter()
-    .append("circle")
-    .attr("class", "point")
-    .attr("cx", (d) => d.project[0])
-    .attr("cy", (d) => d.project[1])
-    .attr("r", 3)
-    .attr("opacity", 0.8)
-    .style("stroke", (d) => d.color)
-    .style("stroke-width", 1)
-    .style("fill", "none");
-  // .style("fill", d => d.color)
-  // .on("mouseover", function() {
-  //   console.log(this);
-  //   d3.select(this).style("fill", () => "yellow");
-  // });
+    let pointArr = tcRaw.tracks
+      .map((member) => member.track)
+      .map((track) =>
+        track.map((point) => {
+          let cat = tcUtil.wind2cat(point[3]);
+          return {
+            point: point[1],
+            project: projection(point[1]),
+            color: tcUtil.tcColor[cat],
+            cat,
+            windRadiusInfo: point[5] ? point[5] : [],
+          };
+        })
+      )
+      .flat();
+
+    let pointSvg = baseMap.append("g");
+    pointSvg.attr("class", "point-g");
+    pointSvg
+      .selectAll("circle")
+      .data(pointArr)
+      .enter()
+      .append("circle")
+      .attr("class", "point")
+      .attr("cx", (d) => d.project[0])
+      .attr("cy", (d) => d.project[1])
+      .attr("r", 1.5)
+      .attr("opacity", 0.5)
+      .style("stroke", (d) => d.color)
+      .style("stroke-width", 1)
+      .style("fill", "none");
+  }
 
   // 确定性预报
-  if (!tcRaw.detTrack || !tcRaw.detTrack.track) return; //不存在退出
+  if (!tcRaw.detTrack || !tcRaw.detTrack.track || !opt.showDetTrack) return; //不存在退出
   let detArr = (() => {
     let track = tcRaw.detTrack.track;
     let twoPointLineArr = [];
@@ -540,6 +639,8 @@ async function d3Map(tcRaw) {
       project: projection(point[1]),
       color: tcUtil.tcColor[cat],
       cat,
+      windRadiusInfo: point[5] ? point[5] : [],
+      timeStep: point[0],
     };
   });
 
@@ -568,6 +669,82 @@ async function d3Map(tcRaw) {
     .style("stroke", (d) => d.color)
     .style("stroke-width", 1.0);
 
+  // 风圈绘制
+  let testRadiusDataValid = detPoints.length
+    ? detPoints[0].windRadiusInfo.length
+      ? true
+      : false
+    : false;
+  if (
+    !opt.showWindRadius ||
+    !tcUtil.model[tcRaw.ins].containWindRadius ||
+    !testRadiusDataValid
+  ) {
+    return;
+  }
+
+  let detPointsRadiusList = detPoints.map((item) => {
+    let windRadiusInfo = item.windRadiusInfo;
+    let infoList = [
+      {
+        threshold: 18,
+        color: "blue",
+        rawValue: windRadiusInfo[0].slice(1),
+        name_CN: "8级风圈",
+        label: "风速>18m/s",
+      },
+      {
+        threshold: 26,
+        color: "rgb(255, 128, 0)",
+        rawValue: windRadiusInfo[1].slice(1),
+        name_CN: "10级风圈",
+        label: "风速>26m/s",
+      },
+      {
+        threshold: 33,
+        color: "red",
+        rawValue: windRadiusInfo[2].slice(1),
+        name_CN: "12级风圈",
+        label: "风速>33m/s",
+      },
+    ];
+    infoList.forEach((info) => {
+      let isEmpty = info.rawValue.every((value) => !value || value == 100);
+      info.isEmpty = isEmpty;
+      if (!isEmpty) {
+        info.geojson = createWindRadiusPolygon(item.point, info.rawValue);
+      }
+    });
+    return {
+      center: item.point,
+      radiusArr: infoList,
+      timeStep: item.timeStep,
+    };
+  });
+  console.log(opt.radiusTimeInterval);
+  let radiusTimeInterval = opt.radiusTimeInterval || 24;
+  detPointsRadiusList = detPointsRadiusList.filter(
+    (item) => item.timeStep % radiusTimeInterval === 0
+  );
+  // console.log(detPointsRadiusList);
+  const detRadiusSvg = baseMap.append("g").attr("class", "radius-svg-det");
+  detRadiusSvg
+    .selectAll("g.radius-group")
+    .data(detPointsRadiusList)
+    .enter()
+    .append("g")
+    .attr("class", "radius-group")
+    .selectAll("path")
+    .data((d) => d.radiusArr)
+    .enter()
+    .append("path")
+    .attr("d", (d) => (d.geojson ? path(d.geojson) : ""))
+    .attr("class", (d) => `radius-${d.threshold}`)
+    .style("stroke", (d) => d.color)
+    .style("fill", "none")
+    .style("stroke-width", "1px");
+
+  // 绘制风圈
   return projection;
 }
 
@@ -628,7 +805,8 @@ async function d3Map2(tcRaw) {
     .append("path")
     .attr("d", (d) => path(d.line))
     .attr("class", (d) => `track-line ${d.nextCat}`)
-    .style("stroke", (d) => d.timeColor);
+    .style("stroke", (d) => d.timeColor)
+    .attr("opacity", 0.5);
 
   let pointArr = tcRaw.tracks
     .map((member) => member.track)
@@ -660,7 +838,8 @@ async function d3Map2(tcRaw) {
     .attr("cx", (d) => d.project[0])
     .attr("cy", (d) => d.project[1])
     .attr("r", 1.5)
-    .style("fill", (d) => d.timeColor);
+    .style("fill", (d) => d.timeColor)
+    .attr("opacity", 0.5);
   // TODO tcRaw.detTrack is undefined
   // 确定性预报
   if (!tcRaw.detTrack || !tcRaw.detTrack.track) return;
@@ -826,7 +1005,7 @@ async function drawMap(
   function zoomed() {
     // console.log(d3.event.transform);
     // console.log(container);
-    let originR = 3;
+    let originR = 1.5;
     if (container == "#map-container2") {
       originR = 1.5;
     }
@@ -1326,6 +1505,10 @@ export default {
     let endTime = now.format("YYYY-MM-DD");
     let startTime = moment(now).subtract(1, "days").format("YYYY-MM-DD");
     return {
+      showWindRadius: true,
+      showEnsTrack: true,
+      showDetTrack: true,
+      radiusTimeInterval: 24,
       tcOpenPanel: "1",
       allTC: [],
       hitCityList2: [
@@ -1342,7 +1525,14 @@ export default {
       timeRange: [startTime, endTime],
       selectedTimeIndex: -1,
       selectedBasin: "WPAC",
-      selectedModel: ["ecmwf", "ncep-R", "ukmo-R", "fnmoc-R", "cmc-R","TRAMS_TY"],
+      selectedModel: [
+        "ecmwf",
+        "ncep-R",
+        "ukmo-R",
+        "fnmoc-R",
+        "cmc-R",
+        "TRAMS_TY",
+      ],
       tcMeta: tcUtil.model,
       cityInfo: cityInfo,
       basinList: [
@@ -1410,7 +1600,7 @@ export default {
       let eTime = this.timeRange[1] + " 23:59";
       return this.getTC([sTime, eTime]);
     },
-    showTC(tcRaw) {
+    showTC(tcRaw, needJump = true) {
       this.showHitTime = false;
       // this.showAllTcHit = false;
       this.currentTCcard = "singleTC";
@@ -1418,11 +1608,36 @@ export default {
       this.$nextTick(() => {
         d3Map2(tcRaw);
         drawPlotyBox(tcRaw, tcRaw.ins);
-        d3Map(tcRaw);
-        this.jump(".tc-tabs-card", 75);
+        d3Map(tcRaw, {
+          showEnsTrack: this.showEnsTrack,
+          showDetTrack: this.showDetTrack,
+          showWindRadius: this.showWindRadius,
+          radiusTimeInterval: this.radiusTimeInterval,
+        });
         this.calHitCityList();
+        if (needJump) this.jump(".tc-tabs-card", 75);
       });
       // d3OverViewMap(tcRaw);
+    },
+    triggerMapOpt(type, value) {
+      switch (type) {
+        case "showEnsTrack":
+          this.showEnsTrack = !this.showEnsTrack;
+          break;
+        case "showDetTrack":
+          this.showDetTrack = !this.showDetTrack;
+          break;
+        case "showWindRadius":
+          this.showWindRadius = !this.showWindRadius;
+          break;
+        case "radiusTimeInterval":
+          console.log(`triger${this.radiusTimeInterval}`)
+          this.radiusTimeInterval = value;
+          break;
+        default:
+          break;
+      }
+      this.showTC(this.selectedTC, false);
     },
     showAllTC(insMultiTC) {
       this.showAllTcHit = false;
@@ -1809,6 +2024,10 @@ export default {
         .sort((pre, next) => next.hit - pre.hit);
       // console.log(info);
       this.hitCityList = info;
+    },
+    calWindRadius() {
+      let info = createWindRadiusPolygon();
+      // console.log(JSON.stringify(info, null, 2))
     },
   },
   computed: {

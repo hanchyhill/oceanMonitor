@@ -4,60 +4,66 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "ec_read",
-        "program": "${workspaceFolder}/bulletin/readData/ec_TC_proRead.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "TRAMS_TY",
-        "program": "${workspaceFolder}/bulletin/trams/getTramsTY.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "ftpRead",
-        "program": "${workspaceFolder}/bulletin/readData/ftpread.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "tyExpress",
-        "program": "${workspaceFolder}/bulletin/push/ty-express.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "getBJbulletin",
-        "program": "${workspaceFolder}/bulletin/push/getBJbulletin.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "readOthers",
-        "program": "${workspaceFolder}/bulletin/readData/readOthers.js"
-    },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "get db",
-        "program": "${workspaceFolder}/bulletin/getData.js"
-    },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ec_cloud",
+            "program": "${workspaceFolder}/bulletin/readData/ec_cloud_read.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ec_read",
+            "program": "${workspaceFolder}/bulletin/readData/ec_TC_proRead.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "TRAMS_TY",
+            "program": "${workspaceFolder}/bulletin/trams/getTramsTY.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ftpRead",
+            "program": "${workspaceFolder}/bulletin/readData/ftpread.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "tyExpress",
+            "program": "${workspaceFolder}/bulletin/push/ty-express.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "getBJbulletin",
+            "program": "${workspaceFolder}/bulletin/push/getBJbulletin.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "readOthers",
+            "program": "${workspaceFolder}/bulletin/readData/readOthers.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "get db",
+            "program": "${workspaceFolder}/bulletin/getData.js"
+        },
         {
             "type": "node",
             "request": "launch",
             "name": "index",
             "program": "${workspaceFolder}/bulletin/index.js"
         },
-    {
-        "type": "node",
-        "request": "launch",
-        "name": "queryTest",
-        "program": "${workspaceFolder}/crawler/queryTest.js"
-    },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "queryTest",
+            "program": "${workspaceFolder}/crawler/queryTest.js"
+        },
         {
             "type": "node",
             "request": "launch",
