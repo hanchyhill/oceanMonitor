@@ -184,19 +184,21 @@
             @click="triggerMapOpt('showDetTrack')"
             >{{ showDetTrack ? "隐藏确定性预报" : "显示确定性预报" }}</i-button
           >
-          <span class="wind-radius-panel">
-
-          
-          <i-button
-            :type="showWindRadius ? 'success' : 'warning'"
-            @click="triggerMapOpt('showWindRadius')"
-            >{{ showWindRadius ? "隐藏风圈" : "显示风圈" }}</i-button
-          >
-          风圈时间间隔<i-select :value="radiusTimeInterval" @on-change="(value)=>triggerMapOpt('radiusTimeInterval', value)" style="width: 100px">
-            <i-option :value="6">6小时</i-option>
-            <i-option :value="12">12小时</i-option>
-            <i-option :value="24">24小时</i-option>
-          </i-select>
+          <span class="wind-radius-panel" v-show="selectedTC && selectedTC.ins == 'ecmwf'">
+            <i-button
+              :type="showWindRadius ? 'success' : 'warning'"
+              @click="triggerMapOpt('showWindRadius')"
+              >{{ showWindRadius ? "隐藏风圈" : "显示风圈" }}</i-button
+            >
+            风圈时间间隔<i-select
+              :value="radiusTimeInterval"
+              @on-change="(value) => triggerMapOpt('radiusTimeInterval', value)"
+              style="width: 100px"
+            >
+              <i-option :value="6">6小时</i-option>
+              <i-option :value="12">12小时</i-option>
+              <i-option :value="24">24小时</i-option>
+            </i-select>
           </span>
         </div>
         <div class="cyc-main" v-show="selectedTC">
@@ -1010,7 +1012,7 @@ async function drawMap(
       originR = 1.5;
     }
     var scale = d3.event.transform.k;
-    console.log(scale);
+    // console.log(scale);
     baseMap.attr("transform", d3.event.transform);
     baseMap.selectAll("circle").attr("r", (originR * 1) / scale);
     baseMap.selectAll(".track-line").style("stroke-width", 1 / scale);
@@ -1631,7 +1633,7 @@ export default {
           this.showWindRadius = !this.showWindRadius;
           break;
         case "radiusTimeInterval":
-          console.log(`triger${this.radiusTimeInterval}`)
+          console.log(`triger${this.radiusTimeInterval}`);
           this.radiusTimeInterval = value;
           break;
         default:
