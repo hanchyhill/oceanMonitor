@@ -184,7 +184,10 @@
             @click="triggerMapOpt('showDetTrack')"
             >{{ showDetTrack ? "隐藏确定性预报" : "显示确定性预报" }}</i-button
           >
-          <span class="wind-radius-panel" v-show="selectedTC && selectedTC.ins == 'ecmwf'">
+          <span
+            class="wind-radius-panel"
+            v-show="selectedTC && selectedTC.ins == 'ecmwf'"
+          >
             <i-button
               :type="showWindRadius ? 'success' : 'warning'"
               @click="triggerMapOpt('showWindRadius')"
@@ -461,7 +464,8 @@ function createWindRadiusPolygon(
   let segList = segInfoArr.map((item, index) => {
     if (item.r == 0) {
       return [center]; // 半径为0返回圆心
-    } else {
+    } 
+    else {
       let circle = circleGen.radius(item.radius)();
       let seg = circle.coordinates[0].filter((loc) => {
         let logic0 = item.greaterThanLon
@@ -472,27 +476,19 @@ function createWindRadiusPolygon(
           : loc[1] <= center[1];
         return logic0 && logic1;
       });
+
       if (index == 2) {
-        seg = seg.sort((a, b) => {
+        seg.sort((a, b) => {
           const vectorA = [a[0] - center[0], a[1] - center[1]];
           const vectorB = [b[0] - center[0], b[1] - center[1]];
           const vectorK = vectorA[0] * vectorB[1] - vectorA[1] * vectorB[0];
-          return vectorK > 0;
+          return vectorK;
         });
       }
-      // seg = seg.sort((a,b)=>item.greaterThanLat?a[0]>b[0]:a[0]<b[0]);
-      // const segLength = seg.length;
-      // if(index%2==0){
-      //   seg[0][0] = center[0];
-      //   seg[segLength-1][1] = center[1];
-      // }else{
-      //   seg[0][1] = center[1];
-      //   seg[segLength-1][0] = center[0];
-      // }
       return seg;
-      // return item.reverse?seg.reverse():seg;
     }
   });
+
   //
   let radiusCoord = segList.reduce((pV, cV) => pV.concat(cV), []);
   radiusCoord.push(radiusCoord[0]); // 首尾相连
