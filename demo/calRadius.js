@@ -43,6 +43,8 @@ function createMesh(lonRange=[100, 130], latRange=[0, 25], interval=0.25){
 }
 
 function main(){
+  performance.mark("main-start");
+
   let mesh = createMesh();
 
   const arrLength = mesh.length;
@@ -117,9 +119,18 @@ function main(){
     hitArr[i] = conut;
   }
 
-  hitArr.forEach((hit, index)=>{
-    if(hit>40) console.log(mesh[index]);
-  })
+  // hitArr.forEach((hit, index)=>{
+  //   if(hit>40) console.log(mesh[index]);
+  // })
+  performance.mark("main-end");
+  performance.measure(
+    "main",
+    "main-start",
+    "main-end"
+  );
+  var measures = performance.getEntriesByName("main");
+  var measure = measures[0];
+  console.log("运行时间, 秒:", measure.duration/1000.0)
 }
 
 function getBound(){
