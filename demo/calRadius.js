@@ -28,7 +28,7 @@ function cal2PointsDistance(point0=[110.0,20.0], point1=[120.0,25.0]){
  * @param {Number} interval 经纬度间隔
  * @returns {Array} [[经度, 纬度],]
  */
-function createMesh(lonRange=[100, 130], latRange=[0, 25], interval=0.25){
+function createMesh(lonRange=[100, 150], latRange=[0, 45], interval=0.25){
   const n = parseInt((lonRange[1] - lonRange[0])/interval);
   const m = parseInt((latRange[1] - latRange[0])/interval);
   const initLon = lonRange[0];
