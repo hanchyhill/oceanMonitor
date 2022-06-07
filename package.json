@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/plugin-syntax-async-generators": "^7.2.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "clipboard": "^1.5.12",
     "d3": "^5.9.2",
     "dayjs": "^1.10.4",
@@ -35,7 +35,7 @@
     "koa-static": "^4.0.3",
     "koa-views": "^6.1.4",
     "md5": "^2.2.1",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "mongoose": "^5.1.4",
     "p-map": "^4.0.0",
     "parcel-bundler": "^1.8.1",
