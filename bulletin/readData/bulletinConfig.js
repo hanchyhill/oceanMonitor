@@ -25,7 +25,7 @@ const config = {
     {name:'SBHK-VHHH', cn:'HKO卫星定位报',    reg:/SBHK.*?VHHH\s*?(\d{6})/i,ins:'VHHH',},
     {name:'SBCI-BCGZ', cn:'广州卫星定位报',   reg:/SBCI.*?BCGZ\s*?(\d{6})/i,ins:'BCGZ',},
     // {name:'SDTH20-VTBB',cn:'曼谷卫星定位报',  reg:/SDTH20.*?VTBB\s*?(\d{6})/i,ins:'VTBB',},
-    {name:'SDPH-RPMM', cn:'PAGASA卫星定位报', reg:/SDPH.*?RPMM\s*?(\d{6})/i,ins:'RPMM',},
+    // {name:'SDPH-RPMM', cn:'PAGASA卫星定位报', reg:/SDPH.*?RPMM\s*?(\d{6})/i,ins:'RPMM',},
   ]
 };
 
