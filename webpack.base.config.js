@@ -6,7 +6,7 @@ require("babel-polyfill");
 
 module.exports = {
     entry: {
-        main: ["babel-polyfill",'./src/main'],
+        main: ["babel-polyfill", './src/main'],
         //vendors: './src/vendors'
     },
     output: {
@@ -16,33 +16,37 @@ module.exports = {
         rules: [{
             test: /\.vue$/,
             loader: 'vue-loader'
-            },
-            {
-                test: /iview\/.*?js$/,
-                loader: 'babel-loader'
-            },
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                use: [
-                  process.env.NODE_ENV !== 'production'
+        },
+        {
+            test: /iview\/.*?js$/,
+            loader: 'babel-loader'
+        },
+        {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+        },
+        {
+            test: /\.css$/,
+            use: [
+                process.env.NODE_ENV !== 'production'
                     ? 'vue-style-loader'
                     : MiniCssExtractPlugin.loader,
-                  'css-loader'
-                ]
-            },
-            {
-                test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader'
-            },
-            {
-                test: /\.(html|tpl)$/,
-                loader: 'html-loader'
-            }
+                'css-loader'
+            ]
+        },
+        {
+            test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
+            loader: 'url-loader'
+        },
+        {
+            test: /\.(html|tpl)$/,
+            loader: 'html-loader'
+        }, {
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: 'javascript/auto'
+        }
         ]
     },
     resolve: {

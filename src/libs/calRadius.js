@@ -1,8 +1,9 @@
-const tcJson = require("./2021-12-14_Rai.json");
+// const tcJson = require("./2021-12-14_Rai.json");
 const _R = 6371009;  // 地球平均半径
 const maxLatGridDis = 111320; // 最大纬距
 const _MAXGRIDINTERVAL = 111320; // 最大纬距
-const d3 = require("d3");
+import * as d3 from "d3";
+
 /**
  * 计算两点间的距离
  * @param {Array} point0 纬度,经度
@@ -42,7 +43,7 @@ function createMesh(lonRange = [100, 150], latRange = [0, 45], interval = 0.25) 
   return { lonlat, n, m };
 }
 
-function getHitCount(tcJson, bound) {
+function getHitCount(tcJson, bound, whichWindR=18) {
 
 
   let meshInfo = createMesh(bound[0], bound[1]);
@@ -50,7 +51,7 @@ function getHitCount(tcJson, bound) {
   const arrLength = mesh.length;
   let hitArr = new Array(arrLength);
   // const ensLength = tcJson['tracks'].length;
-  const whichWindR = 18;
+  // const whichWindR = 18;
   let windIndex;
   switch (whichWindR) {
     case 18:
@@ -131,7 +132,7 @@ function getHitCount(tcJson, bound) {
  * @param {Object} tcRaw 台风数据
  * @returns {Array} 台风范围:[[minLon, maxLon], [minLat, maxLat]]
  */
-function getBound(tcRaw = tcJson) {
+function getBound(tcRaw) {
   const tacksLocArr = tcRaw.tracks.map(iTrack =>
     iTrack['track'].map(iTime => iTime[1])
   ).flat(1);
@@ -143,29 +144,17 @@ function getBound(tcRaw = tcJson) {
   const minLat = Math.min(...latArr);
   return [[minLon, maxLon], [minLat, maxLat]];
 }
-function main() {
-  // performance.mark("bound-start");
-  let bound = getBound();
-  // performance.mark("bound-end");
-  // performance.measure(
-  //   "bound",
-  //   "bound-start",
-  //   "bound-end"
-  // );
-  // var measures = performance.getEntriesByName("bound");
-  // var measure = measures[0];
-  // console.log("获取边界运行时间, 秒:", measure.duration / 1000.0);
-  // console.log(bound.toString());
+function calWindContour(tcJson, windR=18, range=d3.range(0.1, 1, 0.2),) {
+  let bound = getBound(tcJson);
+  // console.log(bound);
   bound[0][0] -= 8.0;// 最小经度
   bound[0][1] = bound[0][1] > 172 ? 180 : bound[0][1] + 8;// 最大经度是否会大于180度
   bound[1][0] = bound[1][0] < 8.0 ? 0 : bound[1][0] - 8.0;// 最小纬度是否会小于赤道0
   bound[1][1] = bound[1][1] > 82 ? 89 : bound[1][1] + 8;// 最大纬度
   const minLon = bound[0][0];
   const minLat = bound[1][0];
-  // console.log(bound.toString());
-  // performance.mark("hit-start");
-  const hitInfo = getHitCount(tcJson, bound);
-  const range = d3.range(0.1, 1, 0.2);
+
+  const hitInfo = getHitCount(tcJson, bound, windR);
   const contours = d3.contours()
     .size([hitInfo.n, hitInfo.m])
     .thresholds(range)
@@ -180,26 +169,7 @@ function main() {
       })
     })
   })
-  console.log(contours);
-  const geojson = {
-    "type": "FeatureCollection",
-    "features":[],
-  }
-  contours.forEach(iContour=>{
-    const feature = {"type": "Feature","properties": {},"geometry":iContour};
-    geojson.features.push(feature);
-  })
-  const jsonstr = JSON.stringify(geojson);
-  console.log(jsonstr);
-  // console.log(contours);
-  // performance.mark("hit-end");
-  // performance.measure(
-  //   "hit",
-  //   "hit-start",
-  //   "hit-end"
-  // );
-  // var measures = performance.getEntriesByName("hit");
-  // var measure = measures[0];
-  // console.log("计算袭击概率运行时间, 秒:", measure.duration / 1000.0);
+  return contours;
 }
-main();
+export default calWindContour;
+export {calWindContour, cal2PointsDistance, createMesh,getHitCount,getBound};

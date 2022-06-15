@@ -191,7 +191,9 @@
             <i-button
               :type="showWindRadius ? 'success' : 'warning'"
               @click="triggerMapOpt('showWindRadius')"
-              >{{ showWindRadius ? "隐藏风圈" : "显示风圈" }}</i-button
+              >{{
+                showWindRadius ? "隐藏确定性预报风圈" : "显示确定性预报风圈"
+              }}</i-button
             >
             风圈时间间隔<i-select
               :value="radiusTimeInterval"
@@ -201,6 +203,21 @@
               <i-option :value="6">6小时</i-option>
               <i-option :value="12">12小时</i-option>
               <i-option :value="24">24小时</i-option>
+            </i-select>
+
+            <i-button
+              :type="showWindPro ? 'success' : 'warning'"
+              @click="triggerMapOpt('showWindPro')"
+              >{{ showWindPro ? "隐藏大风概率" : "显示大风概率" }}</i-button
+            >
+            大风阈值<i-select
+              :value="windProScale"
+              @on-change="(value) => triggerMapOpt('windProScale', value)"
+              style="width: 100px"
+            >
+              <i-option :value="18">8级风</i-option>
+              <i-option :value="26">10级风</i-option>
+              <i-option :value="33">12级风</i-option>
             </i-select>
           </span>
         </div>
@@ -256,6 +273,14 @@
                   <div style="background-color: rgb(153, 20, 8)">STY</div>
                   <div style="background-color: rgb(128, 0, 255)">SuperTY</div>
                 </div>
+                <div class="legend legend-wind-pro"  v-show="showWindPro">
+                  <div style="background-color: #10AC00">5%</div>
+                  <div style="background-color: #B2DA00">10%</div>
+                  <div style="background-color: #E8C52A">30%</div>
+                  <div style="background-color: #FCA46F">50%</div>
+                  <div style="background-color: #F06948">70%</div>
+                  <div style="background-color: #CE2619">90%</div>
+                </div>
                 <div class="lonlat">
                   <div>Lon:<span class="lon"></span></div>
                   <div>Lat:<span class="lat"></span></div>
@@ -309,6 +334,7 @@ import {
   calTChitProbility,
   calPointHitProbilityTimeSeries,
 } from "../../libs/util.js";
+import { calWindContour } from "../../libs/calRadius.js";
 const axios = Util.ajax;
 import * as moment from "moment";
 import cityInfo from "../../config/coastalCity.json";
@@ -327,6 +353,11 @@ import cityInfo from "../../config/coastalCity.json";
 //       })
 //     })
 //   }
+// }
+// const interpolateTerrain = (t)=>{
+//   const i0 = d3.interpolateHsvLong(d3.hsv(120, 1, 0.65), d3.hsv(60, 1, 0.90));
+//   const i1 = d3.interpolateHsvLong(d3.hsv(60, 1, 0.90), d3.hsv(0, 0, 0.95));
+//   return t => t < 0.5 ? i0(t * 2) : i1((t - 0.5) * 2);
 // }
 
 let tcUtil = {
@@ -464,8 +495,7 @@ function createWindRadiusPolygon(
   let segList = segInfoArr.map((item, index) => {
     if (item.r == 0) {
       return [center]; // 半径为0返回圆心
-    } 
-    else {
+    } else {
       let circle = circleGen.radius(item.radius)();
       let seg = circle.coordinates[0].filter((loc) => {
         let logic0 = item.greaterThanLon
@@ -509,6 +539,8 @@ async function d3Map(
     showDetTrack: true,
     showWindRadius: true,
     radiusTimeInterval: 24,
+    showWindPro: false,
+    windProScale: 18,
   }
 ) {
   let center = calCenter(tcRaw);
@@ -524,6 +556,43 @@ async function d3Map(
   //定义地形路径生成器
   //projection.rotate([180,0,0]);
   let path = d3.geoPath().projection(projection);
+
+    // 绘制风圈概率
+  
+  if (
+    !opt.showWindPro ||
+    !tcUtil.model[tcRaw.ins].containWindRadius
+  ) {
+    ''
+  }else{
+    // const contourRange = d3.range(0.1, 1, 0.2);
+    const contourRange = [0.05, 0.1, 0.3, 0.5, 0.7, 0.9];
+    const colorRange = ['#10AC00','#B2DA00','#E8C52A','#FCA46F','#F06948','#CE2619'];
+// ['#10AC00','#32B700','#59C300','#81CB00','#B2DA00','#E6E600','#E8C52A','#EAB455','#FCA46F','#F06948','#CE2619',]
+    // 
+    // console.log(contourRange);
+    const contourArr = calWindContour(tcRaw, opt.windProScale, contourRange);
+    // contourArr.map(contour=>contour.color=d3.interpolateGnBu(contour.value));
+    contourArr.map((contour,index)=>contour.color=colorRange[index]);
+    // console.log(contourArr.map(contour=>contour.color));
+    // contourArr.map(contour=>contour.color=interpolateTerrain(contour.value));
+    
+    const windProSvg = baseMap.insert("g",":first-child").attr("class", "windpro-svg");
+    windProSvg
+      .selectAll("g.wind-contour-group")
+      .data(contourArr)
+      .enter()
+      .append("g")
+      .attr("class", "wind-contour-group")
+      .append("path")
+      .attr("d", (contour) => path(contour))
+      .attr("class", (contour) => `wind-contour-${contour.value}`)
+      .style("stroke", (contour) => contour.color)
+      .style("fill", (contour) => contour.color)
+      .style("stroke-width", "1px");
+    // 绘制风圈概率
+
+  }
 
   // 地理路径
   // let tcRaw = await d3.json("/source/2019022414_Wutip_02WP_GEFS.json");
@@ -719,7 +788,7 @@ async function d3Map(
       timeStep: item.timeStep,
     };
   });
-  console.log(opt.radiusTimeInterval);
+  // console.log(opt.radiusTimeInterval);
   let radiusTimeInterval = opt.radiusTimeInterval || 24;
   detPointsRadiusList = detPointsRadiusList.filter(
     (item) => item.timeStep % radiusTimeInterval === 0
@@ -742,7 +811,6 @@ async function d3Map(
     .style("fill", "none")
     .style("stroke-width", "1px");
 
-  // 绘制风圈
   return projection;
 }
 
@@ -1503,10 +1571,12 @@ export default {
     let endTime = now.format("YYYY-MM-DD");
     let startTime = moment(now).subtract(1, "days").format("YYYY-MM-DD");
     return {
-      showWindRadius: true,
+      showWindRadius: false,
       showEnsTrack: true,
       showDetTrack: true,
+      showWindPro: false,
       radiusTimeInterval: 24,
+      windProScale: 18,
       tcOpenPanel: "1",
       allTC: [],
       hitCityList2: [
@@ -1610,6 +1680,8 @@ export default {
           showEnsTrack: this.showEnsTrack,
           showDetTrack: this.showDetTrack,
           showWindRadius: this.showWindRadius,
+          showWindPro: this.showWindPro,
+          windProScale: this.windProScale,
           radiusTimeInterval: this.radiusTimeInterval,
         });
         this.calHitCityList();
@@ -1631,6 +1703,14 @@ export default {
         case "radiusTimeInterval":
           console.log(`triger${this.radiusTimeInterval}`);
           this.radiusTimeInterval = value;
+          break;
+        case "windProScale":
+          console.log(`triger windProScale`);
+          this.windProScale = value;
+          break;
+        case "showWindPro":
+          console.log(`triger showWindPro`);
+          this.showWindPro = !this.showWindPro;
           break;
         default:
           break;
@@ -2161,7 +2241,9 @@ svg circle {
   background-color: white;
   font-size: 14px;
 }
-
+.legend-wind-pro{
+  right: 0px;
+}
 .lonlat {
   position: absolute;
   bottom: 0px;
