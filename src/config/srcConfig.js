@@ -357,10 +357,24 @@ const currentSrc = {
     },
     dapiya:{
       link:'https://www.dapiya.top/',
-      imgSrc:'/static/thumbnails/hurZone.jpg',
+      imgSrc:'/static/thumbnails/dapiya.png',
       headInfo:'大皮鸭',
       head2:'全球热带气旋采集',
       notes:`提供全球热带风暴卫星云图监测和模式数据`,
+    },
+    natyphoon:{
+      link:'https://www.natyphoon.top/',
+      imgSrc:'/static/thumbnails/natyphoon.jpg',
+      headInfo:'natyphoon',
+      head2:'台风数据存档',
+      notes:`提供全球热带气旋最佳路径数据存档`,
+    },
+    scatterometer:{
+      link:'https://scatterometer.knmi.nl/tile_prod/',
+      imgSrc:'/static/thumbnails/scatterometer.jpg',
+      headInfo:'scatterometer',
+      head2:'洋面风监测',
+      notes:`提供ASCAT/中法海洋卫星/海洋2号卫星的海面风场扫描数据`,
     },
   },
 };
