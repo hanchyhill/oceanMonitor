@@ -17,7 +17,7 @@ const envSrc = {
       notes:'根据热带气旋强度选择平均引导流，引导气流可以指示热带气旋的移动方向。',
     },
     oceanHeatContent:{
-      link:'http://www.aoml.noaa.gov/phod/cyclone/data/np.html',
+      link:'https://www.aoml.noaa.gov/phod/cyclone/data/np.php',
       imgSrc:'/static/thumbnails/ohc.jpg',
       headInfo:'海洋热容量',
       head2:'NOAA / AOML',
@@ -286,7 +286,7 @@ const bulletinSrc = {
       imgSrc:'/static/thumbnails/cwb-tc.jpg',
       headInfo:'台湾颱風消息',
       head2:'台湾中央气象局',
-      notes:'采集和分发JMA提供的各类报文',
+      notes:'台湾颱風消息',
     },
   },
 };
@@ -355,6 +355,13 @@ const currentSrc = {
       head2:'全球热带气旋采集',
       notes:`提供全球热带风暴机构报文-卫星云图`,
     },
+    dapiya:{
+      link:'https://www.dapiya.top/',
+      imgSrc:'/static/thumbnails/hurZone.jpg',
+      headInfo:'大皮鸭',
+      head2:'全球热带气旋采集',
+      notes:`提供全球热带风暴卫星云图监测和模式数据`,
+    },
   },
 };
 
@@ -414,6 +421,13 @@ const satSrc = {
       headInfo:'葵花8即时图像',
       head2:'NICT',
       notes:'提供葵花卫星的实时图像',
+    },
+    fyEarth:{
+      link:'http://10.1.64.154/fydq/#/zc',
+      imgSrc:'/static/thumbnails/fy-earth.png',
+      headInfo:'风云地球',
+      head2:'国家卫星中心/气象中心',
+      notes:'提供风云卫星相关产品',
     },
     zoomEarth:{
       link:'https://zoom.earth/',

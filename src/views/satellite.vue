@@ -6,10 +6,12 @@
   <Col span="22">
     <!--<iframe class="fy4-iframe" height="900px" width="100%" src="http://10.148.114.72:4000/satelliteview"></iframe>-->
     <Row>
+      <card-pic :dial="speedDial.fyEarth"></card-pic>
       <card-pic :dial="speedDial.fy4Direct"></card-pic>
       <card-pic :dial="speedDial.zoomEarth"></card-pic>
       <card-pic :dial="speedDial.swap2"></card-pic>
-      <card-pic :dial="speedDial.colSlider"></card-pic>
+      
+      <!-- <card-pic :dial="speedDial.colSlider"></card-pic> -->
       <card-pic :dial="speedDial.colTropics"></card-pic>
       <!-- <card-pic :dial="speedDial.nictHim8"></card-pic> -->
       <card-pic :dial="speedDial.jmaSat"></card-pic>
