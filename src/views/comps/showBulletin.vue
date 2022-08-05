@@ -22,6 +22,9 @@
           <Radio label="WSCI40-BABJ">
               <span>重要天气报</span>
           </Radio>
+          <Radio label="WHCI40-BABJ">
+              <span>登陆报</span>
+          </Radio>
           </RadioGroup>
         </Col>
         <Col span="22">
