@@ -52,16 +52,16 @@ const config = {
       {reg:/wdpn.*?pgtw/,name:'WDPN-PGTW',},
     ],
   },
-  jtwc:{
-    hasImg:true,
-    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/?C=M;O=D',
-    base:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
-    lastDate : Date.now() - 1000*60*60*24*30,
-    rules:[
-      // {reg:/abpwweb/,name:'ABPW-PGTW',},
-      {reg:/\.txt/,name:'PGTW',},
-    ],
-  }
+  // jtwc:{
+  //   hasImg:true,
+  //   url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/?C=M;O=D',
+  //   base:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/',
+  //   lastDate : Date.now() - 1000*60*60*24*30,
+  //   rules:[
+  //     // {reg:/abpwweb/,name:'ABPW-PGTW',},
+  //     {reg:/\.txt/,name:'PGTW',},
+  //   ],
+  // }
 }
 
 async function getFileList(opt){

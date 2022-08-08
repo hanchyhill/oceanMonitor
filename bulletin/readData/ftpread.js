@@ -57,7 +57,7 @@ const main = async ()=>{
     config.lastDate = filterList[0].date.getTime();
   }
   else{
-    console.log('没有新文件');
+    console.log('ftp没有新文件');
   }
   console.log('ftp 读取完毕');
   await ftp.end();
