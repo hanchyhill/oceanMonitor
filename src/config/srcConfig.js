@@ -106,7 +106,7 @@ const envSrc = {
     ],
   },
   imgs:{
-    jtwc:{name:'JTWC热带气旋警报图',origin:'http://jtwc.gdmo.gq/jtwc/jtwc.html',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
+    jtwc:{name:'JTWC热带气旋警报图',origin: 'https://mirror.mesovortices.com/jtwc/jtwc.html',//'http://jtwc.gdmo.gq/jtwc/jtwc.html',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
     local:'/static/remote-img/env/abpwsair.jpg',},
     tropicOutlook:{name:'2周热带天气展望',origin:'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghazards/images/gth_full.png',
     local:'/static/remote-img/env/gth_full.png',},
