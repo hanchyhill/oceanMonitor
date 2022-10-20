@@ -53,12 +53,12 @@
   let config = {
     timeList:[72,96,120,144,168,192,216,240,264,288,],
     getUrlPrefix(){
-      let isLocal = /(172\.0\.0\.1)|(localhost)/.test(location.href);
+      let isLocal = /localhost/.test(location.href); ///(127\.0\.0\.1)|(localhost)/.test(location.href);
       let prefix = '';
       if(isLocal){// 本地执行
         prefix = '/static/remote-img/';
       }else{// 线上执行
-        prefix = 'https://data.gdmo.gq/img/tc_ec_pro/';
+        prefix = 'https://data.gdmo.gq/img/ec_cloud/';
       }
       return prefix;
     },
@@ -124,11 +124,15 @@
         let timeList = [];
         for(let fcHour of config.timeList){
           let fcTime = moment(initT).add(fcHour,'hours');
-          let timeFormat = [this.fitTime,fcHour,fcTime.format('YYYYMMDDHH')];
-          timeList.push(timeFormat);
+          // let timeFormat = [this.fitTime,fcHour,fcTime.format('YYYYMMDDHH')];
+          // timeList.push(timeFormat);
+          timeList.push(fcTime);
         }
-        let fileArr = timeList.map(tF=>`ecTcPro${tF[0]},${tF[1]},${tF[2]}${this.tcType==='td'?'.td':''}.png`);
-        let urlArr = fileArr.map(fileName=>`${urlPrefix}${fitYear}/${this.fitTime}/${fileName}`);
+        let fileArr = timeList.map(fcTime=>`tc_pro_opencharts_wnp_genesis_${this.tcType}_base${initT.format('YYYYMMDDHHmm')}_valid${fcTime.format('YYYYMMDDHHmm')}.png`)
+        // let fileArr = timeList.map(tF=>`ecTcPro${tF[0]},${tF[1]},${tF[2]}${this.tcType==='td'?'.td':''}.png`);
+        // http://localhost:8080/static/remote-img/2022/2022101912/ecTcPro2022101912,216,2022102812.png
+        // https://data.gdmo.gq/img/ec_cloud/202210/2022101912/tc_pro_opencharts_wnp_genesis_td_base202210191200_valid202210301200.png
+        let urlArr = fileArr.map(fileName=>`${urlPrefix}${initT.format('YYYYMM')}/${initT.format('YYYYMMDDHH')}/${fileName}`);
         return urlArr;
       },
       fcTimeList(){

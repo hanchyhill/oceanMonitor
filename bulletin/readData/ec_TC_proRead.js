@@ -110,6 +110,7 @@ async function getPro() {
       console.error(err.message);
       if(err.statusCode==404){
         console.error('图像未生成'+fileName);
+        console.error('图像未生成'+url);
         break;
       }else{
         console.error('下载发生错误'+fileName);
@@ -139,14 +140,14 @@ function tcProMainJob(){
   return job10;
 }
 
-tcProMainJob();
-getPro()
-  .then(data=>{
-    console.log('完成本次下载 '+data);
-  })
-  .catch(err=>{
-  console.log(err);
-  });
+// tcProMainJob();
+// getPro()
+//   .then(data=>{
+//     console.log('完成本次下载 '+data);
+//   })
+//   .catch(err=>{
+//   console.log(err);
+//   });
 
 /////////////////
 function ecCloudMainJob(){

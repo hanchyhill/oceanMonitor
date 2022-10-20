@@ -11,31 +11,40 @@ const pStat = promisify(fs.stat);
 const pDelete = promisify(fs.unlink);
 const config = {
   irImg: {
-    openUrl: 'https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-ir/',
+    openUrl: 'https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-simulated-ir/',
     preojectionList: ['opencharts_south_east_asia_and_indonesia', "opencharts_eastern_asia"],
     fetchImgUrlBuilder(basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_south_east_asia_and_indonesia') {
-      return `https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-ir/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}`;
+      return `https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-simulated-ir/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}`;
     },
     filePrefix: 'ec_ir',
   },
   tccImg: {
-    openUrl: 'https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-clouds/',
+    openUrl: 'https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-clouds/',
     preojectionList: ['opencharts_south_east_asia_and_indonesia', "opencharts_eastern_asia"],
     fetchImgUrlBuilder(basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_south_east_asia_and_indonesia') {
-      return `https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-clouds/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}`;
+      return `https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-clouds/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}`;
     },
     filePrefix: 'ec_tcc',
   },
   wvImg: {
-    openUrl: 'https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/',
+    openUrl: 'https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/',
     preojectionList: ['opencharts_south_east_asia_and_indonesia', "opencharts_eastern_asia"],
     layerNameList: ['sim_image_wv', 'sim_image_wv_ch6'],
     fetchImgUrlBuilder(basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_south_east_asia_and_indonesia', layerName = 'sim_image_wv') {
-      return `https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}&layer_name=${layerName}`;
+      return `https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-simulated-wv/axis/valid_time/?base_time=${basetime}&projection=${preojection}&values=${validtime}&layer_name=${layerName}`;
     },
     filePrefix: 'ec_wv',
 
-  }
+  },
+  tcPro: {
+    openUrl: 'https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-tc-genesis/',
+    preojectionList: ['opencharts_wnp',],
+    layerNameList: ['genesis_td', 'genesis_ts'],
+    fetchImgUrlBuilder(basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_wnp', layerName = 'genesis_td') {
+      return `https://charts.ecmwf.int/opencharts-api/v1/packages/opencharts/products/medium-tc-genesis/axis/valid_time/?base_time=${basetime}&projection=${preojection}&layer_name=${layerName}&values=${validtime}`;
+    },
+    filePrefix: 'tc_pro',
+  },
 }
 
 const basePath = path.resolve(__dirname + './../../../data/img/ec_cloud/');
@@ -211,6 +220,9 @@ async function getCloudImgMain() {
   await getEcImg(config.wvImg).catch(err => {
     console.error(err);
   });
+  await getEcImg(config.tcPro).catch(err => {
+    console.error(err);
+ });
   console.log('完成本次EC图像下载');
 }
 
