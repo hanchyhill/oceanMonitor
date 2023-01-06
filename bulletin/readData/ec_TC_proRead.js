@@ -152,7 +152,7 @@ function tcProMainJob(){
 /////////////////
 function ecCloudMainJob(){
   let ruleI10 = new schedule.RecurrenceRule();
-  ruleI10.minute = [new schedule.Range(2, 59, 13)];// 13分钟轮询
+  ruleI10.minute = [new schedule.Range(2, 59, 20)];// 20分钟轮询
   let job10 = schedule.scheduleJob(ruleI10, (fireDate)=>{
     console.log('ecCloud轮询开始'+fireDate.toString());
     getEcmwfCloud()

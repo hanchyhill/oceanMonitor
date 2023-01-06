@@ -153,7 +153,7 @@ async function handleImgDownload({ taskConfig, basetime, validtime, projection, 
       let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName)
         .catch(err => { console.log('获取图像地址发生错误:' + imgFileName) });
       // imgUrl = "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png";
-
+      console.log(imgUrl);
       let response = await storeImg(imgUrl, dirPath, imgFileName);
       console.log(response.message);
       return response.message;
@@ -211,28 +211,33 @@ async function getEcImg(taskConfig) {
 }
 
 async function getCloudImgMain() {
-  await getEcImg(config.irImg).catch(err => {
+  console.log('准备下载红外云图');
+  getEcImg(config.irImg).catch(err => {
     console.error(err);
   });
-  await getEcImg(config.tccImg).catch(err => {
+  console.log('准备下载云量图');
+  getEcImg(config.tccImg).catch(err => {
     console.error(err);
   });
-  await getEcImg(config.wvImg).catch(err => {
+  console.log('准备下载水汽图');
+  getEcImg(config.wvImg).catch(err => {
     console.error(err);
   });
+  console.log('准备下载TC生成概率图');
   await getEcImg(config.tcPro).catch(err => {
     console.error(err);
  });
-  console.log('完成本次EC图像下载');
+  // console.log('完成本次EC图像下载');
 }
 
 if (require.main === module) {
   console.log('called directly');
+  // getCloudImgMain();
+
+  // getEcImg(config.tcPro)
 } else {
   console.log('required as a module');
   exports.getEcmwfCloud = getCloudImgMain;
 }
 
 getCloudImgMain();
-
-// getEcImg(config.mvImg);
