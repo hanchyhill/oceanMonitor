@@ -36,7 +36,7 @@
     "koa-views": "^6.1.4",
     "md5": "^2.2.1",
     "moment": "^2.29.2",
-    "mongoose": "^5.1.4",
+    "mongoose": "^5.13.15",
     "p-map": "^4.0.0",
     "parcel-bundler": "^1.8.1",
     "plotly.js": "^1.47.3",
