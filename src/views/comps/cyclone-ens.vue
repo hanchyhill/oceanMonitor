@@ -184,12 +184,23 @@
             @click="triggerMapOpt('showDetTrack')"
             >{{ showDetTrack ? "隐藏确定性预报" : "显示确定性预报" }}</i-button
           >
+          <span class="hit-pro-region-panel">
+            <i-button
+              :type="showHitPro ? 'success' : 'warning'"
+              :ghost="showHitPro ? false : true"
+              @click="triggerMapOpt('showHitPro')"
+              >{{
+                showHitPro ? "隐藏袭击概率填图" : "显示袭击概率填图"
+              }}</i-button
+            >
+          </span>
           <span
             class="wind-radius-panel"
             v-show="selectedTC && selectedTC.ins == 'ecmwf'"
           >
             <i-button
               :type="showWindRadius ? 'success' : 'warning'"
+              :ghost="showWindRadius ? false : true"
               @click="triggerMapOpt('showWindRadius')"
               >{{
                 showWindRadius ? "隐藏确定性预报风圈" : "显示确定性预报风圈"
@@ -207,6 +218,7 @@
 
             <i-button
               :type="showWindPro ? 'success' : 'warning'"
+              :ghost="showWindPro ? false : true"
               @click="triggerMapOpt('showWindPro')"
               >{{ showWindPro ? "隐藏大风概率" : "显示大风概率" }}</i-button
             >
@@ -273,7 +285,7 @@
                   <div style="background-color: rgb(153, 20, 8)">STY</div>
                   <div style="background-color: rgb(128, 0, 255)">SuperTY</div>
                 </div>
-                <div class="legend legend-wind-pro"  v-show="showWindPro">
+                <div class="legend legend-wind-pro"  v-show="showWindPro || showHitPro">
                   <div style="background-color: #10AC00">5%</div>
                   <div style="background-color: #B2DA00">10%</div>
                   <div style="background-color: #E8C52A">30%</div>
@@ -320,8 +332,7 @@
   </div>
 </template>
 <script>
-// TODO: 强度分类增加TD以下
-// TODO: 点击名称可显示总览
+
 // TODO: 更改地图为更高分辨率
 // TODO: 鼠标定经纬度防抖
 // import privateConfig from "./config/private.config.js";
@@ -332,6 +343,7 @@ import * as Plotly from "plotly.js/dist/plotly";
 import Util from "../../libs/util";
 import {
   calTChitProbility,
+  calRegionTChitProbility,
   calPointHitProbilityTimeSeries,
 } from "../../libs/util.js";
 import { calWindContour } from "../../libs/calRadius.js";
@@ -339,21 +351,7 @@ const axios = Util.ajax;
 import * as moment from "moment";
 import cityInfo from "../../config/coastalCity.json";
 
-// if(!window.fetch){
-//   console.log('IE');
-//   window.fetch = (url)=>{
-//   return new Promise((resolve, reject)=>{
-//     console.log(url);
-//     axios.get(url,{baseURL: location.host})
-//       .then(res=>{
-//         resolve(res);
-//       })
-//       .catch(err=>{
-//         reject(err);
-//       })
-//     })
-//   }
-// }
+
 // const interpolateTerrain = (t)=>{
 //   const i0 = d3.interpolateHsvLong(d3.hsv(120, 1, 0.65), d3.hsv(60, 1, 0.90));
 //   const i1 = d3.interpolateHsvLong(d3.hsv(60, 1, 0.90), d3.hsv(0, 0, 0.95));
@@ -540,6 +538,7 @@ async function d3Map(
     showWindRadius: true,
     radiusTimeInterval: 24,
     showWindPro: false,
+    showHitPro: false,
     windProScale: 18,
   }
 ) {
@@ -557,8 +556,7 @@ async function d3Map(
   //projection.rotate([180,0,0]);
   let path = d3.geoPath().projection(projection);
 
-    // 绘制风圈概率
-  
+  // 绘制风圈概率
   if (
     !opt.showWindPro ||
     !tcUtil.model[tcRaw.ins].containWindRadius
@@ -568,15 +566,8 @@ async function d3Map(
     // const contourRange = d3.range(0.1, 1, 0.2);
     const contourRange = [0.05, 0.1, 0.3, 0.5, 0.7, 0.9];
     const colorRange = ['#10AC00','#B2DA00','#E8C52A','#FCA46F','#F06948','#CE2619'];
-// ['#10AC00','#32B700','#59C300','#81CB00','#B2DA00','#E6E600','#E8C52A','#EAB455','#FCA46F','#F06948','#CE2619',]
-    // 
-    // console.log(contourRange);
     const contourArr = calWindContour(tcRaw, opt.windProScale, contourRange);
-    // contourArr.map(contour=>contour.color=d3.interpolateGnBu(contour.value));
     contourArr.map((contour,index)=>contour.color=colorRange[index]);
-    // console.log(contourArr.map(contour=>contour.color));
-    // contourArr.map(contour=>contour.color=interpolateTerrain(contour.value));
-    
     const windProSvg = baseMap.insert("g",":first-child").attr("class", "windpro-svg");
     windProSvg
       .selectAll("g.wind-contour-group")
@@ -591,8 +582,30 @@ async function d3Map(
       .style("fill", (contour) => contour.color)
       .style("stroke-width", "1px");
     // 绘制风圈概率
-
   }
+  
+  /*start 绘制袭击概率图*/
+  if(opt.showHitPro){
+    
+    const contourRange = [0.05, 0.1, 0.3, 0.5, 0.7, 0.9];
+    const colorRange = ['#10AC00','#B2DA00','#E8C52A','#FCA46F','#F06948','#CE2619'];
+    const contourArr = calRegionTChitProbility(tcRaw, contourRange, tcUtil.model[tcRaw.ins].enNumber, tcUtil.model[tcRaw.ins].interval);
+    contourArr.map((contour,index)=>contour.color=colorRange[index]);
+    const hitProSvg = baseMap.insert("g",":first-child").attr("class", "hitpro-svg");
+    hitProSvg
+      .selectAll("g.hitpro-contour-group")
+      .data(contourArr)
+      .enter()
+      .append("g")
+      .attr("class", "hitpro-contour-group")
+      .append("path")
+      .attr("d", (contour) => path(contour))
+      .attr("class", (contour) => `hitpro-contour-${contour.value}`)
+      .style("stroke", (contour) => contour.color)
+      .style("fill", (contour) => contour.color)
+      .style("stroke-width", "1px");
+  }
+  /*end 绘制袭击概率图*/
 
   // 地理路径
   // let tcRaw = await d3.json("/source/2019022414_Wutip_02WP_GEFS.json");
@@ -1575,6 +1588,7 @@ export default {
       showEnsTrack: true,
       showDetTrack: true,
       showWindPro: false,
+      showHitPro: false,
       radiusTimeInterval: 24,
       windProScale: 18,
       tcOpenPanel: "1",
@@ -1681,6 +1695,7 @@ export default {
           showDetTrack: this.showDetTrack,
           showWindRadius: this.showWindRadius,
           showWindPro: this.showWindPro,
+          showHitPro: this.showHitPro,
           windProScale: this.windProScale,
           radiusTimeInterval: this.radiusTimeInterval,
         });
@@ -1701,16 +1716,22 @@ export default {
           this.showWindRadius = !this.showWindRadius;
           break;
         case "radiusTimeInterval":
-          console.log(`triger${this.radiusTimeInterval}`);
+          // console.log(`triger${this.radiusTimeInterval}`);
           this.radiusTimeInterval = value;
           break;
         case "windProScale":
-          console.log(`triger windProScale`);
+          // console.log(`triger windProScale`);
           this.windProScale = value;
           break;
         case "showWindPro":
-          console.log(`triger showWindPro`);
+          // console.log(`triger showWindPro`);
           this.showWindPro = !this.showWindPro;
+          this.showHitPro = false;
+          break;
+        case "showHitPro":
+          // console.log(`triger showHitPro`);
+          this.showHitPro = !this.showHitPro;
+          this.showWindPro = false;
           break;
         default:
           break;
@@ -2065,10 +2086,8 @@ export default {
      * 单个台风袭击概率
      */
     calHitCityList() {
-      // return [];
       if (!this.selectedTC) return [];
       let info = JSON.parse(JSON.stringify(cityInfo));
-      // return cityInfo;
       let pointList = info.map((city) => {
         return { x: city.lon, y: city.lat };
       });
@@ -2137,6 +2156,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.wind-radius-panel{
+  display: inline-block;
+  border: #91a1e1 solid 2px;
+}
+</style>
 
 <style>
 #app {

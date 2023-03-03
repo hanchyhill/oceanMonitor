@@ -171,5 +171,6 @@ function calWindContour(tcJson, windR=18, range=d3.range(0.1, 1, 0.2),) {
   })
   return contours;
 }
+
 export default calWindContour;
 export {calWindContour, cal2PointsDistance, createMesh,getHitCount,getBound};
