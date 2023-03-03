@@ -47,6 +47,7 @@ const config = {
   },
 }
 
+task_set = new Set();
 const basePath = path.resolve(__dirname + './../../../data/img/ec_cloud/');
 
 async function openWebsite(taskConfig) {
@@ -65,7 +66,7 @@ async function openWebsite(taskConfig) {
 
 async function getImgUrl(fetchBuilder, basetime = '202104100000', validtime = '202104100000', preojection = 'opencharts_south_east_asia_and_indonesia', layerName) {
   const infoUrl = fetchBuilder(basetime, validtime, preojection, layerName);
-  const response = await got(infoUrl);
+  const response = await got(infoUrl,{timeout: {request: 60000}});
   const imgInfo = JSON.parse(response.body);
   const imgUrl = imgInfo.results[validtime].url;
   // console.log(imgUrl);
@@ -74,20 +75,21 @@ async function getImgUrl(fetchBuilder, basetime = '202104100000', validtime = '2
 
 async function storeImg(imgUrl, dirPath, targetImgName) {// "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png"
   let feedback;
-
+  
   await pMakeDir(dirPath);
   const filePath = path.resolve(dirPath, targetImgName);
   let isFileExists = await isExists(filePath);
   if (!isFileExists) {
     try {
       await pipeline(
-        got.stream(imgUrl),
+        got.stream(imgUrl,{timeout: {request: 60000}}),
         fs.createWriteStream(filePath)
       );
     } catch (err) {
       console.log('下载图像发生错误, 正在尝试删除');
       let isErrorFileExists = await isExists(filePath);
       console.log('是否存在错误数据: ' + isErrorFileExists);
+      console.log(`删除文件${filePath}`);
       if (isErrorFileExists) await pDelete(filePath);
       feedback = {
         error: true,
@@ -154,9 +156,20 @@ async function handleImgDownload({ taskConfig, basetime, validtime, projection, 
         .catch(err => { console.log('获取图像地址发生错误:' + imgFileName) });
       // imgUrl = "https://apps.ecmwf.int/webapps/opencharts/streaming/20210410-1130/1a/render-worker-commands-6b585b4f49-vqvcr-6fe5cac1a363ec1525f54343b6cc9fd8-47cJxk.png";
       console.log(imgUrl);
-      let response = await storeImg(imgUrl, dirPath, imgFileName);
-      console.log(response.message);
-      return response.message;
+      if(!imgUrl){// imgUrl 为undefined 退出
+        return '获取图像地址发生错误'+ imgFileName;
+      } 
+        
+      if(task_set.has(imgFileName)){
+        console.log(`任务已存在${imgFileName}`);
+        return `任务已存在${imgFileName}`;
+      }else{
+        task_set.add(imgFileName);// 添加进任务列表
+        let response = await storeImg(imgUrl, dirPath, imgFileName);
+        task_set.delete(imgFileName);// 删除任务
+        console.log(response.message);
+        return response.message;
+      }
     }
     else {
       let fileStatus = await pStat(filePath);
@@ -165,10 +178,21 @@ async function handleImgDownload({ taskConfig, basetime, validtime, projection, 
         await pDelete(filePath);
         let imgUrl = await getImgUrl(taskConfig.fetchImgUrlBuilder, basetime, validtime, projection, layerName)
           .catch(err => { console.log('获取图像地址发生错误:' + imgFileName) });
-        let response = await storeImg(imgUrl, dirPath, imgFileName);
-        console.log(response.message);
-        return response.message;
-      }else{
+        if(!imgUrl){// imgUrl 为undefined 退出
+          return '获取图像地址发生错误'+ imgFileName;
+        } 
+        if(task_set.has(imgFileName)){
+          console.log(`任务已存在${imgFileName}`);
+          return `任务已存在${imgFileName}`;
+        }else{
+          task_set.add(imgFileName);// 添加进任务列表
+          let response = await storeImg(imgUrl, dirPath, imgFileName);
+          task_set.delete(imgFileName);// 删除任务
+          console.log(response.message);
+          return response.message;
+        }
+      }
+      else{
         console.log(`文件已存在${imgFileName}`);
         return `文件已存在${imgFileName}`;
       }
@@ -201,7 +225,7 @@ async function getEcImg(taskConfig) {
       }
     });
     try {
-      await pMap(taskList, handleImgDownload, { stopOnError: false, concurrency: 5 });
+      await pMap(taskList, handleImgDownload, { stopOnError: false, concurrency: 10 });
       // console.log(result);
       // return result;
     } catch (err) {
@@ -211,6 +235,10 @@ async function getEcImg(taskConfig) {
 }
 
 async function getCloudImgMain() {
+  console.log('准备下载TC生成概率图');
+  getEcImg(config.tcPro).catch(err => {
+    console.error(err);
+  });
   console.log('准备下载红外云图');
   getEcImg(config.irImg).catch(err => {
     console.error(err);
@@ -223,10 +251,7 @@ async function getCloudImgMain() {
   getEcImg(config.wvImg).catch(err => {
     console.error(err);
   });
-  console.log('准备下载TC生成概率图');
-  await getEcImg(config.tcPro).catch(err => {
-    console.error(err);
- });
+  
   // console.log('完成本次EC图像下载');
 }
 
