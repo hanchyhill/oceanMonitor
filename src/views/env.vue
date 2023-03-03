@@ -145,12 +145,12 @@
 
       <h2 id="ascat">ASCAT风场扫描</h2>
       <Tabs type="card" :animated="false">
-        <TabPane label="上升A">
+        <!-- <TabPane label="上升A">
           <ascat-view :imgList="ascat.ascend"></ascat-view>
         </TabPane>
         <TabPane label="下降A">
           <ascat-view :imgList="ascat.descend"></ascat-view>
-        </TabPane>
+        </TabPane> -->
         <TabPane label="上升B">
           <ascat-view :imgList="ascat.ascendB"></ascat-view>
         </TabPane>
