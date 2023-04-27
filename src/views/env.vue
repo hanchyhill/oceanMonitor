@@ -11,15 +11,18 @@
         <card-pic :dial="speedDial.mtcswa"></card-pic>
         <card-pic :dial="speedDial.eTRaP"></card-pic>
       </Row>
-      <h2 id="sst">海温 & 浪高</h2>
-      <Tabs class="tabs-style" type="card" :animated="false">
-        <TabPane v-for="(item, index) of sst" :key="index" :label="item.name">
+      <h2 id="sst">海洋热容量 & 海温 & 浪高</h2>
+      <Tabs class="tabs-style" type="card" :animated="false" value="西太海温">
+        <TabPane key="ohc" label="海洋热容量" name="海洋热容量">
+          <iframe src="//lab.gdmo.gq/ocean/ohc" frameborder="0" style="width:100%; height: 750px;"></iframe>
+        </TabPane>
+        <TabPane v-for="(item, index) of sst" :key="index" :label="item.name" :name="item.name">
           <a :href="item.origin" target="_blank">
             <img :src="item.src" :alt="item.name" />
           </a>
         </TabPane>
       </Tabs>
-
+      <!-- <iframe src="//lab.gdmo.gq/ocean/ohc" frameborder="0" style="width:100%; height: 750px;"></iframe> -->
       <h2 id="wisc">WISC 环境场分析</h2>
       <Tabs type="card" :animated="false">
         <TabPane
