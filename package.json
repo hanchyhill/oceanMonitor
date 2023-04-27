@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config webpack.dev.config.js",
-    "dev": "webpack-dev-server --content-base ./ --open --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",
-    "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
+    "dev": "set NODE_OPTIONS=--openssl-legacy-provider --openssl-legacy-provider && webpack-dev-server --content-base ./ --open --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider --openssl-legacy-provider && webpack --progress --hide-modules --config webpack.prod.config.js",
     "lint": "eslint --fix --ext .js,.vue src",
     "koa":"node ./src/bule-koa.js"
   },
