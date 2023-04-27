@@ -14,7 +14,7 @@
       <h2 id="sst">海洋热容量 & 海温 & 浪高</h2>
       <Tabs class="tabs-style" type="card" :animated="false" value="西太海温">
         <TabPane key="ohc" label="海洋热容量" name="海洋热容量">
-          <iframe src="//lab.gdmo.gq/ocean/ohc" frameborder="0" style="width:100%; height: 750px;"></iframe>
+          <iframe src="//lab.gdmo.gq/ocean/ohc?hidebanner=1" frameborder="0" style="width:100%; height: 750px;"></iframe>
         </TabPane>
         <TabPane v-for="(item, index) of sst" :key="index" :label="item.name" :name="item.name">
           <a :href="item.origin" target="_blank">
@@ -145,15 +145,15 @@
         </a>
       </TabPane> -->
       </Tabs>
-
-      <h2 id="ascat">ASCAT风场扫描</h2>
-      <Tabs type="card" :animated="false">
-        <!-- <TabPane label="上升A">
-          <ascat-view :imgList="ascat.ascend"></ascat-view>
-        </TabPane>
-        <TabPane label="下降A">
-          <ascat-view :imgList="ascat.descend"></ascat-view>
-        </TabPane> -->
+      <div >
+        <h2 style="display: inline-block;" id="ascat">风场扫描</h2>
+      <Button :type="showOldAscat?'primary':''" @click="showOldAscat=!showOldAscat">
+        {{showOldAscat?'切换新版风场扫描':'显示旧版ASCAT风场扫描'}}
+      </Button>
+      </div>
+      <iframe v-show="!showOldAscat" style="width:100%;height: 100vh;" frameborder="0"
+      :src="'//lab.gdmo.gq/windplot?hidebanner=1'"></iframe>
+      <Tabs type="card" :animated="false" v-show="showOldAscat">
         <TabPane label="上升B">
           <ascat-view :imgList="ascat.ascendB"></ascat-view>
         </TabPane>
@@ -188,6 +188,7 @@ export default {
     return {
       speedDial: envSrc.speedDial,
       sourceFrom: "local", //origin
+      showOldAscat:false,
     };
   },
   methods: {},
