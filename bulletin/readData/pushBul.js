@@ -11,7 +11,7 @@ const JTWC = {
 };
 //'WTPN3-PGTW'
 const RJTD = {
-  head:'WTPQ2-RJTD',
+  head:'WTPQ5-RJTD',
   testStr : 'UPGRADED FROM',
   icon:'/static/thumbnails/Japan_Meteorological_Agency_logo2.jpg',
   title:'JMA台风预报',
