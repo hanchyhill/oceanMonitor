@@ -6,9 +6,20 @@ const glob = require('glob');
 const {resolve} = require('path');
 const MAX_RECONNECTED = 10;
 const {configBL} = require('./privateConfig/private.dbConfig.js');
-const dbLink = configBL.localLink;
-const dbLink2 = configBL.remoteLink;
-const dbConfig = configBL.remoteConfig;
+let dbLink_local = configBL.localLink;
+let dbLink_remote = configBL.remoteLink;
+let dbConfig_remote = configBL.remoteConfig;
+let dbLink;
+let dbConfig;
+
+if(process.env.NODE_ENV !== 'production'){
+  mongoose.set('debug', true);
+  dbLink = dbLink_local;
+  dbConfig = configBL.localConfig;
+}else{
+  dbLink = dbLink_remote;
+  dbConfig = dbConfig_remote;
+}
 
 exports.initSchemas = ()=>{
   glob.sync(resolve(__dirname,'./schema','**/*.js')).forEach(
@@ -23,22 +34,16 @@ exports.connect = ()=>{
       console.log('mongo 已连接');
       resolve('mongo 已连接');
     }
-    if(process.env.NODE_ENV !== 'production'){
-      mongoose.set('debug', true);
-      mongoose.connect(dbLink,{ keepAlive: 120 , autoIndex: false, useNewUrlParser: true,});
-    }
-    else{
-      mongoose.connect(dbLink2,dbConfig,);
-    }
+    mongoose.connect(dbLink,dbConfig);
     
     mongoose.connection.on('disconnected',()=>{
-      mongoose.connect(dbLink);
+      mongoose.connect(dbLink,dbConfig);
     });
 
     mongoose.connection.on('error',(err)=>{
       maxConnectTimes++;
       if(maxConnectTimes < MAX_RECONNECTED){
-        mongoose.connect(dbLink);
+        mongoose.connect(dbLink,dbConfig);
       }
       else{
         reject(new Error('Max Reconnect, DB breakdown.'));
