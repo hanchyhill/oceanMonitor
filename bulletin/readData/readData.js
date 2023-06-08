@@ -50,7 +50,7 @@ const scanMeta = (bulletin='')=>{
       let iMinute = Number(iTime.slice(4,6));
       let initTime = new Date(Date.UTC(utc[0],utc[1],iDay,iHour,iMinute));
       let md5 = MD5(bulletin.replace(/ZCZC.*?\d{3}/,'').replace(/ZCZC/,'').replace(/\s/g,'').replace(/NNNN/g,''));//去除ZCZC开头，去除所有空白字符
-      if(initTime.getTime()-today.getTime()>0){
+      if(initTime.getTime()-today.getTime()>10800000){// 如果时间超过3小时则认为是昨天的报文
         initTime = new Date(Date.UTC(utc[0],utc[1]-1,iDay,iHour,iMinute));
         //fulltime = utc[0].toString() + number2(utc[1]) + number2(iDay) + number2(iHour) + number2(iMinute);
       }// OR today.date<iDay?today.date -1 
@@ -103,6 +103,7 @@ async function saveBulletin(item){
     bulletin = new Bulletin(transItem);
     await bulletin.save()
     .then(()=>{
+      console.log(`${item.title}储存成功`);
       pushBulletin(item);
       //检测报文是否需要推送      
     })
