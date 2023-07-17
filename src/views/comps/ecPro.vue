@@ -46,6 +46,9 @@
             <div class="pro-carousel"><img :src="url" @error="evt=>eventImgError(evt.currentTarget)"></div>
         </CarouselItem>
     </Carousel>
+    <div class="legend flex">
+      <img src="/static/thumbnails/ecmwf_tc_strike_prob.jpg" alt="台风袭击概率图例" srcset="">
+    </div>
   </div>
 </template>
 <script>
@@ -151,7 +154,7 @@
   };
 </script>
 <style scope>
-  .pro-carousel{
+  .pro-carousel, .legend.flex{
     display: flex;
     justify-content:center;
     align-items: center;

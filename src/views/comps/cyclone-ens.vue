@@ -13,7 +13,7 @@
         @on-change="timeChange"
         :value="timeRange"
       ></DatePicker>
-      选择机构<i-select multiple v-model="selectedModel" style="width: 550px">
+      选择机构<i-select multiple v-model="selectedModel" style="width: 600px">
         <OptionGroup label="WMO数据源">
           <i-option
             v-for="item in modelListOffice"
@@ -285,13 +285,16 @@
                   <div style="background-color: rgb(153, 20, 8)">STY</div>
                   <div style="background-color: rgb(128, 0, 255)">SuperTY</div>
                 </div>
-                <div class="legend legend-wind-pro"  v-show="showWindPro || showHitPro">
-                  <div style="background-color: #10AC00">5%</div>
-                  <div style="background-color: #B2DA00">10%</div>
-                  <div style="background-color: #E8C52A">30%</div>
-                  <div style="background-color: #FCA46F">50%</div>
-                  <div style="background-color: #F06948">70%</div>
-                  <div style="background-color: #CE2619">90%</div>
+                <div
+                  class="legend legend-wind-pro"
+                  v-show="showWindPro || showHitPro"
+                >
+                  <div style="background-color: #10ac00">5%</div>
+                  <div style="background-color: #b2da00">10%</div>
+                  <div style="background-color: #e8c52a">30%</div>
+                  <div style="background-color: #fca46f">50%</div>
+                  <div style="background-color: #f06948">70%</div>
+                  <div style="background-color: #ce2619">90%</div>
                 </div>
                 <div class="lonlat">
                   <div>Lon:<span class="lon"></span></div>
@@ -332,7 +335,6 @@
   </div>
 </template>
 <script>
-
 // TODO: 更改地图为更高分辨率
 // TODO: 鼠标定经纬度防抖
 // import privateConfig from "./config/private.config.js";
@@ -350,7 +352,6 @@ import { calWindContour } from "../../libs/calRadius.js";
 const axios = Util.ajax;
 import * as moment from "moment";
 import cityInfo from "../../config/coastalCity.json";
-
 
 // const interpolateTerrain = (t)=>{
 //   const i0 = d3.interpolateHsvLong(d3.hsv(120, 1, 0.65), d3.hsv(60, 1, 0.90));
@@ -465,6 +466,34 @@ let tcUtil = {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
+    "ncep_e": {
+      enNumber: 31,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      },
+    },
+    "ukmo_e": {
+      enNumber: 36,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      },
+    },
+    "fnmoc_e": {
+      enNumber: 20,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      },
+    },
+    "cmc_e": {
+      enNumber: 21,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(40), (val, index) => index * 6);
+      },
+    },
     UKMO: {},
   },
 };
@@ -557,18 +586,24 @@ async function d3Map(
   let path = d3.geoPath().projection(projection);
 
   // 绘制风圈概率
-  if (
-    !opt.showWindPro ||
-    !tcUtil.model[tcRaw.ins].containWindRadius
-  ) {
-    ''
-  }else{
+  if (!opt.showWindPro || !tcUtil.model[tcRaw.ins].containWindRadius) {
+    ("");
+  } else {
     // const contourRange = d3.range(0.1, 1, 0.2);
     const contourRange = [0.05, 0.1, 0.3, 0.5, 0.7, 0.9];
-    const colorRange = ['#10AC00','#B2DA00','#E8C52A','#FCA46F','#F06948','#CE2619'];
+    const colorRange = [
+      "#10AC00",
+      "#B2DA00",
+      "#E8C52A",
+      "#FCA46F",
+      "#F06948",
+      "#CE2619",
+    ];
     const contourArr = calWindContour(tcRaw, opt.windProScale, contourRange);
-    contourArr.map((contour,index)=>contour.color=colorRange[index]);
-    const windProSvg = baseMap.insert("g",":first-child").attr("class", "windpro-svg");
+    contourArr.map((contour, index) => (contour.color = colorRange[index]));
+    const windProSvg = baseMap
+      .insert("g", ":first-child")
+      .attr("class", "windpro-svg");
     windProSvg
       .selectAll("g.wind-contour-group")
       .data(contourArr)
@@ -583,15 +618,28 @@ async function d3Map(
       .style("stroke-width", "1px");
     // 绘制风圈概率
   }
-  
+
   /*start 绘制袭击概率图*/
-  if(opt.showHitPro){
-    
+  if (opt.showHitPro) {
     const contourRange = [0.05, 0.1, 0.3, 0.5, 0.7, 0.9];
-    const colorRange = ['#10AC00','#B2DA00','#E8C52A','#FCA46F','#F06948','#CE2619'];
-    const contourArr = calRegionTChitProbility(tcRaw, contourRange, tcUtil.model[tcRaw.ins].enNumber, tcUtil.model[tcRaw.ins].interval);
-    contourArr.map((contour,index)=>contour.color=colorRange[index]);
-    const hitProSvg = baseMap.insert("g",":first-child").attr("class", "hitpro-svg");
+    const colorRange = [
+      "#10AC00",
+      "#B2DA00",
+      "#E8C52A",
+      "#FCA46F",
+      "#F06948",
+      "#CE2619",
+    ];
+    const contourArr = calRegionTChitProbility(
+      tcRaw,
+      contourRange,
+      tcUtil.model[tcRaw.ins].enNumber,
+      tcUtil.model[tcRaw.ins].interval
+    );
+    contourArr.map((contour, index) => (contour.color = colorRange[index]));
+    const hitProSvg = baseMap
+      .insert("g", ":first-child")
+      .attr("class", "hitpro-svg");
     hitProSvg
       .selectAll("g.hitpro-contour-group")
       .data(contourArr)
@@ -1639,7 +1687,13 @@ export default {
         { value: "fnmoc-R", label: "FNMOC" },
         { value: "cmc-R", label: "加拿大" },
       ],
-      modelListEmc: [{ value: "ncep-N", label: "NCEP-EMC" }],
+      modelListEmc: [
+        { value: "ncep_e", label: "NCEP" },
+        { value: "fnmoc_e", label: "FNMOC" },
+        { value: "cmc_e", label: "加拿大" },
+        { value: "ukmo_e", label: "英国" },
+        { value: "ncep-N", label: "NCEP备份" },
+      ],
       tcFilter: "all",
       showHitTime: false,
       hitTimeLocName: "",
@@ -2158,7 +2212,7 @@ export default {
 </script>
 
 <style scoped>
-.wind-radius-panel{
+.wind-radius-panel {
   display: inline-block;
   border: #91a1e1 solid 2px;
 }
@@ -2267,7 +2321,7 @@ svg circle {
   background-color: white;
   font-size: 14px;
 }
-.legend-wind-pro{
+.legend-wind-pro {
   right: 0px;
 }
 .lonlat {
