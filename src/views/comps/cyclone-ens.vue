@@ -466,28 +466,28 @@ let tcUtil = {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
-    "ncep_e": {
+    ncep_e: {
       enNumber: 31,
-      interval: 6,
+      interval: 1000,
       timeRange() {
-        return Array.from(new Array(40), (val, index) => index * 6);
+        return Array.from(new Array(64), (val, index) => index * 6);
       },
     },
-    "ukmo_e": {
+    ukmo_e: {
       enNumber: 36,
       interval: 6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
-    "fnmoc_e": {
+    fnmoc_e: {
       enNumber: 20,
       interval: 6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
-    "cmc_e": {
+    cmc_e: {
       enNumber: 21,
       interval: 6,
       timeRange() {
@@ -892,81 +892,84 @@ async function d3Map2(tcRaw) {
   let path = d3.geoPath().projection(projection);
 
   // 地理路径
-  let catArr = tcRaw.tracks
-    .map((member) => member.track)
-    .map((track) => {
-      let twoPointLineArr = [];
-      for (let i = 0; i < track.length - 1; i++) {
-        let point0 = track[i][1];
-        let point1 = track[i + 1][1];
-        let point1Step = track[i + 1][0];
-        let nextWind = track[i + 1][3];
-        let nextCat = tcUtil.wind2cat(nextWind);
-        let nextColor = tcUtil.tcColor[nextCat];
-        let timeColor = tcUtil.matchTimeColor(point1Step);
-        let time0 = track[i][0];
-        let time1 = track[i + 1][0];
-        if (time1 - time0 > timeInterval) continue; // 如果有跳点则断线
-        const distance = Math.sqrt(
-          Math.pow(point1[0] - point0[0], 2) +
-            Math.pow(point1[1] - point0[1], 2)
-        );
-        if (distance > 9) continue; // 如果大于指定个经纬度则断线
-        twoPointLineArr.push({
-          line: { type: "LineString", coordinates: [point0, point1] },
-          nextCat,
-          nextColor,
-          timeColor,
-          curCat: tcUtil.wind2cat(track[i][3]),
-        });
-      }
-      return twoPointLineArr;
-    })
-    .flat();
-  // console.log(catArr);
-  let tcSvg = baseMap.append("g").attr("class", "tc-svg");
-  tcSvg
-    .selectAll("path")
-    .data(catArr)
-    .enter()
-    .append("path")
-    .attr("d", (d) => path(d.line))
-    .attr("class", (d) => `track-line ${d.nextCat}`)
-    .style("stroke", (d) => d.timeColor)
-    .attr("opacity", 0.5);
-
-  let pointArr = tcRaw.tracks
-    .map((member) => member.track)
-    .map((track) =>
-      track.map((point) => {
-        let cat = tcUtil.wind2cat(point[3]);
-        let step = point[0];
-        let timeColor = tcUtil.matchTimeColor(step);
-        return {
-          point: point[1],
-          project: projection(point[1]),
-          color: tcUtil.tcColor[cat],
-          timeColor,
-          step,
-          cat,
-        };
+  if (tcRaw.tracks) {
+    let catArr = tcRaw.tracks
+      .map((member) => member.track)
+      .map((track) => {
+        let twoPointLineArr = [];
+        for (let i = 0; i < track.length - 1; i++) {
+          let point0 = track[i][1];
+          let point1 = track[i + 1][1];
+          let point1Step = track[i + 1][0];
+          let nextWind = track[i + 1][3];
+          let nextCat = tcUtil.wind2cat(nextWind);
+          let nextColor = tcUtil.tcColor[nextCat];
+          let timeColor = tcUtil.matchTimeColor(point1Step);
+          let time0 = track[i][0];
+          let time1 = track[i + 1][0];
+          if (time1 - time0 > timeInterval) continue; // 如果有跳点则断线
+          const distance = Math.sqrt(
+            Math.pow(point1[0] - point0[0], 2) +
+              Math.pow(point1[1] - point0[1], 2)
+          );
+          if (distance > 9) continue; // 如果大于指定个经纬度则断线
+          twoPointLineArr.push({
+            line: { type: "LineString", coordinates: [point0, point1] },
+            nextCat,
+            nextColor,
+            timeColor,
+            curCat: tcUtil.wind2cat(track[i][3]),
+          });
+        }
+        return twoPointLineArr;
       })
-    )
-    .flat();
+      .flat();
+    // console.log(catArr);
+    let tcSvg = baseMap.append("g").attr("class", "tc-svg");
+    tcSvg
+      .selectAll("path")
+      .data(catArr)
+      .enter()
+      .append("path")
+      .attr("d", (d) => path(d.line))
+      .attr("class", (d) => `track-line ${d.nextCat}`)
+      .style("stroke", (d) => d.timeColor)
+      .attr("opacity", 0.5);
 
-  let pointSvg = baseMap.append("g");
-  pointSvg.attr("class", "point-g");
-  pointSvg
-    .selectAll("circle")
-    .data(pointArr)
-    .enter()
-    .append("circle")
-    .attr("class", "point")
-    .attr("cx", (d) => d.project[0])
-    .attr("cy", (d) => d.project[1])
-    .attr("r", 1.5)
-    .style("fill", (d) => d.timeColor)
-    .attr("opacity", 0.5);
+    let pointArr = tcRaw.tracks
+      .map((member) => member.track)
+      .map((track) =>
+        track.map((point) => {
+          let cat = tcUtil.wind2cat(point[3]);
+          let step = point[0];
+          let timeColor = tcUtil.matchTimeColor(step);
+          return {
+            point: point[1],
+            project: projection(point[1]),
+            color: tcUtil.tcColor[cat],
+            timeColor,
+            step,
+            cat,
+          };
+        })
+      )
+      .flat();
+
+    let pointSvg = baseMap.append("g");
+    pointSvg.attr("class", "point-g");
+    pointSvg
+      .selectAll("circle")
+      .data(pointArr)
+      .enter()
+      .append("circle")
+      .attr("class", "point")
+      .attr("cx", (d) => d.project[0])
+      .attr("cy", (d) => d.project[1])
+      .attr("r", 1.5)
+      .style("fill", (d) => d.timeColor)
+      .attr("opacity", 0.5);
+  }
+
   // TODO tcRaw.detTrack is undefined
   // 确定性预报
   if (!tcRaw.detTrack || !tcRaw.detTrack.track) return;
@@ -1419,13 +1422,24 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
  * 计算中心
  */
 function calCenter(tcRaw) {
-  let allPoint = tcRaw.tracks
-    .map((member) => member.track)
-    .map((track) => track.map((point) => point[1]))
-    .flat();
-  let meanLon = d3.mean(allPoint.map((loc) => loc[0]));
-  let meanLat = d3.mean(allPoint.map((loc) => loc[1]));
-  return [meanLon, meanLat];
+  // console.log(tcRaw);
+  if(tcRaw.tracks && tcRaw.tracks.length){
+    let allPoint = tcRaw.tracks
+      .map((member) => member.track)
+      .map((track) => track.map((point) => point[1]))
+      .flat();
+    let meanLon = d3.mean(allPoint.map((loc) => loc[0]));
+    let meanLat = d3.mean(allPoint.map((loc) => loc[1]));
+    return [meanLon, meanLat];
+  }else if(tcRaw.detTrack && tcRaw.detTrack.track && tcRaw.detTrack.track.length){
+    let allPoint = tcRaw.detTrack.track
+      .map(item=>item[1]);
+    let meanLon = d3.mean(allPoint.map((loc) => loc[0]));
+    let meanLat = d3.mean(allPoint.map((loc) => loc[1]));
+    return [meanLon, meanLat];
+  }else{
+    return [130, 20];
+  }
 }
 
 function step2time(initTime, step) {
@@ -1463,6 +1477,7 @@ async function d3MapOverview(multiTC) {
   let allCatArr = new Array();
   for (let iTc = 0; iTc < multiTC.length; iTc++) {
     let tcRaw = multiTC[iTc];
+    if (!tcRaw.tracks) continue; //不存在退出
     let catArr = tcRaw.tracks
       .map((member) => member.track)
       .map((track) => {
