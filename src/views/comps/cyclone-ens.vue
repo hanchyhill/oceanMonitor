@@ -468,28 +468,28 @@ let tcUtil = {
     },
     ncep_e: {
       enNumber: 31,
-      interval: 1000,
+      interval: -1,// -1 表示忽略时间间隔的判断
       timeRange() {
         return Array.from(new Array(64), (val, index) => index * 6);
       },
     },
     ukmo_e: {
       enNumber: 36,
-      interval: 6,
+      interval: -1,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
     fnmoc_e: {
       enNumber: 20,
-      interval: 6,
+      interval: -1,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
     },
     cmc_e: {
       enNumber: 21,
-      interval: 6,
+      interval: -1,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
@@ -669,7 +669,7 @@ async function d3Map(
         let nextColor = tcUtil.tcColor[nextCat];
         let time0 = track[i][0];
         let time1 = track[i + 1][0];
-        if (time1 - time0 > timeInterval) continue;
+        if (timeInterval>0 && time1 - time0 > timeInterval) continue;// 时间步长过长断线
         const distance = Math.sqrt(
           Math.pow(point1[0] - point0[0], 2) +
             Math.pow(point1[1] - point0[1], 2)
@@ -745,7 +745,7 @@ async function d3Map(
       let nextColor = tcUtil.tcColor[nextCat];
       let time0 = track[i][0];
       let time1 = track[i + 1][0];
-      if (time1 - time0 > timeInterval) continue; // 大于时间间隔跳过连线
+      if (timeInterval>0 && time1 - time0 > timeInterval) continue; // 大于时间间隔跳过连线
       const distance = Math.sqrt(
         Math.pow(point1[0] - point0[0], 2) + Math.pow(point1[1] - point0[1], 2)
       );
@@ -907,7 +907,7 @@ async function d3Map2(tcRaw) {
           let timeColor = tcUtil.matchTimeColor(point1Step);
           let time0 = track[i][0];
           let time1 = track[i + 1][0];
-          if (time1 - time0 > timeInterval) continue; // 如果有跳点则断线
+          if (timeInterval>0 && time1 - time0 > timeInterval) continue; // 如果有跳点则断线
           const distance = Math.sqrt(
             Math.pow(point1[0] - point0[0], 2) +
               Math.pow(point1[1] - point0[1], 2)
@@ -986,7 +986,7 @@ async function d3Map2(tcRaw) {
       let time1 = track[i + 1][0];
       let point1Step = track[i + 1][0];
       let timeColor = tcUtil.matchTimeColor(point1Step);
-      if (time1 - time0 > timeInterval) continue;
+      if (timeInterval>0 && time1 - time0 > timeInterval) continue;
       const distance = Math.sqrt(
         Math.pow(point1[0] - point0[0], 2) + Math.pow(point1[1] - point0[1], 2)
       );
@@ -1490,7 +1490,7 @@ async function d3MapOverview(multiTC) {
           let nextColor = tcUtil.tcColor[nextCat];
           let time0 = track[i][0];
           let time1 = track[i + 1][0];
-          if (time1 - time0 > timeInterval) continue;
+          if (timeInterval>0 && time1 - time0 > timeInterval) continue;
           const distance = Math.sqrt(
             Math.pow(point1[0] - point0[0], 2) +
               Math.pow(point1[1] - point0[1], 2)
@@ -1577,7 +1577,7 @@ async function d3MapOverview(multiTC) {
         let nextColor = tcUtil.tcColor[nextCat];
         let time0 = track[i][0];
         let time1 = track[i + 1][0];
-        if (time1 - time0 > timeInterval) continue; // 大于时间间隔跳过连线
+        if (timeInterval>0 && time1 - time0 > timeInterval) continue; // 大于时间间隔跳过连线
         const distance = Math.sqrt(
           Math.pow(point1[0] - point0[0], 2) +
             Math.pow(point1[1] - point0[1], 2)
