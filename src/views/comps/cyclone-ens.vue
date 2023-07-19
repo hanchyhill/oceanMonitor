@@ -1674,7 +1674,7 @@ export default {
       selectedModel: [
         "ecmwf",
         "ncep-R",
-        "ukmo-R",
+        "ncep_e",
         "fnmoc-R",
         "cmc-R",
         "TRAMS_TY",
@@ -1704,10 +1704,10 @@ export default {
         { value: "cmc-R", label: "加拿大" },
       ],
       modelListEmc: [
-        { value: "ncep_e", label: "NCEP" },
-        { value: "fnmoc_e", label: "FNMOC" },
-        { value: "cmc_e", label: "加拿大" },
-        { value: "ukmo_e", label: "英国" },
+        { value: "ncep_e", label: "NCEP_E" },
+        { value: "fnmoc_e", label: "FNMOC_E" },
+        { value: "cmc_e", label: "加拿大_E" },
+        { value: "ukmo_e", label: "英国_E" },
         { value: "ncep-N", label: "NCEP备份" },
       ],
       tcFilter: "all",
