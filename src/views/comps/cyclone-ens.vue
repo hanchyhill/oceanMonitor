@@ -1172,6 +1172,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
   let timeRange = tcUtil.model[ins].timeRange(); //生成等差序列
   let initTime = moment(tcRaw.initTime);
   let traceArr = [];
+  let x_dtick = timeRange[timeRange.length-1]>240?8:4;
   for (let step of timeRange) {
     let currentTimePoint = tracks
       .map((member) => {
@@ -1236,7 +1237,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       tickwidth: 2,
       ticklen: 5,
       tickmode: "linear",
-      dtick: 4,
+      dtick: x_dtick,
     },
     height: 320,
   };
@@ -1289,7 +1290,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       tickwidth: 2,
       ticklen: 5,
       tickmode: "linear",
-      dtick: 4,
+      dtick: x_dtick,
     },
     showlegend: false,
     margin: {
@@ -1327,7 +1328,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       tickwidth: 2,
       ticklen: 5,
       tickmode: "linear",
-      dtick: 4,
+      dtick: x_dtick,
       side: "top",
     },
     // title: '',
