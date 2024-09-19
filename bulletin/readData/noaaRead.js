@@ -17,6 +17,7 @@ const config = {
       {reg:/wtpq2.*?rjtd/,name:'WTPQ2-RJTD',},
       {reg:/wtpq3.*?rjtd/,name:'WTPQ3-RJTD',},
       {reg:/wtpq5.*?rjtd/,name:'WTPQ5-RJTD',},
+      {reg:/wtpq5.*?babj/,name:'WTPQ2-BABJ',},
       {reg:/wtjp2.*?rjtd/,name:'WTJP2-RJTD',},//JMA WARNING
       {reg:/wtjp3.*?rjtd/,name:'WTJP3-RJTD',},//JMA STORM WARNING
       {reg:/wtpn2.*?pgtw/,name:'WTPQ2-PGTW',},
@@ -64,6 +65,73 @@ const config = {
   // }
 }
 
+async function getFileList_new(opt){
+  let options = {
+    uri: opt.url,
+  };
+  let html = null;
+  try {
+    html = await rp(options);
+    
+  } catch (error) {
+    throw error;
+  }
+  const $ = cheerio.load(html);
+  // 保存文件信息的数组
+  // 获取 <pre> 标签中的所有文本内容
+  const preText = $('pre').text();
+
+  // 按行分割文本内容
+  const lines = preText.split('\n');
+
+  // 保存文件信息的数组
+  let fileDetails = [];
+
+  // 遍历每一行
+  lines.forEach((line) => {
+    // 去除空白字符
+    line = line.trim();
+    if (line !== '') {
+      // 使用正则表达式解析文件名、日期、时间和文件大小
+      const regex = /(\S+)\s+(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2})\s+([\d.]+\w?)/;
+      const match = regex.exec(line);
+
+      if (match) {
+        const [fullMatch, fileName, fileDate, fileSize] = match;
+        fileDetails.push({
+          fileName: fileName,
+          fileDate: fileDate,
+          fileSize: fileSize,
+        });
+      }
+    }
+  });
+  let fileArr = fileDetails.map(
+    item=>{
+      return {
+        fileName: item.fileName,
+        url: item.fileName,
+        date: moment(item.fileDate, "DD-MMM-YYYY HH:mm"),
+      };
+    }
+  )
+
+  const filterArr = fileArr.filter(v=>{// 筛查文件和日期
+    let isInclude = false;
+    let rules = opt.rules;
+    for(let rule of rules){
+      let result = rule.reg.exec(v.fileName);
+      if(result && (v.date.valueOf() - opt.lastDate>0) ){// 限制日期
+        isInclude = true;
+        break;
+      }
+    };
+    return isInclude;
+  });
+  
+  return filterArr;
+}
+
 async function getFileList(opt){
   let options = {
     uri: opt.url,
@@ -76,6 +144,7 @@ async function getFileList(opt){
     throw error;
   }
   const $ = cheerio.load(html);
+  const a_list = $('a').slice(1);
   const trs = $('tr').slice(3,-1);// 去除头尾
   const initTd = opt.hasImg?1:0;// 兼容noaa jtwc镜像
   let fileArr = [];
@@ -108,7 +177,7 @@ async function getNoaa(){
   let configKey = Object.keys(config);
   try{
     for (let iConfig of configKey){
-      const list = await getFileList(config[iConfig]);
+      const list = await getFileList_new(config[iConfig]);
       if(list.length!=0){
         console.log(list);
         config[iConfig].lastDate = list[0].date.valueOf();// 记录最后更新时间，其实也可以记录lastModified
@@ -120,13 +189,22 @@ async function getNoaa(){
       for(let file of list){
         let bulletin = await rp(config[iConfig].base+file.url);
         resolveData(bulletin)
-          .catch(err=>{console.log('解析储存时发生错误'+err.message)});
+         .catch(err=>{console.log('解析储存时发生错误'+err.message)});
       }
     }
   }
   catch(err){
     throw err;
   }
+}
+
+// 如果以主程序执行
+if(require.main === module){
+  getNoaa()
+    .catch(err=>{
+      console.log('noaa Error:'+err.message);
+      console.error(err);
+    });
 }
 
 // getNoaa()

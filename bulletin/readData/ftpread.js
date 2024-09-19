@@ -1,8 +1,11 @@
 const PromiseFtp = require('promise-ftp');
 const fs = require('fs');
 const {resolveData} = require('./readData.js');
+
+// 导入json文件
+const ftp_config = require('../config/private.bulletin.ftp.json');
 const config = {
-  ftp:{host: '10.148.8.212', user: 'gmcrgz', password: 'guangz123',
+  ftp:{host: ftp_config.server, user: ftp_config.username, password:ftp_config.password,
       keepalive:120, autoReconnect:true,preserveCwd:true,},
   dir01:'/bcgz/dmsg/',
   dir02:'/bcgzup/msg/publ/',
