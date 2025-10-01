@@ -168,6 +168,11 @@ ruleI20.minute = [new schedule.Range(0, 59, 20)];// 20分钟轮询
 job6 = schedule.scheduleJob(ruleI6, (fireDate)=>startScheme(config.i6, fireDate, '6分钟'));
 job20 = schedule.scheduleJob(ruleI20, (fireDate)=>startScheme(config.i20, fireDate, '20分钟'));
 
+// 一小时间隔的定时器
+let ruleH1 = new schedule.RecurrenceRule();
+ruleH1.hour = [new schedule.Range(0, 23, 1)];// 每小时轮询
+jobH1 = schedule.scheduleJob(ruleH1, (fireDate)=>startScheme(config.h1, fireDate, '1小时'));
+
 // startScheme(config.i6, new Date(), '6分钟');
 // startScheme(config.i20, new Date(),'20分钟');
 // 创建目录

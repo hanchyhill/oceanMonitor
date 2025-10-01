@@ -128,8 +128,35 @@ async function getFileList_new(opt){
     };
     return isInclude;
   });
-  
-  return filterArr;
+  // 兼容旧格式网站
+  const trs = $('tr').slice(3,-1);// 去除头尾
+  const initTd = opt.hasImg?1:0;// 兼容noaa jtwc镜像
+  let fileArr2 = [];
+  trs.each((i,item)=>{
+    const tds = $(item).find('td');
+    const fileName = $(tds[initTd+0]).text();
+    const url = $(tds[initTd+0]).find('a').attr('href');
+    const dateString = $(tds[initTd+1]).text();
+    const date = moment(dateString.trim(), "DD-MMM-YYYY HH:mm")
+    fileArr.push({fileName,url,date,});
+  });
+
+  const filterArr2 = fileArr.filter(v=>{// 筛查文件和日期
+    let isInclude = false;
+    let rules = opt.rules;
+    for(let rule of rules){
+      let result = rule.reg.exec(v.fileName);
+      if(result && (v.date.valueOf() - opt.lastDate>0) ){// 限制日期
+        isInclude = true;
+        break;
+      }
+    };
+    return isInclude;
+  });
+
+  const filterArr_all = [...filterArr, ...filterArr2];
+  return filterArr_all;
+
 }
 
 async function getFileList(opt){

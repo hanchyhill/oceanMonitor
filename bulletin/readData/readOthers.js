@@ -15,7 +15,7 @@ config = {
     }],
   },
   jtwc:{
-    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/jtwc.rss',
+    url:'https://mirror.mesovortices.com/jtwc/rss/jtwc.rss',
     steps:[
       {exec:(data)=>{
 

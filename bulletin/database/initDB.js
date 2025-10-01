@@ -14,8 +14,8 @@ let dbConfig;
 
 if(process.env.NODE_ENV !== 'production'){
   mongoose.set('debug', true);
-  dbLink = dbLink_local;
-  dbConfig = configBL.localConfig;
+  dbLink = dbLink_remote//dbLink_local;
+  dbConfig = dbConfig_remote//configBL.localConfig;
 }else{
   dbLink = dbLink_remote;
   dbConfig = dbConfig_remote;
