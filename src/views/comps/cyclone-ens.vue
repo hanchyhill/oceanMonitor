@@ -400,6 +400,11 @@ let tcUtil = {
     { name: "H192", color: "rgb(0,255,255)" },
     { name: "H216", color: "rgb(255,0,255)" },
     { name: "H240", color: "rgb(178,178,178)" },
+    { name: "H264", color: "rgb(255,192,203)" },   // 粉色
+    { name: "H288", color: "rgb(255,215,0)" },     // 金色
+    { name: "H312", color: "rgb(0,128,128)" },     // 青色
+    { name: "H336", color: "rgb(128,0,128)" },     // 紫色
+    { name: "H360", color: "rgb(128,128,128)" },   // 灰色
   ],
   matchTimeColor(time = 24) {
     let count = Math.ceil(time / 24) - 1;
@@ -450,6 +455,13 @@ let tcUtil = {
       interval: 6,
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
+      },
+    },
+    "fnv3": {
+      enNumber: 51,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
     },
     "fnmoc-R": {
@@ -1673,10 +1685,11 @@ export default {
       selectedBasin: "WPAC",
       selectedModel: [
         "ecmwf",
-        "ncep-R",
+        // "ncep-R",
         "ncep_e",
-        "fnmoc-R",
-        "cmc-R",
+        "fnv3",
+        // "fnmoc-R",
+        // "cmc-R",
         "TRAMS_TY",
       ],
       tcMeta: tcUtil.model,
@@ -1695,6 +1708,7 @@ export default {
         { value: "ecmwf", label: "ECMWF" },
         { value: "TRAMS_TY", label: "华南台风模式" },
         { value: "NCEP", label: "NCEP" },
+        { value: "fnv3", label: "FNV3-Google" },
       ],
       modelListRuc: [
         { value: "ncep-R", label: "NCEP-R" },
