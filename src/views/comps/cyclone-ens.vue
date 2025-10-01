@@ -316,6 +316,11 @@
                   <div style="color: rgb(178, 178, 178)">
                     {{ timeLegend[9] }}
                   </div>
+                  <div style="color: rgb(255, 192, 203)">{{ timeLegend[10] }}</div>
+                  <div style="color: rgb(255, 215, 0)">{{ timeLegend[11] }}</div>
+                  <div style="color: rgb(0, 128, 128)">{{ timeLegend[12] }}</div>
+                  <div style="color: rgb(128, 0, 128)">{{ timeLegend[13] }}</div>
+                  <div style="color: rgb(128, 128, 128)">{{ timeLegend[14] }}</div>
                 </div>
                 <div class="lonlat">
                   <div>Lon:<span class="lon"></span></div>
@@ -2224,11 +2229,16 @@ export default {
         "192h",
         "216h",
         "240h",
+        "264h",
+        "288h",
+        "312h",
+        "336h",
+        "360h",
       ];
 
       if (this.selectedTC) {
         let initTime = moment(this.selectedTC.initTime);
-        let timeArr = Array.from(new Array(10), (val, index) =>
+        let timeArr = Array.from(new Array(15), (val, index) =>
           moment(initTime)
             .add((index + 1) * 24, "hours")
             .format("DD日HH时")
@@ -2350,6 +2360,7 @@ svg circle {
   font-weight: bold;
   background-color: white;
   font-size: 14px;
+  line-height: 100%;
 }
 .legend-wind-pro {
   right: 0px;
