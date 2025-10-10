@@ -469,6 +469,13 @@ let tcUtil = {
         return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
     },
+    "fnv3-gen": {
+      enNumber: 51,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
+      },
+    },
     "fnmoc-R": {
       enNumber: 20,
       interval: 6,
@@ -1693,6 +1700,7 @@ export default {
         // "ncep-R",
         "ncep_e",
         "fnv3",
+        "fnv3-gen",
         // "fnmoc-R",
         // "cmc-R",
         "TRAMS_TY",
@@ -1714,6 +1722,7 @@ export default {
         { value: "TRAMS_TY", label: "华南台风模式" },
         { value: "NCEP", label: "NCEP" },
         { value: "fnv3", label: "FNV3-Google" },
+        { value: "fnv3-gen", label: "FNV3-含扰动" },
       ],
       modelListRuc: [
         { value: "ncep-R", label: "NCEP-R" },
@@ -2414,7 +2423,6 @@ svg circle {
   border: 3px solid royalblue;
   margin: 5px;
   padding: 5px;
-  flex-shrink: 0;
   background-color: #f4dfed;
 }
 
