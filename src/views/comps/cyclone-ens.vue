@@ -190,6 +190,14 @@
             @click="triggerMapOpt('showMeanTrack')"
             >{{ showMeanTrack ? "隐藏集合平均" : "显示集合平均" }}</i-button
           >
+
+          <i-button
+            :type="showKeyTimeNodes ? 'success' : 'warning'"
+            @click="triggerMapOpt('showKeyTimeNodes')"
+            >{{
+              showKeyTimeNodes ? "隐藏关键时间节点" : "显示关键时间节点"
+            }}</i-button
+          >
           <span class="hit-pro-region-panel">
             <i-button
               :type="showHitPro ? 'success' : 'warning'"
@@ -1016,9 +1024,68 @@ async function d3Map(
 }
 
 /**
+ * 计算关键时间节点的等时间线
+ * 1. 每12小时取一组集合预报点位（时间点集合A）
+ * 2. 计算集合A经/纬度跨度，取跨度较大的方向为主轴
+ * 3. 按主轴从小到大排序，取10%~90%分位的点位（剔除离群成员）
+ * 4. 返回用于3次贝塞尔曲线插值的点序列及时间标签
+ */
+function calKeyTimeIsochrones(tcRaw, interval = 12) {
+  if (!tcRaw.tracks || !tcRaw.tracks.length) return [];
+  const initTime = tcRaw.initTime ? moment(tcRaw.initTime) : null;
+  // 收集所有出现过的时效步长
+  const stepSet = new Set();
+  tcRaw.tracks.forEach((member) => {
+    (member.track || []).forEach((point) => stepSet.add(point[0]));
+  });
+  // 每 interval 小时选取一组时间点
+  const steps = [...stepSet]
+    .filter((step) => step > 0 && step % interval === 0)
+    .sort((a, b) => a - b);
+
+  const isochrones = [];
+  steps.forEach((step) => {
+    // 集合A：该时效下所有成员的点位
+    let groupA = tcRaw.tracks
+      .map((member) => {
+        let point = member.track.find((v) => v[0] === step);
+        return point ? point[1] : null;
+      })
+      .filter((loc) => loc && loc.length >= 2);
+    if (groupA.length < 4) return; // 成员过少无法可靠取分位
+
+    // 计算经纬度跨度
+    const lons = groupA.map((loc) => loc[0]);
+    const lats = groupA.map((loc) => loc[1]);
+    const lonSpan = Math.max(...lons) - Math.min(...lons);
+    const latSpan = Math.max(...lats) - Math.min(...lats);
+    // 跨度大的方向作为排序主轴
+    const axis = lonSpan >= latSpan ? 0 : 1;
+    groupA = groupA.slice().sort((a, b) => a[axis] - b[axis]);
+
+    // 取 10%~90% 分位，剔除两端离群点
+    const n = groupA.length;
+    const lowIdx = Math.floor(n * 0.1);
+    const highIdx = Math.ceil(n * 0.9);
+    const selected = groupA.slice(lowIdx, highIdx);
+    if (selected.length < 2) return;
+
+    isochrones.push({
+      step,
+      points: selected,
+      axis, // 0=以经度为主轴，1=以纬度为主轴
+      fcTime: initTime
+        ? moment(initTime).add(step, "hours").format("MM-DD HH")
+        : `+${step}h`,
+    });
+  });
+  return isochrones;
+}
+
+/**
  * 按照时间填色
  */
-async function d3Map2(tcRaw) {
+async function d3Map2(tcRaw, opt = { showKeyTimeNodes: false }) {
   let center = calCenter(tcRaw);
   let timeInterval = tcUtil.model[tcRaw.ins].interval;
   center[1] += 5;
@@ -1110,6 +1177,11 @@ async function d3Map2(tcRaw) {
       .attr("opacity", 0.5);
   }
 
+  // 关键时间节点等时间线（不依赖确定性预报，需在提前退出前绘制）
+  if (opt && opt.showKeyTimeNodes) {
+    drawKeyTimeIsochrones(baseMap, tcRaw, projection);
+  }
+
   // TODO tcRaw.detTrack is undefined
   // 确定性预报
   if (!tcRaw.detTrack || !tcRaw.detTrack.track) return;
@@ -1177,6 +1249,203 @@ async function d3Map2(tcRaw) {
     .attr("cy", (d) => d.project[1])
     .attr("r", 3.5)
     .style("fill", (d) => d.timeColor);
+}
+
+/**
+ * 二次多项式最小二乘拟合 u = a·t² + b·t + c
+ * 返回系数 [c, b, a]，样本不足则退化为一次/常数
+ */
+function quadraticLeastSquares(ts, us) {
+  const n = ts.length;
+  // 样本过少无法二次拟合，退化处理
+  if (n < 3) {
+    if (n === 2) {
+      const b = (us[1] - us[0]) / (ts[1] - ts[0] || 1);
+      return [us[0] - b * ts[0], b, 0];
+    }
+    return [us[0] || 0, 0, 0];
+  }
+  // 构造正规方程 (X^T X) β = X^T u，X 的列为 [1, t, t²]
+  let S0 = n,
+    S1 = 0,
+    S2 = 0,
+    S3 = 0,
+    S4 = 0;
+  let T0 = 0,
+    T1 = 0,
+    T2 = 0;
+  for (let i = 0; i < n; i++) {
+    const t = ts[i];
+    const t2 = t * t;
+    S1 += t;
+    S2 += t2;
+    S3 += t2 * t;
+    S4 += t2 * t2;
+    T0 += us[i];
+    T1 += us[i] * t;
+    T2 += us[i] * t2;
+  }
+  // 3x3 线性方程组，克莱姆法则求解
+  const A = [
+    [S0, S1, S2],
+    [S1, S2, S3],
+    [S2, S3, S4],
+  ];
+  const B = [T0, T1, T2];
+  const det3 = (m) =>
+    m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
+    m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+    m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+  const D = det3(A);
+  if (Math.abs(D) < 1e-9) {
+    // 病态：退化为一次拟合
+    const b = (S0 * T1 - S1 * T0) / (S0 * S2 - S1 * S1 || 1);
+    const c = (T0 - b * S1) / S0;
+    return [c, b, 0];
+  }
+  const replaceCol = (m, col, vec) =>
+    m.map((row, i) => row.map((v, j) => (j === col ? vec[i] : v)));
+  const c = det3(replaceCol(A, 0, B)) / D;
+  const b = det3(replaceCol(A, 1, B)) / D;
+  const a = det3(replaceCol(A, 2, B)) / D;
+  return [c, b, a];
+}
+
+/**
+ * 绘制关键时间节点等时间线并标注时间
+ * 用二次多项式最小二乘拟合，得到平滑曲线（不强制穿过每个散点）
+ */
+function drawKeyTimeIsochrones(baseMap, tcRaw, projection) {
+  const isochrones = calKeyTimeIsochrones(tcRaw, 12);
+  if (!isochrones.length) return;
+
+  const SAMPLE = 24; // 拟合曲线采样点数
+  const isoGroup = baseMap.append("g").attr("class", "key-time-isochrone");
+
+  const isoData = isochrones
+    .map((iso) => {
+      const projected = iso.points
+        .map((loc) => projection(loc))
+        .filter((p) => p && isFinite(p[0]) && isFinite(p[1]));
+      if (projected.length < 2) return null;
+
+      // 主轴对应屏幕坐标：墨卡托下经度→x(0)、纬度→y(1)
+      const axisIdx = iso.axis; // 0=x, 1=y
+      const ts = projected.map((p) => p[axisIdx]);
+      const us = projected.map((p) => p[1 - axisIdx]);
+      const [c, b, a] = quadraticLeastSquares(ts, us);
+
+      // 沿主轴在样本范围内均匀采样，生成平滑曲线
+      const tMin = Math.min(...ts);
+      const tMax = Math.max(...ts);
+      const curve = [];
+      for (let i = 0; i <= SAMPLE; i++) {
+        const t = tMin + ((tMax - tMin) * i) / SAMPLE;
+        const u = a * t * t + b * t + c;
+        curve.push(axisIdx === 0 ? [t, u] : [u, t]);
+      }
+      return { ...iso, curve };
+    })
+    .filter(Boolean);
+
+  const lineGen = d3
+    .line()
+    .x((d) => d[0])
+    .y((d) => d[1])
+    .curve(d3.curveBasis); // 采样点已平滑，basis 仅做轻微顺滑
+
+  // 奇偶时次分色，增强标签与曲线的对应区分度
+  const evenColor = "#1565c0"; // 偶数时次：蓝
+  const oddColor = "#e65100"; // 奇数时次：橙
+  const colorOf = (i) => (i % 2 === 0 ? evenColor : oddColor);
+
+  // 等时间线
+  isoGroup
+    .selectAll("path.isochrone-line")
+    .data(isoData)
+    .enter()
+    .append("path")
+    .attr("class", "isochrone-line")
+    .attr("d", (d) => lineGen(d.curve))
+    .style("fill", "none")
+    .style("stroke", (d, i) => colorOf(i))
+    .style("stroke-width", "1.5px")
+    .style("stroke-dasharray", "5,3")
+    .attr("opacity", 0.85);
+
+  // 计算每条曲线的东西端点（按屏幕x：小=偏西/经度小，大=偏东/经度大）
+  // 注意曲线是沿主轴采样的，端点顺序未必对应东西，需显式比较
+  isoData.forEach((d) => {
+    const head = d.curve[0];
+    const tail = d.curve[d.curve.length - 1];
+    if (head[0] <= tail[0]) {
+      d.westPt = head;
+      d.eastPt = tail;
+    } else {
+      d.westPt = tail;
+      d.eastPt = head;
+    }
+  });
+
+  // 时间标注：相邻时次交替放置，避免标签互相重叠
+  // 偶数时次 → 西侧端点的西侧（右对齐）；奇数时次 → 东侧端点的东侧（左对齐）
+  const GAP = 22; // 标签锚点与曲线端点的水平间距（留出引线长度）
+  const labelGroup = isoGroup.append("g").attr("class", "isochrone-labels");
+
+  // 引线：从曲线端点连到标签锚点
+  labelGroup
+    .selectAll("line.isochrone-leader")
+    .data(isoData)
+    .enter()
+    .append("line")
+    .attr("class", "isochrone-leader")
+    .attr("x1", (d, i) => (i % 2 === 0 ? d.westPt[0] : d.eastPt[0]))
+    .attr("y1", (d, i) => (i % 2 === 0 ? d.westPt[1] : d.eastPt[1]))
+    .attr("x2", (d, i) =>
+      i % 2 === 0 ? d.westPt[0] - GAP : d.eastPt[0] + GAP
+    )
+    .attr("y2", (d, i) => (i % 2 === 0 ? d.westPt[1] : d.eastPt[1]))
+    .style("stroke", (d, i) => colorOf(i))
+    .style("stroke-width", "1px")
+    .attr("opacity", 0.9);
+
+  // 端点小圆点，标示引线起点
+  labelGroup
+    .selectAll("circle.isochrone-anchor")
+    .data(isoData)
+    .enter()
+    .append("circle")
+    .attr("class", "isochrone-anchor")
+    .attr("cx", (d, i) => (i % 2 === 0 ? d.westPt[0] : d.eastPt[0]))
+    .attr("cy", (d, i) => (i % 2 === 0 ? d.westPt[1] : d.eastPt[1]))
+    .attr("r", 2.5)
+    .style("fill", (d, i) => colorOf(i))
+    .style("stroke", "white")
+    .style("stroke-width", "1px");
+
+  const labels = labelGroup
+    .selectAll("g.isochrone-label")
+    .data(isoData)
+    .enter()
+    .append("g")
+    .attr("class", "isochrone-label")
+    .attr("transform", (d, i) => {
+      const anchor = i % 2 === 0 ? d.westPt : d.eastPt;
+      const x = i % 2 === 0 ? anchor[0] - GAP : anchor[0] + GAP;
+      return `translate(${x},${anchor[1]})`;
+    });
+  labels
+    .append("text")
+    .attr("dy", "0.32em")
+    .attr("dx", (d, i) => (i % 2 === 0 ? -3 : 3))
+    .attr("text-anchor", (d, i) => (i % 2 === 0 ? "end" : "start"))
+    .style("font-size", "11px")
+    .style("font-weight", "bold")
+    .style("fill", (d, i) => colorOf(i))
+    .style("stroke", "white")
+    .style("stroke-width", "3px")
+    .style("paint-order", "stroke")
+    .text((d) => d.fcTime);
 }
 
 /**
@@ -1794,6 +2063,7 @@ export default {
       showMeanTrack: true,
       showWindPro: false,
       showHitPro: false,
+      showKeyTimeNodes: true,
       radiusTimeInterval: 24,
       windProScale: 18,
       tcOpenPanel: "1",
@@ -1907,10 +2177,13 @@ export default {
       // 切换到新的TC时，ECMWF且编号以7开头的默认不显示集合平均路径
       if (needJump) {
         const number = tcRaw && tcRaw.cycloneNumber ? tcRaw.cycloneNumber : "";
-        this.showMeanTrack = !(tcRaw && tcRaw.ins === "ecmwf" && number[0] === "7");
+        // ecmwf 且编号以7开头（如70W/71W）默认不显示集合平均路径与关键时间节点
+        const isEcmwf7 = tcRaw && tcRaw.ins === "ecmwf" && number[0] === "7";
+        this.showMeanTrack = !isEcmwf7;
+        this.showKeyTimeNodes = !isEcmwf7;
       }
       this.$nextTick(() => {
-        d3Map2(tcRaw);
+        d3Map2(tcRaw, { showKeyTimeNodes: this.showKeyTimeNodes });
         drawPlotyBox(tcRaw, tcRaw.ins);
         d3Map(tcRaw, {
           showEnsTrack: this.showEnsTrack,
@@ -1937,6 +2210,9 @@ export default {
           break;
         case "showMeanTrack":
           this.showMeanTrack = !this.showMeanTrack;
+          break;
+        case "showKeyTimeNodes":
+          this.showKeyTimeNodes = !this.showKeyTimeNodes;
           break;
         case "showWindRadius":
           this.showWindRadius = !this.showWindRadius;
