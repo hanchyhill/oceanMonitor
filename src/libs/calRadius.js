@@ -52,19 +52,8 @@ function getHitCount(tcJson, bound, whichWindR=18) {
   let hitArr = new Array(arrLength);
   // const ensLength = tcJson['tracks'].length;
   // const whichWindR = 18;
-  let windIndex;
-  switch (whichWindR) {
-    case 18:
-      windIndex = 0;
-      break;
-    case 26:
-      windIndex = 1;
-      break;
-    case 33:
-      windIndex = 2;
-      break;
-    default:
-      throw new Error('异常的风圈设定');
+  if (![18, 26, 33].includes(whichWindR)) {
+    throw new Error('异常的风圈设定');
   }
   for (let i = 0; i < arrLength; ++i) {// 遍历每个格点
     let conut = 0;
@@ -76,7 +65,12 @@ function getHitCount(tcJson, bound, whichWindR=18) {
 
         const trackLon = iFc[1][0];
         const trackLat = iFc[1][1];
-        const infoR = iFc[5][windIndex];
+        const radiusList = iFc[5];
+        // 按阈值查找对应等级风圈；FNV3等数据源允许某等级缺失
+        const infoR = Array.isArray(radiusList)
+          ? radiusList.find((item) => Array.isArray(item) && item[0] === whichWindR)
+          : undefined;
+        if (!infoR) continue; // 该预报时效无对应等级风圈
         let radius;
         if (grid[0] >= trackLon && grid[1] >= trackLat) {
           radius = infoR[1]// 第1象限

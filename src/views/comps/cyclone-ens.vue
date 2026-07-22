@@ -132,7 +132,7 @@
               <div
                 v-for="(cityA, indexA) in allTcHitCityList"
                 :key="cityA.name + indexA"
-                :style="'background-color:' + cityA.color"
+                :style="{ backgroundColor: cityA.color, color: cityA.textColor }"
                 @click="showAllTcHitProSeries(cityA)"
               >
                 <span>{{ cityA.name }}: {{ cityA.hit.toFixed(1) }}%</span>
@@ -184,6 +184,12 @@
             @click="triggerMapOpt('showDetTrack')"
             >{{ showDetTrack ? "隐藏确定性预报" : "显示确定性预报" }}</i-button
           >
+
+          <i-button
+            :type="showMeanTrack ? 'success' : 'warning'"
+            @click="triggerMapOpt('showMeanTrack')"
+            >{{ showMeanTrack ? "隐藏集合平均" : "显示集合平均" }}</i-button
+          >
           <span class="hit-pro-region-panel">
             <i-button
               :type="showHitPro ? 'success' : 'warning'"
@@ -196,25 +202,27 @@
           </span>
           <span
             class="wind-radius-panel"
-            v-show="selectedTC && selectedTC.ins == 'ecmwf'"
+            v-show="selectedTC && tcMeta[selectedTC.ins] && tcMeta[selectedTC.ins].containWindRadius"
           >
-            <i-button
-              :type="showWindRadius ? 'success' : 'warning'"
-              :ghost="showWindRadius ? false : true"
-              @click="triggerMapOpt('showWindRadius')"
-              >{{
-                showWindRadius ? "隐藏确定性预报风圈" : "显示确定性预报风圈"
-              }}</i-button
-            >
-            风圈时间间隔<i-select
-              :value="radiusTimeInterval"
-              @on-change="(value) => triggerMapOpt('radiusTimeInterval', value)"
-              style="width: 100px"
-            >
-              <i-option :value="6">6小时</i-option>
-              <i-option :value="12">12小时</i-option>
-              <i-option :value="24">24小时</i-option>
-            </i-select>
+            <template v-if="selectedTC && selectedTC.detTrack && selectedTC.detTrack.track">
+              <i-button
+                :type="showWindRadius ? 'success' : 'warning'"
+                :ghost="showWindRadius ? false : true"
+                @click="triggerMapOpt('showWindRadius')"
+                >{{
+                  showWindRadius ? "隐藏确定性预报风圈" : "显示确定性预报风圈"
+                }}</i-button
+              >
+              风圈时间间隔<i-select
+                :value="radiusTimeInterval"
+                @on-change="(value) => triggerMapOpt('radiusTimeInterval', value)"
+                style="width: 100px"
+              >
+                <i-option :value="6">6小时</i-option>
+                <i-option :value="12">12小时</i-option>
+                <i-option :value="24">24小时</i-option>
+              </i-select>
+            </template>
 
             <i-button
               :type="showWindPro ? 'success' : 'warning'"
@@ -250,7 +258,7 @@
                 <div
                   v-for="(city, index) in hitCityList"
                   :key="city.name + index"
-                  :style="'background-color:' + city.color"
+                  :style="{ backgroundColor: city.color, color: city.textColor }"
                   @click="showHitProSeries(city)"
                 >
                   <span>{{ city.name }}: {{ city.hit.toFixed(1) }}%</span>
@@ -468,8 +476,17 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
+      containWindRadius: true,
     },
     "fnv3-gen": {
+      enNumber: 50,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
+      },
+      containWindRadius: true,
+    },
+    "aifs-cai": {
       enNumber: 51,
       interval: 6,
       timeRange() {
@@ -521,6 +538,24 @@ let tcUtil = {
     UKMO: {},
   },
 };
+
+/**
+ * 根据袭击概率返回背景色和适配的文字色
+ * 深底 → 白字，浅底 → 深灰字
+ */
+function hitProbColor(p) {
+  if (p > 0.75) {
+    return { color: "rgb(199,50,104)", textColor: "#ffffff" };
+  } else if (p >= 0.5) {
+    return { color: "rgb(253,91,91)", textColor: "#ffffff" };
+  } else if (p >= 0.25) {
+    return { color: "rgb(253,253,104)", textColor: "#333333" };
+  } else if (p >= 0.1) {
+    return { color: "rgb(186,253,186)", textColor: "#333333" };
+  } else {
+    return { color: "white", textColor: "#333333" };
+  }
+}
 
 /**
  * 根据风圈半径计算风圈geojson数据
@@ -756,6 +791,96 @@ async function d3Map(
       .style("fill", "none");
   }
 
+  // 集合平均路径
+  if (opt.showMeanTrack && tcRaw.tracks && tcRaw.tracks.length) {
+    const stepMap = new Map();
+    tcRaw.tracks.forEach((member) => {
+      (member.track || []).forEach((point) => {
+        const step = point[0];
+        const loc = point[1];
+        const wind = point[3];
+        if (!loc || loc.length < 2) return;
+        if (!stepMap.has(step)) stepMap.set(step, []);
+        stepMap.get(step).push({ lon: loc[0], lat: loc[1], wind });
+      });
+    });
+    const meanTrack = [...stepMap.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([step, arr]) => ({
+        step,
+        point: [d3.mean(arr, (v) => v.lon), d3.mean(arr, (v) => v.lat)],
+        wind: d3.mean(arr, (v) => v.wind),
+      }));
+
+    let meanLineArr = [];
+    for (let i = 0; i < meanTrack.length - 1; i++) {
+      const cur = meanTrack[i];
+      const nxt = meanTrack[i + 1];
+      if (timeInterval > 0 && nxt.step - cur.step > timeInterval) continue;
+      const distance = Math.sqrt(
+        Math.pow(nxt.point[0] - cur.point[0], 2) +
+          Math.pow(nxt.point[1] - cur.point[1], 2)
+      );
+      if (distance > 9) continue;
+      meanLineArr.push({
+        line: { type: "LineString", coordinates: [cur.point, nxt.point] },
+        nextCat: tcUtil.wind2cat(nxt.wind),
+      });
+    }
+
+    const meanTrackSvg = baseMap.append("g").attr("class", "tc-svg mean-track");
+    meanTrackSvg
+      .selectAll("path")
+      .data(meanLineArr)
+      .enter()
+      .append("path")
+      .attr("d", (d) => path(d.line))
+      .attr("class", (d) => `track-line-mean ${d.nextCat}`)
+      .style("stroke", "black")
+      .style("stroke-width", "3px")
+      .style("fill", "none");
+
+    const initTimeMoment = tcRaw.initTime ? moment(tcRaw.initTime) : null;
+    const meanPoints = meanTrack.map((item) => {
+      const cat = tcUtil.wind2cat(item.wind);
+      const fcTime = initTimeMoment
+        ? moment(initTimeMoment).add(item.step, "hours").format("MM-DD HH时")
+        : "";
+      return {
+        point: item.point,
+        project: projection(item.point),
+        color: tcUtil.tcColor[cat],
+        cat,
+        step: item.step,
+        wind: item.wind,
+        fcTime,
+      };
+    });
+    const meanPointSvg = baseMap.append("g");
+    meanPointSvg.attr("class", "point-g mean-point");
+    const meanCircles = meanPointSvg
+      .selectAll("circle")
+      .data(meanPoints)
+      .enter()
+      .append("circle")
+      .attr("class", "point")
+      .attr("cx", (d) => d.project[0])
+      .attr("cy", (d) => d.project[1])
+      .attr("r", 3.5)
+      .style("fill", (d) => d.color)
+      .style("stroke", (d) => d.color)
+      .style("stroke-width", 1.0);
+    meanCircles
+      .append("title")
+      .text(
+        (d) =>
+          `预报时效: +${d.step}h${d.fcTime ? ` (${d.fcTime})` : ""}\n` +
+          `强度: ${d.cat}\n` +
+          `平均风速: ${d.wind.toFixed(1)} m/s\n` +
+          `位置: ${d.point[0].toFixed(2)}, ${d.point[1].toFixed(2)}`
+      );
+  }
+
   // 确定性预报
   if (!tcRaw.detTrack || !tcRaw.detTrack.track || !opt.showDetTrack) return; //不存在退出
   let detArr = (() => {
@@ -837,31 +962,22 @@ async function d3Map(
 
   let detPointsRadiusList = detPoints.map((item) => {
     let windRadiusInfo = item.windRadiusInfo;
-    let infoList = [
-      {
-        threshold: 18,
-        color: "blue",
-        rawValue: windRadiusInfo[0].slice(1),
-        name_CN: "8级风圈",
-        label: "风速>18m/s",
-      },
-      {
-        threshold: 26,
-        color: "rgb(255, 128, 0)",
-        rawValue: windRadiusInfo[1].slice(1),
-        name_CN: "10级风圈",
-        label: "风速>26m/s",
-      },
-      {
-        threshold: 33,
-        color: "red",
-        rawValue: windRadiusInfo[2].slice(1),
-        name_CN: "12级风圈",
-        label: "风速>33m/s",
-      },
+    let infoMeta = [
+      { threshold: 18, color: "blue", name_CN: "8级风圈", label: "风速>18m/s" },
+      { threshold: 26, color: "rgb(255, 128, 0)", name_CN: "10级风圈", label: "风速>26m/s" },
+      { threshold: 33, color: "red", name_CN: "12级风圈", label: "风速>33m/s" },
     ];
+    // 按阈值匹配对应等级风圈；FNV3等数据源某等级可能缺失
+    let infoList = infoMeta.map((meta) => {
+      let seg = Array.isArray(windRadiusInfo)
+        ? windRadiusInfo.find((v) => Array.isArray(v) && v[0] === meta.threshold)
+        : null;
+      return { ...meta, rawValue: seg ? seg.slice(1) : [] };
+    });
     infoList.forEach((info) => {
-      let isEmpty = info.rawValue.every((value) => !value || value == 100);
+      let isEmpty =
+        !info.rawValue.length ||
+        info.rawValue.every((value) => !value || value == 100);
       info.isEmpty = isEmpty;
       if (!isEmpty) {
         info.geojson = createWindRadiusPolygon(item.point, info.rawValue);
@@ -1675,6 +1791,7 @@ export default {
       showWindRadius: false,
       showEnsTrack: true,
       showDetTrack: true,
+      showMeanTrack: true,
       showWindPro: false,
       showHitPro: false,
       radiusTimeInterval: 24,
@@ -1699,7 +1816,8 @@ export default {
         "ecmwf",
         // "ncep-R",
         "ncep_e",
-        "fnv3",
+        // "fnv3",
+        "aifs-cai",
         "fnv3-gen",
         // "fnmoc-R",
         // "cmc-R",
@@ -1722,6 +1840,7 @@ export default {
         { value: "TRAMS_TY", label: "华南台风模式" },
         { value: "NCEP", label: "NCEP" },
         { value: "fnv3", label: "FNV3-Google" },
+        { value: "aifs-cai", label: "AIFS集合" },
         { value: "fnv3-gen", label: "FNV3-含扰动" },
       ],
       modelListRuc: [
@@ -1785,12 +1904,18 @@ export default {
       // this.showAllTcHit = false;
       this.currentTCcard = "singleTC";
       this.selectedTC = tcRaw;
+      // 切换到新的TC时，ECMWF且编号以7开头的默认不显示集合平均路径
+      if (needJump) {
+        const number = tcRaw && tcRaw.cycloneNumber ? tcRaw.cycloneNumber : "";
+        this.showMeanTrack = !(tcRaw && tcRaw.ins === "ecmwf" && number[0] === "7");
+      }
       this.$nextTick(() => {
         d3Map2(tcRaw);
         drawPlotyBox(tcRaw, tcRaw.ins);
         d3Map(tcRaw, {
           showEnsTrack: this.showEnsTrack,
           showDetTrack: this.showDetTrack,
+          showMeanTrack: this.showMeanTrack,
           showWindRadius: this.showWindRadius,
           showWindPro: this.showWindPro,
           showHitPro: this.showHitPro,
@@ -1809,6 +1934,9 @@ export default {
           break;
         case "showDetTrack":
           this.showDetTrack = !this.showDetTrack;
+          break;
+        case "showMeanTrack":
+          this.showMeanTrack = !this.showMeanTrack;
           break;
         case "showWindRadius":
           this.showWindRadius = !this.showWindRadius;
@@ -2163,17 +2291,7 @@ export default {
       info.forEach((city, i) => {
         let iP = probilityList[i];
         city.hit = iP * 100;
-        if (iP > 0.75) {
-          city.color = "rgb(199,50,104)";
-        } else if (iP >= 0.5) {
-          city.color = "rgb(253,91,91)";
-        } else if (iP >= 0.25) {
-          city.color = "rgb(253,253,104)";
-        } else if (iP >= 0.1) {
-          city.color = "rgb(186,253,186)";
-        } else {
-          city.color = "white";
-        }
+        Object.assign(city, hitProbColor(iP));
       });
       info = info
         .filter((city) => city.hit > 0)
@@ -2202,17 +2320,7 @@ export default {
       info.forEach((city, i) => {
         let iP = probilityList[i];
         city.hit = iP * 100;
-        if (iP > 0.75) {
-          city.color = "rgb(199,50,104)";
-        } else if (iP >= 0.5) {
-          city.color = "rgb(253,91,91)";
-        } else if (iP >= 0.25) {
-          city.color = "rgb(253,253,104)";
-        } else if (iP >= 0.1) {
-          city.color = "rgb(186,253,186)";
-        } else {
-          city.color = "white";
-        }
+        Object.assign(city, hitProbColor(iP));
       });
       info = info
         .filter((city) => city.hit > 0)
@@ -2437,13 +2545,14 @@ svg circle {
   padding-right: 5px;
   text-align: center;
   cursor: pointer;
+  font-weight: 600;
+  transition: box-shadow 0.15s ease;
 }
 .hit-pro-panel > div:hover {
-  filter: invert(100%);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55);
 }
 .hit-pro-panel div span {
-  color: white;
-  mix-blend-mode: difference;
+  color: inherit;
 }
 /*
 #stacked-cat .hovertext > path{
