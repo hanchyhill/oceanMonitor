@@ -347,7 +347,20 @@
             <div class="bar-div">
               <div id="stacked-cat"></div>
               <div id="box-wind"></div>
-              <div id="box-pressure"></div>
+              <div class="box-plot-wrap">
+                <div class="box-switch">
+                  <i-button
+                    type="primary"
+                    size="small"
+                    @click="showPressureBox = !showPressureBox"
+                    >{{
+                      showPressureBox ? "切换移速箱线图" : "切换中心气压箱线图"
+                    }}</i-button
+                  >
+                </div>
+                <div id="box-speed" v-show="!showPressureBox"></div>
+                <div id="box-pressure" v-show="showPressureBox"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -917,8 +930,12 @@ async function d3Map(
     return twoPointLineArr;
   })();
 
+  const detInitTimeMoment = tcRaw.initTime ? moment(tcRaw.initTime) : null;
   const detPoints = tcRaw.detTrack.track.map((point) => {
     let cat = tcUtil.wind2cat(point[3]);
+    const fcTime = detInitTimeMoment
+      ? moment(detInitTimeMoment).add(point[0], "hours").format("MM-DD HH时")
+      : "";
     return {
       point: point[1],
       project: projection(point[1]),
@@ -926,6 +943,9 @@ async function d3Map(
       cat,
       windRadiusInfo: point[5] ? point[5] : [],
       timeStep: point[0],
+      wind: point[3],
+      pressure: point[2],
+      fcTime,
     };
   });
 
@@ -941,7 +961,7 @@ async function d3Map(
 
   const detPointSvg = baseMap.append("g");
   detPointSvg.attr("class", "point-g");
-  detPointSvg
+  const detCircles = detPointSvg
     .selectAll("circle")
     .data(detPoints)
     .enter()
@@ -953,6 +973,16 @@ async function d3Map(
     .style("fill", (d) => d.color)
     .style("stroke", (d) => d.color)
     .style("stroke-width", 1.0);
+  detCircles
+    .append("title")
+    .text(
+      (d) =>
+        `预报时效: +${d.timeStep}h${d.fcTime ? ` (${d.fcTime})` : ""}\n` +
+        `强度: ${d.cat}\n` +
+        `风速: ${d.wind != null ? d.wind.toFixed(1) : "-"} m/s\n` +
+        `气压: ${d.pressure != null ? d.pressure.toFixed(0) : "-"} hPa\n` +
+        `位置: ${d.point[0].toFixed(2)}, ${d.point[1].toFixed(2)}`
+    );
 
   // 风圈绘制
   let testRadiusDataValid = detPoints.length
@@ -1033,6 +1063,10 @@ async function d3Map(
 function calKeyTimeIsochrones(tcRaw, interval = 12) {
   if (!tcRaw.tracks || !tcRaw.tracks.length) return [];
   const initTime = tcRaw.initTime ? moment(tcRaw.initTime) : null;
+  // 集合成员总数：优先用模型定义的成员数，缺失则退回实际追踪成员数
+  const insMeta = tcUtil.model[tcRaw.ins];
+  const ensembleNumber =
+    insMeta && insMeta.enNumber ? insMeta.enNumber : tcRaw.tracks.length;
   // 收集所有出现过的时效步长
   const stepSet = new Set();
   tcRaw.tracks.forEach((member) => {
@@ -1053,12 +1087,16 @@ function calKeyTimeIsochrones(tcRaw, interval = 12) {
       })
       .filter((loc) => loc && loc.length >= 2);
     if (groupA.length < 4) return; // 成员过少无法可靠取分位
+    // 数据点数少于集合成员数的50%时，样本不足以代表整体，跳过该时次
+    if (groupA.length < ensembleNumber * 0.5) return;
 
     // 计算经纬度跨度
     const lons = groupA.map((loc) => loc[0]);
     const lats = groupA.map((loc) => loc[1]);
     const lonSpan = Math.max(...lons) - Math.min(...lons);
     const latSpan = Math.max(...lats) - Math.min(...lats);
+    // 最大跨度超过20个经纬度时，分歧过大或存在异源路径误归类，跳过绘制
+    if (Math.max(lonSpan, latSpan) > 20) return;
     // 跨度大的方向作为排序主轴
     const axis = lonSpan >= latSpan ? 0 : 1;
     groupA = groupA.slice().sort((a, b) => a[axis] - b[axis]);
@@ -1573,6 +1611,58 @@ async function drawMap(
   return projection;
 }
 
+/**
+ * 计算单个成员路径各时次的移动速度（km/h）
+ * - 最前端：前插（前向差分）
+ * - 最后端：后插（后向差分）
+ * - 中间点：中央差分
+ * 返回 Map: 时效step -> 移速(km/h)
+ */
+function calMoveSpeed(track) {
+  const speedMap = new Map();
+  if (!Array.isArray(track) || track.length < 2) return speedMap;
+  // 按时效排序并过滤无效点，确保前后相邻关系正确
+  const sorted = track
+    .filter((p) => p && Array.isArray(p[1]) && p[1].length >= 2)
+    .slice()
+    .sort((a, b) => a[0] - b[0]);
+  const n = sorted.length;
+  if (n < 2) return speedMap;
+  // 球面大圆距离（Haversine），返回 km
+  const dist = (a, b) => {
+    const R = 6371; // 地球平均半径 km
+    const toRad = (d) => (d * Math.PI) / 180;
+    const dLat = toRad(b[1] - a[1]);
+    const dLon = toRad(b[0] - a[0]);
+    const lat1 = toRad(a[1]);
+    const lat2 = toRad(b[1]);
+    const h =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  };
+  for (let i = 0; i < n; i++) {
+    let dt, d;
+    if (i === 0) {
+      // 最前端：前插
+      dt = sorted[1][0] - sorted[0][0];
+      d = dist(sorted[0][1], sorted[1][1]);
+    } else if (i === n - 1) {
+      // 最后端：后插
+      dt = sorted[n - 1][0] - sorted[n - 2][0];
+      d = dist(sorted[n - 2][1], sorted[n - 1][1]);
+    } else {
+      // 中间点：中央差
+      dt = sorted[i + 1][0] - sorted[i - 1][0];
+      d = dist(sorted[i - 1][1], sorted[i + 1][1]);
+    }
+    if (dt > 0) {
+      speedMap.set(sorted[i][0], d / dt); // km / h
+    }
+  }
+  return speedMap;
+}
+
 async function drawPlotyBox(tcRaw, ins = "NCEP") {
   // let tcRaw = await d3.json("/source/2019022414_Wutip_02WP_GEFS.json");
   // ins = ins.replace('-','_');
@@ -1582,20 +1672,28 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
   let initTime = moment(tcRaw.initTime);
   let traceArr = [];
   let x_dtick = timeRange[timeRange.length-1]>240?8:4;
+  // 预计算每个成员各时次的移速（km/h），键为时效step
+  let speedMaps = tracks.map((member) => calMoveSpeed(member.track));
   for (let step of timeRange) {
     let currentTimePoint = tracks
-      .map((member) => {
+      .map((member, mi) => {
         let point = member.track.find((v) => v[0] == step);
-        return { point, ensembleNumber: member.ensembleNumber };
+        return { point, mi, ensembleNumber: member.ensembleNumber };
       })
       .filter((member) => member.point); //去除空值
     let iTime = step2time(initTime, step);
+    // 该时次各成员的移速，剔除无对应值的成员
+    let speedList = currentTimePoint
+      .map((member) => speedMaps[member.mi].get(step))
+      .filter((v) => v != null && isFinite(v));
     traceArr.push({
       timeStep: moment(iTime).format("DD日HH时"),
       wind: currentTimePoint.map((member) => member.point[3]),
       meanWind: d3.mean(currentTimePoint.map((member) => member.point[3])),
       pressure: currentTimePoint.map((member) => member.point[2]),
       meanPressure: d3.mean(currentTimePoint.map((member) => member.point[2])),
+      speed: speedList,
+      meanSpeed: speedList.length ? d3.mean(speedList) : null,
     });
   }
   let windData = traceArr.map((trace) => {
@@ -1614,7 +1712,21 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     name: "mean",
   };
   let windLayout = {
-    title: "中心附近最大风力箱线图",
+    // 标题改为绘图区内左上角标注，回收顶部 margin，坐标轴顶部贴近 SVG 顶部
+    annotations: [
+      {
+        text: "中心附近最大风力箱线图",
+        showarrow: false,
+        xref: "paper",
+        yref: "paper",
+        x: 0,
+        y: 1,
+        xanchor: "left",
+        yanchor: "top",
+        font: { size: 13, color: "#333" },
+        bgcolor: "rgba(255,255,255,0.6)",
+      },
+    ],
     yaxis: {
       title: "wind m/s",
       zeroline: false,
@@ -1631,7 +1743,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     margin: {
       l: 60,
       r: 20,
-      t: 40,
+      t: 10,
       b: 40,
     },
     xaxis: {
@@ -1648,7 +1760,7 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
       tickmode: "linear",
       dtick: x_dtick,
     },
-    height: 320,
+    height: 310,
   };
   Plotly.newPlot("box-wind", [...windData, meanWind], windLayout, {
     displayModeBar: false,
@@ -1674,7 +1786,20 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     name: "mean",
   };
   let pressureLayout = {
-    title: "中心气压箱线图",
+    annotations: [
+      {
+        text: "中心气压箱线图",
+        showarrow: false,
+        xref: "paper",
+        yref: "paper",
+        x: 0,
+        y: 1,
+        xanchor: "left",
+        yanchor: "top",
+        font: { size: 13, color: "#333" },
+        bgcolor: "rgba(255,255,255,0.6)",
+      },
+    ],
     yaxis: {
       title: "pressure hPa",
       zeroline: false,
@@ -1705,10 +1830,10 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     margin: {
       l: 60,
       r: 20,
-      t: 40,
+      t: 10,
       b: 40,
     },
-    height: 320,
+    height: 310,
   };
   Plotly.newPlot(
     "box-pressure",
@@ -1717,9 +1842,81 @@ async function drawPlotyBox(tcRaw, ins = "NCEP") {
     { displayModeBar: false }
   );
 
+  // 移动速度箱线图（km/h）
+  let speedData = traceArr.map((trace) => {
+    return {
+      y: trace.speed,
+      type: "box",
+      name: trace.timeStep,
+      marker: { color: "rgb(65,105,225)" },
+    };
+  });
+  let meanSpeed = {
+    x: traceArr.map((trace) => trace.timeStep),
+    y: traceArr.map((trace) => trace.meanSpeed),
+    type: "lines",
+    line: {
+      color: "rgb(255,140,0)",
+      dash: "dot",
+    },
+    name: "mean",
+  };
+  let speedLayout = {
+    annotations: [
+      {
+        text: "移动速度箱线图",
+        showarrow: false,
+        xref: "paper",
+        yref: "paper",
+        x: 0,
+        y: 1,
+        xanchor: "left",
+        yanchor: "top",
+        font: { size: 13, color: "#333" },
+        bgcolor: "rgba(255,255,255,0.6)",
+      },
+    ],
+    yaxis: {
+      title: "speed km/h",
+      zeroline: false,
+      showline: true,
+      showticklabels: true,
+      linecolor: "rgb(204,204,204)",
+      linewidth: 2,
+      ticks: "outside",
+      tickcolor: "rgb(204,204,204)",
+      tickwidth: 2,
+      ticklen: 5,
+    },
+    xaxis: {
+      showgrid: true,
+      showline: true,
+      showticklabels: true,
+      linecolor: "rgb(204,204,204)",
+      linewidth: 2,
+      ticks: "outside",
+      tickcolor: "rgb(204,204,204)",
+      tickwidth: 2,
+      ticklen: 5,
+      tickmode: "linear",
+      dtick: x_dtick,
+    },
+    showlegend: false,
+    margin: {
+      l: 60,
+      r: 20,
+      t: 10,
+      b: 40,
+    },
+    height: 310,
+  };
+  Plotly.newPlot("box-speed", [...speedData, meanSpeed], speedLayout, {
+    displayModeBar: false,
+  });
+
   var stackLayout = {
     barmode: "stack",
-    height: 300,
+    height: 288,
     margin: {
       l: 60,
       r: 20,
@@ -2057,6 +2254,7 @@ export default {
     let endTime = now.format("YYYY-MM-DD");
     let startTime = moment(now).subtract(1, "days").format("YYYY-MM-DD");
     return {
+      showPressureBox: false,
       showWindRadius: false,
       showEnsTrack: true,
       showDetTrack: true,
@@ -2179,8 +2377,11 @@ export default {
         const number = tcRaw && tcRaw.cycloneNumber ? tcRaw.cycloneNumber : "";
         // ecmwf 且编号以7开头（如70W/71W）默认不显示集合平均路径与关键时间节点
         const isEcmwf7 = tcRaw && tcRaw.ins === "ecmwf" && number[0] === "7";
-        this.showMeanTrack = !isEcmwf7;
-        this.showKeyTimeNodes = !isEcmwf7;
+        // fnv3-gen 中编号为 C-9999 的预报表示无法归类的集合成员，默认不显示关键时间节点
+        const isFnv3genUnclassified =
+          tcRaw && tcRaw.ins === "fnv3-gen" && number.includes("9999");
+        this.showMeanTrack = !(isEcmwf7 || isFnv3genUnclassified);
+        this.showKeyTimeNodes = !(isEcmwf7 || isFnv3genUnclassified);
       }
       this.$nextTick(() => {
         d3Map2(tcRaw, { showKeyTimeNodes: this.showKeyTimeNodes });
@@ -2609,6 +2810,16 @@ export default {
       // console.log(JSON.stringify(info, null, 2))
     },
   },
+  watch: {
+    // 箱线图容器在隐藏(display:none)时绘制宽度为0，切换显示后需重新适配尺寸
+    showPressureBox(val) {
+      this.$nextTick(() => {
+        const target = val ? "box-pressure" : "box-speed";
+        const dom = document.getElementById(target);
+        if (dom && dom.data) Plotly.Plots.resize(dom);
+      });
+    },
+  },
   computed: {
     timeLegend() {
       let legend = [
@@ -2681,6 +2892,31 @@ export default {
   overflow-x: auto;
   overflow-y: visible;
   /* flex-wrap: wrap; */
+}
+
+/* 箱线图区域固定宽度，避免 v-show 隐藏时容器坍缩导致图表绘制宽度异常 */
+/* 高度对齐左侧两个 map-container（各 450px + 上下边框 2px），合计 908px */
+/* 三图高度精确相加 = 908：stacked-cat 288 + box-wind 310 + 底部图 310 */
+.bar-div {
+  flex: 0 0 auto;
+  width: 700px;
+  height: 908px;
+  overflow: hidden;
+}
+.bar-div #box-wind,
+.bar-div #box-speed,
+.bar-div #box-pressure {
+  width: 700px;
+}
+/* 箱线图切换区域：按钮悬浮在图上，不占用竖向空间 */
+.box-plot-wrap {
+  position: relative;
+}
+.box-switch {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  z-index: 2;
 }
 
 #map-container,

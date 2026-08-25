@@ -27,28 +27,85 @@ proxyOptions = {
 let Bulletin = undefined;
 let Subscribe = undefined;
 let Cyclone = undefined;
+const MAX_BULLETIN_RANGE_DAYS = 31;
+const MAX_TC_ENS_RANGE_DAYS = 14;
+
+function memorySnapshot() {
+  const memory = process.memoryUsage();
+  return {
+    rssMiB: (memory.rss / 1024 / 1024).toFixed(1),
+    heapUsedMiB: (memory.heapUsed / 1024 / 1024).toFixed(1),
+    heapTotalMiB: (memory.heapTotal / 1024 / 1024).toFixed(1),
+    externalMiB: (memory.external / 1024 / 1024).toFixed(1),
+  };
+}
+
+function logApiMetric(ctx, interface, event, details) {
+  console.log('[api-metric]', JSON.stringify(Object.assign({
+    interface,
+    event,
+    method: ctx.method,
+    url: ctx.originalUrl,
+    memory: memorySnapshot(),
+  }, details)));
+}
+
 // '/api/:type/'
 router.get('/api/',async(ctx,next)=>{
   // let type = ctx.params.type;
   // console.log(type);
   // console.log(ctx.query);
   let interface = ctx.query.interface;
-  console.log(interface);
+  const startedAt = Date.now();
+  logApiMetric(ctx, interface || 'unknown', 'request-start', {});
   if(interface == "bulletin"){
     let [minTime,maxTime] = [NaN,NaN];
     const ins = ctx.query.ins?ctx.query.ins.split(','):['BABJ','PGTW','RJTD','VHHH'];
     minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
     maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
     if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
-      const bulletins = await Bulletin.find({}).
-                        where('date').gt(new Date(minTime)).lt(new Date(maxTime)).
-                        where('ins').in(ins).
-                        select('content name cn date fulltime title ins').exec();
-    
-      ctx.body = {
-        data: bulletins,
-        success: true
-      };
+      const rangeDays = maxTime.diff(minTime, 'days', true);
+      if(rangeDays > MAX_BULLETIN_RANGE_DAYS){
+        ctx.status = 400;
+        ctx.body = {
+          error: `查询时间范围不能超过 ${MAX_BULLETIN_RANGE_DAYS} 天`,
+          success: false,
+        };
+        logApiMetric(ctx, interface, 'request-rejected', {
+          durationMs: Date.now() - startedAt,
+          rangeDays,
+        });
+      }else{
+        try{
+          const bulletins = await Bulletin.find({}).
+                            where('date').gt(minTime.toDate()).lt(maxTime.toDate()).
+                            where('ins').in(ins).
+                            select('content name cn date fulltime title ins').
+                            lean().
+                            exec();
+
+          ctx.body = {
+            data: bulletins,
+            success: true
+          };
+          logApiMetric(ctx, interface, 'request-complete', {
+            durationMs: Date.now() - startedAt,
+            rangeDays,
+            resultCount: bulletins.length,
+          });
+        }catch(error){
+          console.error('[api-error]', interface, ctx.originalUrl, error);
+          ctx.status = 500;
+          ctx.body = {
+            error: '查询公告数据失败',
+            success: false,
+          };
+          logApiMetric(ctx, interface, 'request-failed', {
+            durationMs: Date.now() - startedAt,
+            error: error.message,
+          });
+        }
+      }
       await next();
     }
     else{
@@ -57,6 +114,10 @@ router.get('/api/',async(ctx,next)=>{
         success: false,
       };
       ctx.status = 400;
+      logApiMetric(ctx, interface, 'request-rejected', {
+        durationMs: Date.now() - startedAt,
+        reason: 'invalid-date-range',
+      });
       await next();
     }
   }else if(interface == 'tc-ens'){
@@ -68,18 +129,49 @@ router.get('/api/',async(ctx,next)=>{
     minTime = ctx.query.dateFormat?moment(ctx.query.gt,ctx.query.dateFormat):moment(ctx.query.gt);
     maxTime = ctx.query.dateFormat?moment(ctx.query.lt,ctx.query.dateFormat):moment(ctx.query.lt);
     if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
-      let query = Cyclone.find({}).
-      where('initTime').gt(new Date(minTime)).lt(new Date(maxTime)).
-      where('ins').in(ins).      // where('controlIndex').ne(-1).
-      select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2')
-      if(basinList.length!=0){
-        query = query.or(basinList);
+      const rangeDays = maxTime.diff(minTime, 'days', true);
+      if(rangeDays > MAX_TC_ENS_RANGE_DAYS){
+        ctx.status = 400;
+        ctx.body = {
+          error: `查询时间范围不能超过 ${MAX_TC_ENS_RANGE_DAYS} 天`,
+          success: false,
+        };
+        logApiMetric(ctx, interface, 'request-rejected', {
+          durationMs: Date.now() - startedAt,
+          rangeDays,
+        });
+      }else{
+        try{
+          let query = Cyclone.find({}).
+          where('initTime').gt(minTime.toDate()).lt(maxTime.toDate()).
+          where('ins').in(ins).      // where('controlIndex').ne(-1).
+          select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2')
+          if(basinList.length!=0){
+            query = query.or(basinList);
+          }
+          const cyclones = await query.lean().exec();
+          ctx.body = {
+            data: cyclones,
+            success: true
+          };
+          logApiMetric(ctx, interface, 'request-complete', {
+            durationMs: Date.now() - startedAt,
+            rangeDays,
+            resultCount: cyclones.length,
+          });
+        }catch(error){
+          console.error('[api-error]', interface, ctx.originalUrl, error);
+          ctx.status = 500;
+          ctx.body = {
+            error: '查询台风集合预报数据失败',
+            success: false,
+          };
+          logApiMetric(ctx, interface, 'request-failed', {
+            durationMs: Date.now() - startedAt,
+            error: error.message,
+          });
+        }
       }
-      const cyclones = await query.exec()//.exec();
-      ctx.body = {
-        data: cyclones,
-        success: true
-      };
       await next();
     }
     else{
@@ -88,6 +180,10 @@ router.get('/api/',async(ctx,next)=>{
         success: false,
       };
       ctx.status = 400;
+      logApiMetric(ctx, interface, 'request-rejected', {
+        durationMs: Date.now() - startedAt,
+        reason: 'invalid-date-range',
+      });
       await next();
     }
   }else{
@@ -96,6 +192,10 @@ router.get('/api/',async(ctx,next)=>{
       success: false,
     };
     ctx.status = 400;
+    logApiMetric(ctx, interface || 'unknown', 'request-rejected', {
+      durationMs: Date.now() - startedAt,
+      reason: 'invalid-interface',
+    });
     await next();
   }
 });
