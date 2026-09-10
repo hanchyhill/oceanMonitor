@@ -11,7 +11,6 @@
       <card-pic :dial="speedDial.wisc"></card-pic>
       <card-pic :dial="speedDial.digitalTY"></card-pic>
       <card-pic :dial="speedDial.nrlNavy"></card-pic>
-      <card-pic :dial="speedDial.fnmoc"></card-pic>
       <card-pic :dial="speedDial.hurZone"></card-pic>
       <card-pic :dial="speedDial.dapiya"></card-pic>
       <card-pic :dial="speedDial.natyphoon"></card-pic>

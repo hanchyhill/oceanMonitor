@@ -136,7 +136,7 @@ const config = {
   ],
   h1:[
    {urlBase:'http://www.typhoon2000.ph/', name:'t2kgraphsat.png', lastModified:'', dir:'env/'},
-   {urlBase:'http://jtwc.gdmo.gq/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/'},//, retry:'any'},#http://jtwc.gdmo.gq/jtwc/products/
+   {urlBase:'https://jtwc.minhill.com/jtwc/products/', name:'abpwsair.jpg', lastModified:'', dir:'env/'},//, retry:'any'},#http://jtwc.gdmo.gq/jtwc/products/
   ],
   iTest:[
     {urlBase:'https://www.ssd.noaa.gov/jma/twpac/', name:'vis-l.gif', lastModified:'', dir:'sat/'},

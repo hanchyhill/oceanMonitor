@@ -106,7 +106,7 @@ const envSrc = {
     ],
   },
   imgs:{
-    jtwc:{name:'JTWC热带气旋警报图',origin: 'https://mirror.mesovortices.com/jtwc/jtwc.html',//'http://jtwc.gdmo.gq/jtwc/jtwc.html',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
+    jtwc:{name:'JTWC热带气旋警报图',origin: 'https://jtwc.minhill.com',//'http://jtwc.gdmo.gq/jtwc/jtwc.html',// origin:'http://www.metoc.navy.mil/jtwc/products/abpwsair.jpg',
     local:'/static/remote-img/env/abpwsair.jpg',},
     tropicOutlook:{name:'2周热带天气展望',origin:'https://www.cpc.ncep.noaa.gov/products/precip/CWlink/ghaz/',
     local:'/static/remote-img/env/gth_full.png',},
@@ -116,7 +116,7 @@ const envSrc = {
     local:'/static/remote-img/env/scs2idx.today.gif',},
 
   },
-  
+
 };
 
 /**
@@ -159,7 +159,7 @@ const nwpSrc = {
       head2:'easterlywave',
       notes:'提供台风预报相关产品',
     },
-    
+
     gefs:{
       link:'https://www.tropicaltidbits.com/storminfo/',
       imgSrc:'/static/thumbnails/gefs_latest.png',
@@ -296,7 +296,7 @@ const bulletinSrc = {
  */
 const currentSrc = {
   speedDial:{
-    
+
     activeTCinSSD:{
       link:'http://www.ssd.noaa.gov/PS/TROP/Basin_WestPac.html',
       imgSrc:'/static/thumbnails/SSD-active-TC.jpg',
@@ -325,7 +325,7 @@ const currentSrc = {
       head2:'威斯康星大学',
       notes:'由CIMSS热带气旋小组提供的热带气旋环境分析和监测页面',
     },
-    
+
     digitalTY:{
       link:'http://agora.ex.nii.ac.jp/digital-typhoon/',
       imgSrc:'/static/thumbnails/digitalTY.jpg',
@@ -334,19 +334,11 @@ const currentSrc = {
       notes:'提供当前和历史台风卫星云图数据',
     },
     nrlNavy:{
-      link:'http://nrltc.gdmo.gq/TC.html',
+      link:'https://nrlmry.gdmo.org/geoips/tcweb4/',
       imgSrc:'/static/thumbnails/nrl.jpg',
       headInfo:'NRL镜像',
-      head2:'源地址nrlmry.navy.mil/TC.html',
-      notes:`用户名:ocean; 密码:typhoon
-      镜像站带宽有限请勿传播账号密码`,
-    },
-    fnmoc:{
-      link:'http://fnmoc.gdmo.gq/tcweb/cgi-bin/tc_home.cgi',
-      imgSrc:'/static/thumbnails/nrl.jpg',
-      headInfo:'fnmoc镜像',
-      head2:'源地址www.fnmoc.navy.mil',
-      notes:`用户名:ocean; 密码:typhoon 镜像站带宽有限请勿传播账号密码`,
+      head2:'极轨卫星的热带气旋监测',
+      notes:`源地址https://science.nrlmry.navy.mil/geoips/tcweb4/`,
     },
     hurZone:{
       link:'https://www.hurricanezone.net/',
@@ -391,7 +383,7 @@ const refSrc = {
       {name:'日本气象厅-风观测', url:'http://www.jma.go.jp/en/amedas/000.html?elementCode=1'},
       {name:'菲律宾PAGASA', url:'https://www1.pagasa.dost.gov.ph/'},
       {name:'NRL历史台风数据', url:'https://www.nrlmry.navy.mil/tcdat/'},
-      
+
     ],
     others:[
       {name:'德法强度表', url:'http://www.ssd.noaa.gov/PS/TROP/CI-chart.html'},
@@ -548,7 +540,7 @@ const satSrc = {
       local:'/static/remote-img/sat/himawari-8_band_13_sector_06.gif',},
     ],
   },
-  
+
 }
 
 /**
@@ -556,7 +548,7 @@ const satSrc = {
  */
 const ascatImg ={
   descend:[
-    [ 
+    [
       {name:'下降华东', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds230.png',local:'/static/remote-img/ascat/WMBds230.png'},
       {name:'下降黄海', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds242.png',local:'/static/remote-img/ascat/WMBds242.png'},
       {name:'下降日本', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBds254.png',local:'/static/remote-img/ascat/WMBds254.png'},
@@ -578,7 +570,7 @@ const ascatImg ={
     ],
   ],
   ascend:[
-    [ 
+    [
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas230.png',local:'/static/remote-img/ascat/WMBas230.png',name:'上升华东', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas242.png',local:'/static/remote-img/ascat/WMBas242.png',name:'上升黄海', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_META/zooms/WMBas254.png',local:'/static/remote-img/ascat/WMBas254.png',name:'上升日本', },
@@ -600,7 +592,7 @@ const ascatImg ={
     ],
   ],
   descendB:[
-    [ 
+    [
       {name:'下降华东', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds230.png',local:'/static/remote-img/ascat/B-WMBds230.png'},
       {name:'下降黄海', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds242.png',local:'/static/remote-img/ascat/B-WMBds242.png'},
       {name:'下降日本', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBds254.png',local:'/static/remote-img/ascat/B-WMBds254.png'},
@@ -622,7 +614,7 @@ const ascatImg ={
     ],
   ],
   ascendB:[
-    [ 
+    [
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas230.png',local:'/static/remote-img/ascat/B-WMBas230.png',name:'上升华东', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas242.png',local:'/static/remote-img/ascat/B-WMBas242.png',name:'上升黄海', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METB/zooms/WMBas254.png',local:'/static/remote-img/ascat/B-WMBas254.png',name:'上升日本', },
@@ -644,7 +636,7 @@ const ascatImg ={
     ],
   ],
   descendC:[
-    [ 
+    [
       {name:'下降华东', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBds230.png',local:'/static/remote-img/ascat/C-WMBds230.png'},
       {name:'下降黄海', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBds242.png',local:'/static/remote-img/ascat/C-WMBds242.png'},
       {name:'下降日本', origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBds254.png',local:'/static/remote-img/ascat/C-WMBds254.png'},
@@ -666,7 +658,7 @@ const ascatImg ={
     ],
   ],
   ascendC:[
-    [ 
+    [
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBas230.png',local:'/static/remote-img/ascat/C-WMBas230.png',name:'上升华东', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBas242.png',local:'/static/remote-img/ascat/C-WMBas242.png',name:'上升黄海', },
       {origin:'https://manati.star.nesdis.noaa.gov/ascat_images/cur_25km_METC/zooms/WMBas254.png',local:'/static/remote-img/ascat/C-WMBas254.png',name:'上升日本', },

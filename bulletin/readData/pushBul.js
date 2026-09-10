@@ -7,7 +7,7 @@ const JTWC = {
   regTCFA : 'TROPICAL CYCLONE FORMATION ALERT',// WTPN
   icon:'/static/thumbnails/JTWC_LogoFront.gif',
   title:'JTWC台风生成警报',
-  url:'https://pzal.ndbc.noaa.gov/collab/jtwc/',
+  url:'https://jtwc.minhill.com/',
 };
 //'WTPN3-PGTW'
 const RJTD = {

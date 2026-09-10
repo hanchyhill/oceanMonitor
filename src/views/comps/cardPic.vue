@@ -50,7 +50,7 @@
   width: 280px; 
   float: left; 
   /* font-family: sans-sarif; */ 
-  margin: 30px 2.5%; 
+  margin: 15px 1.5%; 
   background-color: #fff; 
   text-align: center; 
   position: relative;

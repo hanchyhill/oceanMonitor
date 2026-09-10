@@ -5,17 +5,17 @@ const moment = require('moment');
 
 config = {
   abpw:{
-    url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwweb.txt',
+    url:'https://jtwc.minhill.com/jtwc/products/abpwweb.txt',
     lastModified:'',
     steps:[{
-      url:'https://pzal.ndbc.noaa.gov/collab/jtwc/products/abpwweb.txt',
+      url:'https://jtwc.minhill.com/jtwc/products/abpwweb.txt',
       exec:(data)=>{
         return data;
       },
     }],
   },
   jtwc:{
-    url:'https://mirror.mesovortices.com/jtwc/rss/jtwc.rss',
+    url:'https://jtwc.minhill.com/jtwc/rss/jtwc.rss',
     steps:[
       {exec:(data)=>{
 
