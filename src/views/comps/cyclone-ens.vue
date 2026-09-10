@@ -2363,11 +2363,111 @@ export default {
       return this.searchTC();
     },
     searchTC() {
+      this._tcSearchToken = (this._tcSearchToken || 0) + 1;
+      this._tcTrackPending = Object.create(null);
       let sTime = this.timeRange[0] + " 00:00";
       let eTime = this.timeRange[1] + " 23:59";
       return this.getTC([sTime, eTime]);
     },
-    showTC(tcRaw, needJump = true) {
+    isInsTracksLoaded(insWrap) {
+      return !!(insWrap && insWrap.tracksLoaded);
+    },
+    findInsWrap(initTime, ins) {
+      const timeWrap = this.allTC.find((item) => item.time == initTime);
+      if (!timeWrap) return null;
+      return timeWrap.ins.find((item) => item.ins === ins) || null;
+    },
+    sortTCs(tcArr = []) {
+      return tcArr.slice().sort((tc0, tc1) => {
+        let number0 = tc0.cycloneNumber || "";
+        let number1 = tc1.cycloneNumber || "";
+        if (number0[0] == "9") number0 = "6" + number0;
+        if (number1[0] == "9") number1 = "6" + number1;
+        if (number0 < number1) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+    },
+    mergeInsTracks(initTime, ins, tcArr) {
+      const insWrap = this.findInsWrap(initTime, ins);
+      if (!insWrap) return null;
+      insWrap.tc = this.sortTCs(tcArr || []);
+      this.$set(insWrap, "tracksLoaded", true);
+      return insWrap;
+    },
+    fetchInsTracks(initTime, ins) {
+      return axios
+        .get("/api", {
+          params: {
+            interface: "tc-ens-detail",
+            initTime,
+            ins,
+            basin: this.selectedBasin,
+          },
+        })
+        .then((response) => {
+          let raw = response.data;
+          if (!raw.success) throw new Error(raw.error || "加载路径数据失败");
+          return raw.data || [];
+        });
+    },
+    ensureInsTracks(initTime, ins) {
+      if (!this._tcTrackPending) this._tcTrackPending = Object.create(null);
+      const insWrap = this.findInsWrap(initTime, ins);
+      if (this.isInsTracksLoaded(insWrap)) {
+        return Promise.resolve(insWrap);
+      }
+      const key = `${initTime}|${ins}`;
+      if (this._tcTrackPending[key]) {
+        return this._tcTrackPending[key];
+      }
+      const token = this._tcSearchToken;
+      this._tcTrackPending[key] = this.fetchInsTracks(initTime, ins)
+        .then((data) => {
+          if (token !== this._tcSearchToken) return null;
+          return this.mergeInsTracks(initTime, ins, data);
+        })
+        .finally(() => {
+          if (this._tcTrackPending) delete this._tcTrackPending[key];
+        });
+      return this._tcTrackPending[key];
+    },
+    isCurrentUserAction(action) {
+      const current = this._lastUserAction;
+      if (!current || current.type !== action.type) return false;
+      if (action.type === "single") return current.tcID === action.tcID;
+      return current.initTime == action.initTime && current.ins === action.ins;
+    },
+    async showTC(tcRaw, needJump = true) {
+      if (!tcRaw) return;
+      const userAction = { type: "single", tcID: tcRaw.tcID };
+      this._lastUserAction = userAction;
+      if (!Array.isArray(tcRaw.tracks)) {
+        this.$Message.info("正在加载路径数据...");
+        try {
+          const insWrap = await this.ensureInsTracks(tcRaw.initTime, tcRaw.ins);
+          if (!this.isCurrentUserAction(userAction)) return;
+          if (!insWrap) return;
+          const fullTc = insWrap.tc.find((tc) => tc.tcID === tcRaw.tcID);
+          if (!fullTc) {
+            this.$Notice.error({
+              title: "加载失败",
+              desc: "未找到该台风的路径数据",
+            });
+            return;
+          }
+          tcRaw = fullTc;
+        } catch (error) {
+          this.$Notice.error({
+            title: "加载路径数据出错",
+            desc: error.message,
+          });
+          console.error(error);
+          return;
+        }
+      }
       this.showHitTime = false;
       // this.showAllTcHit = false;
       this.currentTCcard = "singleTC";
@@ -2441,7 +2541,28 @@ export default {
       }
       this.showTC(this.selectedTC, false);
     },
-    showAllTC(insMultiTC) {
+    async showAllTC(insMultiTC) {
+      if (!insMultiTC || !insMultiTC.tc || !insMultiTC.tc.length) return;
+      const initTime = insMultiTC.tc[0].initTime;
+      const ins = insMultiTC.ins;
+      const userAction = { type: "overview", initTime, ins };
+      this._lastUserAction = userAction;
+      if (!this.isInsTracksLoaded(insMultiTC)) {
+        this.$Message.info("正在加载路径数据...");
+        try {
+          const insWrap = await this.ensureInsTracks(initTime, ins);
+          if (!this.isCurrentUserAction(userAction)) return;
+          if (!insWrap) return;
+          insMultiTC = insWrap;
+        } catch (error) {
+          this.$Notice.error({
+            title: "加载路径数据出错",
+            desc: error.message,
+          });
+          console.error(error);
+          return;
+        }
+      }
       this.showAllTcHit = false;
       let multiTC = insMultiTC.tc;
       this.selectedIns = insMultiTC;
@@ -2454,19 +2575,21 @@ export default {
     },
     getTC(times = ["20190407 00:00", "2019-04-08 23:59"]) {
       //.get("/source/2019032400_21S_VERONICA_ECEP.json")
+      const token = this._tcSearchToken;
       this.$Message.info("正在查询数据...");
       axios
         .get(
-          `/api?interface=tc-ens&gt=${times[0]}&lt=${
+          `/api?interface=tc-ens-meta&gt=${times[0]}&lt=${
             times[1]
           }&dateFormat=YYYY-MM-DD HH:mm&ins=${this.selectedModel.join(
             ","
           )}&basin=${this.selectedBasin}&spe=${this.tcFilter}`
         )
         .then((response) => {
+          if (token !== this._tcSearchToken) return;
           let raw = response.data;
           // console.log(raw);
-          if (!raw.success) throw new Error(raw);
+          if (!raw.success) throw new Error(raw.error || raw);
           let tcArr = raw.data;
 
           if (tcArr.length) {
@@ -2492,6 +2615,7 @@ export default {
           }
         })
         .catch((error) => {
+          if (token !== this._tcSearchToken) return;
           this.$Notice.error({
             title: "查询TC出错",
             desc: error.message,
@@ -2509,22 +2633,12 @@ export default {
         for (let iIns of insSet) {
           let insWrap = { ins: iIns, tc: [] };
           let sameIns = sameTime.filter((tc) => tc.ins == iIns);
-          sameIns.sort((tc0, tc1) => {
-            let number0 = tc0.cycloneNumber;
-            let number1 = tc1.cycloneNumber;
-            if (number0[0] == "9") number0 = "6" + number0;
-            if (number1[0] == "9") number1 = "6" + number1;
-            if (number0 < number1) {
-              return -1;
-            } else {
-              return 1;
-            }
-          });
-          insWrap.tc = sameIns;
+          insWrap.tc = this.sortTCs(sameIns);
           timeWrap.ins.push(insWrap);
         }
         tcAll.push(timeWrap);
       }
+      tcAll.sort((a, b) => new Date(a.time) - new Date(b.time));
       // console.log(tcAll);
       return tcAll;
       // this.tcOpenPanel = String(this.allTC.length);

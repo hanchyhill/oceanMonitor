@@ -29,6 +29,25 @@ let Subscribe = undefined;
 let Cyclone = undefined;
 const MAX_BULLETIN_RANGE_DAYS = 31;
 const MAX_TC_ENS_RANGE_DAYS = 14;
+const TC_ENS_META_FIELDS = 'initTime cycloneNumber cycloneName ins tcID basinShort basinShort2';
+const TC_ENS_DETAIL_FIELDS = 'initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2 controlIndex fillStatus';
+
+function getBasinList(basin) {
+  if (basin === 'WPAC') return [{ basinShort2: 'WP' }, { basinShort: 'W' }];
+  return [];
+}
+
+function applyBasinFilter(query, basinList) {
+  if (basinList.length) {
+    return query.or(basinList);
+  }
+  return query;
+}
+
+function parseQueryTime(value, dateFormat) {
+  if (!value) return moment.invalid();
+  return dateFormat ? moment(value, dateFormat) : moment(value);
+}
 
 function memorySnapshot() {
   const memory = process.memoryUsage();
@@ -184,6 +203,127 @@ router.get('/api/',async(ctx,next)=>{
         durationMs: Date.now() - startedAt,
         reason: 'invalid-date-range',
       });
+      await next();
+    }
+  }else if(interface == 'tc-ens-meta'){
+    let minTime,maxTime;
+    const ins = ctx.query.ins?ctx.query.ins.split(','):['NCEP','ecmwf'];
+    const basinList = getBasinList(ctx.query.basin);
+    minTime = parseQueryTime(ctx.query.gt, ctx.query.dateFormat);
+    maxTime = parseQueryTime(ctx.query.lt, ctx.query.dateFormat);
+    if(minTime.isValid()&&maxTime.isValid()&&minTime.isBefore(maxTime)){
+      const rangeDays = maxTime.diff(minTime, 'days', true);
+      if(rangeDays > MAX_TC_ENS_RANGE_DAYS){
+        ctx.status = 400;
+        ctx.body = {
+          error: `查询时间范围不能超过 ${MAX_TC_ENS_RANGE_DAYS} 天`,
+          success: false,
+        };
+        logApiMetric(ctx, interface, 'request-rejected', {
+          durationMs: Date.now() - startedAt,
+          rangeDays,
+        });
+      }else{
+        try{
+          let query = Cyclone.find({}).
+          where('initTime').gt(minTime.toDate()).lt(maxTime.toDate()).
+          where('ins').in(ins).
+          select(TC_ENS_META_FIELDS);
+          query = applyBasinFilter(query, basinList);
+          const cyclones = await query.lean().exec();
+          ctx.body = {
+            data: cyclones,
+            success: true
+          };
+          logApiMetric(ctx, interface, 'request-complete', {
+            durationMs: Date.now() - startedAt,
+            rangeDays,
+            resultCount: cyclones.length,
+          });
+        }catch(error){
+          console.error('[api-error]', interface, ctx.originalUrl, error);
+          ctx.status = 500;
+          ctx.body = {
+            error: '查询台风集合预报元数据失败',
+            success: false,
+          };
+          logApiMetric(ctx, interface, 'request-failed', {
+            durationMs: Date.now() - startedAt,
+            error: error.message,
+          });
+        }
+      }
+      await next();
+    }
+    else{
+      ctx.body = {
+        error:'日期参数错误',
+        success: false,
+      };
+      ctx.status = 400;
+      logApiMetric(ctx, interface, 'request-rejected', {
+        durationMs: Date.now() - startedAt,
+        reason: 'invalid-date-range',
+      });
+      await next();
+    }
+  }else if(interface == 'tc-ens-detail'){
+    const ins = ctx.query.ins ? String(ctx.query.ins).split(',')[0] : '';
+    const basinList = getBasinList(ctx.query.basin);
+    const initTime = parseQueryTime(ctx.query.initTime, ctx.query.dateFormat);
+    if(!ins){
+      ctx.status = 400;
+      ctx.body = {
+        error: '缺少机构参数',
+        success: false,
+      };
+      logApiMetric(ctx, interface, 'request-rejected', {
+        durationMs: Date.now() - startedAt,
+        reason: 'missing-ins',
+      });
+      await next();
+    }else if(!initTime.isValid()){
+      ctx.status = 400;
+      ctx.body = {
+        error: '日期参数错误',
+        success: false,
+      };
+      logApiMetric(ctx, interface, 'request-rejected', {
+        durationMs: Date.now() - startedAt,
+        reason: 'invalid-init-time',
+      });
+      await next();
+    }else{
+      try{
+        const initMomentUtc = initTime.clone().utc();
+        let query = Cyclone.find({}).
+        where('initTime').gte(initMomentUtc.clone().startOf('minute').toDate()).lte(initMomentUtc.clone().endOf('minute').toDate()).
+        where('ins').equals(ins).
+        select(TC_ENS_DETAIL_FIELDS);
+        query = applyBasinFilter(query, basinList);
+        const cyclones = await query.lean().exec();
+        ctx.body = {
+          data: cyclones,
+          success: true
+        };
+        logApiMetric(ctx, interface, 'request-complete', {
+          durationMs: Date.now() - startedAt,
+          ins,
+          initTime: initTime.toISOString(),
+          resultCount: cyclones.length,
+        });
+      }catch(error){
+        console.error('[api-error]', interface, ctx.originalUrl, error);
+        ctx.status = 500;
+        ctx.body = {
+          error: '查询台风集合预报详情失败',
+          success: false,
+        };
+        logApiMetric(ctx, interface, 'request-failed', {
+          durationMs: Date.now() - startedAt,
+          error: error.message,
+        });
+      }
       await next();
     }
   }else{
