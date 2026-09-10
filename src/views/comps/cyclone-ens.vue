@@ -75,33 +75,39 @@
           :key="item.time"
           v-show="i == selectedTimeIndex"
         >
-          <div
-            class="tc-table-ins-wrap"
+          <Tooltip
             v-for="ins in item.ins"
             :key="ins.ins"
             v-show="ins.tc.length"
+            :content="insNote(ins.ins)"
+            :disabled="!insNote(ins.ins)"
+            placement="top"
+            transfer
+            max-width="320"
           >
-            <span class="tc-ins">
+            <div class="tc-table-ins-wrap">
+              <span class="tc-ins">
+                <i-button
+                  @click="showAllTC(ins)"
+                  :ghost="
+                    i != selectedInsIndex[0] || ins.ins != selectedInsIndex[1]
+                  "
+                  type="primary"
+                >
+                  {{ ins.ins }}
+                </i-button>
+              </span>
               <i-button
-                @click="showAllTC(ins)"
-                :ghost="
-                  i != selectedInsIndex[0] || ins.ins != selectedInsIndex[1]
-                "
-                type="primary"
+                v-for="(tc, indexTc) in ins.tc"
+                @click="showTC(tc)"
+                :key="tc.tcID + indexTc"
+                type="success"
+                :ghost="!selectedTC || tc.tcID != selectedTC.tcID"
               >
-                {{ ins.ins }}
+                {{ showTCName(tc) }}
               </i-button>
-            </span>
-            <i-button
-              v-for="(tc, indexTc) in ins.tc"
-              @click="showTC(tc)"
-              :key="tc.tcID + indexTc"
-              type="success"
-              :ghost="!selectedTC || tc.tcID != selectedTC.tcID"
-            >
-              {{ showTCName(tc) }}
-            </i-button>
-          </div>
+            </div>
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -455,6 +461,7 @@ let tcUtil = {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
       containWindRadius: true,
+      note: "ECMWF 集合预报（51 成员）和 ECMWF 确定性预报，10天预报时效，来源EC官网，7开头和8开头的编号为扰动编号,其余为当年顺序编号. 顺序编号不一定跟当年台风序号相同，ECMWF的扰动聚类方法容易把多个台风聚类为一个编号。",
     },
     NCEP: {
       enNumber: 21,
@@ -462,6 +469,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "NCEP 集合预报（21 成员）和 NCEP 确定性预报，10天预报时效，来自gdex.ucar.edu TIGGE",
     },
     TRAMS_TY: {
       enNumber: 30,
@@ -469,6 +477,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "华南台风模式集合预报（30 成员）, 来自天擎众创平台",
     },
     "ncep-R": {
       enNumber: 21,
@@ -476,6 +485,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "RUC 源 NCEP 集合预报",
     },
     "ukmo-R": {
       enNumber: 36,
@@ -483,6 +493,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "RUC 源英国 UKMO 集合预报",
     },
     "ecmwf-R": {
       enNumber: 51,
@@ -490,14 +501,16 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "RUC 源 ECMWF 集合预报",
     },
-    "fnv3": {
+    fnv3: {
       enNumber: 51,
       interval: 6,
       timeRange() {
         return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
       containWindRadius: true,
+      note: "Google Deepmind WeatherNext Cyclone Operational (FNV3, WNV2) 集合预报，15 天时效, 51个成员, 数字序号开头为JTWC当年编号，C开头为自动聚类编号，C9999为无法聚类成员，",
     },
     "fnv3-gen": {
       enNumber: 50,
@@ -506,6 +519,16 @@ let tcUtil = {
         return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
       containWindRadius: true,
+      note: "Google Deepmind WeatherNext Cyclone Operational (FNV3, WNV2) 含扰动集合预报，15 天时效, 50个成员, 数字序号开头为JTWC当年编号，C开头为自动聚类编号，C9999为无法聚类成员，来自Google Deepmind官网",
+    },
+    WNV3: {
+      enNumber: 64,
+      interval: 6,
+      timeRange() {
+        return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
+      },
+      containWindRadius: true,
+      note: "Google Deepmind WeatherNext 3 Cyclone (WNV3) 集合预报，15 天时效, 64个成员, 数字序号开头为JTWC当年编号，C开头为自动聚类编号，C9999为无法聚类成员，来自Google Deepmind官网",
     },
     "aifs-cai": {
       enNumber: 51,
@@ -513,6 +536,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(60), (val, index) => index * 6); // 15天，360小时
       },
+      note: "AIFS 集合预报，15 天时效, 51个成员, 为自动聚类，数据来源www.smca.fun",
     },
     "fnmoc-R": {
       enNumber: 20,
@@ -520,6 +544,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "RUC 源 FNMOC 集合预报",
     },
     "cmc-R": {
       enNumber: 21,
@@ -527,13 +552,15 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "RUC 源加拿大 CMC 集合预报",
     },
     ncep_e: {
       enNumber: 31,
-      interval: -1,// -1 表示忽略时间间隔的判断
+      interval: -1, // -1 表示忽略时间间隔的判断
       timeRange() {
         return Array.from(new Array(64), (val, index) => index * 6);
       },
+      note: "NCEP 集合预报和确定性预报(仅有编号台风)，15天预报时效，来自 emc.ncep.noaa.gov",
     },
     ukmo_e: {
       enNumber: 36,
@@ -541,6 +568,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "EMC 源英国 UKMO 集合预报",
     },
     fnmoc_e: {
       enNumber: 20,
@@ -548,6 +576,7 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "EMC 源 FNMOC 集合预报",
     },
     cmc_e: {
       enNumber: 21,
@@ -555,8 +584,11 @@ let tcUtil = {
       timeRange() {
         return Array.from(new Array(40), (val, index) => index * 6);
       },
+      note: "EMC 源加拿大 CMC 集合预报",
     },
-    UKMO: {},
+    UKMO: {
+      note: "UKMO",
+    },
   },
 };
 
@@ -2287,6 +2319,7 @@ export default {
         // "fnv3",
         "aifs-cai",
         "fnv3-gen",
+        "WNV3",
         // "fnmoc-R",
         // "cmc-R",
         "TRAMS_TY",
@@ -2310,6 +2343,7 @@ export default {
         { value: "fnv3", label: "FNV3-Google" },
         { value: "aifs-cai", label: "AIFS集合" },
         { value: "fnv3-gen", label: "FNV3-含扰动" },
+        { value: "WNV3", label: "WNV3" },
       ],
       modelListRuc: [
         { value: "ncep-R", label: "NCEP-R" },
@@ -2477,9 +2511,11 @@ export default {
         const number = tcRaw && tcRaw.cycloneNumber ? tcRaw.cycloneNumber : "";
         // ecmwf 且编号以7开头（如70W/71W）默认不显示集合平均路径与关键时间节点
         const isEcmwf7 = tcRaw && tcRaw.ins === "ecmwf" && number[0] === "7";
-        // fnv3-gen 中编号为 C-9999 的预报表示无法归类的集合成员，默认不显示关键时间节点
+        // fnv3-gen / WNV3 中编号为 C-9999 的预报表示无法归类的集合成员，默认不显示关键时间节点
         const isFnv3genUnclassified =
-          tcRaw && tcRaw.ins === "fnv3-gen" && number.includes("9999");
+          tcRaw &&
+          (tcRaw.ins === "fnv3-gen" || tcRaw.ins === "WNV3") &&
+          number.includes("9999");
         this.showMeanTrack = !(isEcmwf7 || isFnv3genUnclassified);
         this.showKeyTimeNodes = !(isEcmwf7 || isFnv3genUnclassified);
       }
@@ -2660,6 +2696,10 @@ export default {
         fullName += ` ${basin}`;
       }
       return fullName;
+    },
+    insNote(ins) {
+      const meta = this.tcMeta && this.tcMeta[ins];
+      return (meta && meta.note) || "";
     },
     jump(selector, offset = 0) {
       let jump = document.querySelector(selector);
@@ -3152,6 +3192,9 @@ svg circle {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.tc-table-time-wrap > .ivu-tooltip {
+  display: inline-block;
 }
 .tc-table-ins-wrap {
   border: 3px solid royalblue;
