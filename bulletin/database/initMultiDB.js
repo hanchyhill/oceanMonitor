@@ -1,6 +1,6 @@
 // 合并initSchemas 和 connect
 const mongoose = require('mongoose');
-const {configBL,configTC} = require('./privateConfig/private.dbConfig.js');
+const {configBL,configTC,configWriteTC} = require('./privateConfig/private.dbConfig.js');
 const MAX_RECONNECTED = 10;
 
 let connect = (config)=>{
@@ -110,6 +110,10 @@ let cycloneSchema = new Schema({
     track: Array,
   }],
   fileName:String,
+  unidCurrent:String,
+  unidIns:String,
+  unidGlobal:String,
+  tsid:String,
 },{timestamps: true,}
 );
 
@@ -125,4 +129,10 @@ exports.connectTC = async ()=>{
   db.model('Cyclone',cycloneSchema,'cyclones');
   return db;
 }
+
+exports.connectWriteTC = async ()=>{
+  let db = await connect(configWriteTC);
+  db.model('Cyclone',cycloneSchema,'cyclones');
+  return db;
+};
 

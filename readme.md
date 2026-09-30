@@ -15,6 +15,44 @@
 
 TODO
 
+## 台风集合预报编号 API
+
+服务端入口是 `node bulletin/bule-koa.js`，默认监听 `10074` 端口。以下请求中的时间均须带时区；建议使用 UTC 的 `Z` 格式。关联算法由外部项目实现，本服务只提供预报读取和编号写入。
+
+### 按起报时刻读取
+
+```http
+GET /api/?interface=tc-ens&initTime=2026-09-30T00:00:00Z&basin=WPAC HTTP/1.1
+Host: localhost:10074
+```
+
+指定 `initTime` 后，接口查询该 UTC 分钟内所有机构的预报，返回 `{ "success": true, "data": [...] }`；每条数据包含后续写入要用的 `_id`。可加 `ins=NCEP,ecmwf` 限定机构，不传则查询所有机构。没有记录时 `data` 为 `[]`，无效时间返回 `400`。原有 `gt`、`lt` 时间范围查询仍可使用；按时次查询无需传这两个参数。
+
+### 配置写入 token
+
+先生成一次 token：`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`。将结果配置为服务端环境变量 `TC_ENS_WRITE_TOKEN`，或放入未纳入 Git 的 `bulletin/config/private.tcEnsWriteToken.js`：
+
+```js
+module.exports = {token: '<生成的 token>'};
+```
+
+环境变量优先；每个部署环境都需单独配置。外部项目通过 `Authorization: Bearer <token>` 发送，生产环境使用 HTTPS；不要把 token 放入前端代码或提交到仓库。未配置 token 时，写入接口返回 `503`。
+
+### 写入统一编号
+
+```http
+POST /api/tc-ens/identifiers HTTP/1.1
+Host: localhost:10074
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{"initTime":"2026-09-30T00:00:00Z","updates":[{"id":"507f1f77bcf86cd799439011","identifiers":{"unidCurrent":"CUR-001","unidIns":"INS-001","unidGlobal":"GLB-001","tsid":"1234"}}]}
+```
+
+`id` 是读取结果中的 `_id`，每批最多 100 条且请求体不超过 64 KB。`identifiers` 可以只包含需要写入的字段，允许的字段为 `unidCurrent`、`unidIns`、`unidGlobal`、`tsid`；值须为非空字符串，不能用 `null` 清除旧值。服务端核对每条记录的 `initTime`，并仅更新提交的编号字段，不改动路径、`tcID` 或 `updatedAt`。已有不同编号时跳过该记录，不会覆盖。
+
+响应包含 `counts` 和逐条 `results`，状态可能为 `updated`、`unchanged`、`notFound`、`timeMismatch`、`conflict`、`error`。重复提交相同编号得到 `unchanged`；批量请求部分失败时，仅重试失败的记录。鉴权失败返回 `401`，参数错误返回 `400`，非 JSON 请求返回 `415`。
+
 ## 海洋监测网页
 
 分步走战略：

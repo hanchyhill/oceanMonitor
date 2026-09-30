@@ -6,7 +6,10 @@ const logger = require('koa-logger');
 const Router = require('koa-router');
 // const mongoose = require('mongoose');
 // const {connect,initSchemas} = require('./database/initDB.js');
-const {connectBL,connectTC} = require('./database/initMultiDB.js')
+const {connectBL,connectTC,connectWriteTC} = require('./database/initMultiDB.js')
+const fs = require('fs');
+const path = require('path');
+const {tokenMatches,parseInitMinute,validateBatch,applyIdentifierBatch} = require('./identifierUpdates.js');
 const router = new Router();
 const koaBody   = require('koa-body');
 const moment = require('moment');
@@ -27,10 +30,26 @@ proxyOptions = {
 let Bulletin = undefined;
 let Subscribe = undefined;
 let Cyclone = undefined;
+let writeCollectionPromise;
+const writeTokenFile = path.join(__dirname, 'config/private.tcEnsWriteToken.js');
+const writeToken = process.env.TC_ENS_WRITE_TOKEN ||
+  (fs.existsSync(writeTokenFile) ? require(writeTokenFile).token : '');
 const MAX_BULLETIN_RANGE_DAYS = 31;
 const MAX_TC_ENS_RANGE_DAYS = 14;
-const TC_ENS_META_FIELDS = 'initTime cycloneNumber cycloneName ins tcID basinShort basinShort2';
-const TC_ENS_DETAIL_FIELDS = 'initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2 controlIndex fillStatus';
+const TC_ENS_META_FIELDS = 'initTime cycloneNumber cycloneName ins tcID basinShort basinShort2 unidCurrent unidIns unidGlobal tsid';
+const TC_ENS_DETAIL_FIELDS = 'initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2 controlIndex fillStatus unidCurrent unidIns unidGlobal tsid';
+
+function getWriteCollection() {
+  if (!writeCollectionPromise) {
+    writeCollectionPromise = connectWriteTC()
+      .then(db => db.model('Cyclone').collection)
+      .catch(error => {
+        writeCollectionPromise = null;
+        throw error;
+      });
+  }
+  return writeCollectionPromise;
+}
 
 function getBasinList(basin) {
   if (basin === 'WPAC') return [{ basinShort2: 'WP' }, { basinShort: 'W' }];
@@ -140,6 +159,35 @@ router.get('/api/',async(ctx,next)=>{
       await next();
     }
   }else if(interface == 'tc-ens'){
+    if (ctx.query.initTime !== undefined) {
+      const minute = parseInitMinute(ctx.query.initTime);
+      if (!minute) {
+        ctx.status = 400;
+        ctx.body = {error: '日期参数错误', success: false};
+        await next();
+        return;
+      }
+      try {
+        let query = Cyclone.find({}).
+          where('initTime').gte(minute.start).lt(minute.end).
+          select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2 unidCurrent unidIns unidGlobal tsid');
+        if (ctx.query.ins) query = query.where('ins').in(ctx.query.ins.split(','));
+        query = applyBasinFilter(query, getBasinList(ctx.query.basin));
+        const cyclones = await query.lean().exec();
+        ctx.body = {data: cyclones, success: true};
+        logApiMetric(ctx, interface, 'request-complete', {
+          durationMs: Date.now() - startedAt,
+          initTime: minute.start.toISOString(),
+          resultCount: cyclones.length,
+        });
+      } catch (error) {
+        console.error('[api-error]', interface, ctx.originalUrl, error);
+        ctx.status = 500;
+        ctx.body = {error: '查询台风集合预报数据失败', success: false};
+      }
+      await next();
+      return;
+    }
     let minTime,maxTime;
     const ins = ctx.query.ins?ctx.query.ins.split(','):['NCEP','ecmwf'];
     const basin = ctx.query.basin;
@@ -164,7 +212,7 @@ router.get('/api/',async(ctx,next)=>{
           let query = Cyclone.find({}).
           where('initTime').gt(minTime.toDate()).lt(maxTime.toDate()).
           where('ins').in(ins).      // where('controlIndex').ne(-1).
-          select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2')
+          select('initTime cycloneNumber cycloneName ins tcID tracks detTrack basinShort basinShort2 unidCurrent unidIns unidGlobal tsid')
           if(basinList.length!=0){
             query = query.or(basinList);
           }
@@ -337,6 +385,41 @@ router.get('/api/',async(ctx,next)=>{
       reason: 'invalid-interface',
     });
     await next();
+  }
+});
+
+router.post('/api/tc-ens/identifiers', async (ctx,next) => {
+  if (!writeToken) {
+    ctx.status = 503;
+    ctx.body = {success: false, error: '写入接口未配置'};
+    return;
+  }
+  if (!tokenMatches(ctx.get('Authorization'), writeToken)) {
+    ctx.status = 401;
+    ctx.body = {success: false, error: '未授权'};
+    return;
+  }
+  if (!ctx.is('application/json')) {
+    ctx.status = 415;
+    ctx.body = {success: false, error: '只接受 JSON 请求体'};
+    return;
+  }
+  await next();
+}, koaBody({jsonLimit: '64kb'}), async ctx => {
+  const validated = validateBatch(ctx.request.body);
+  if (validated.error) {
+    ctx.status = 400;
+    ctx.body = {success: false, error: validated.error};
+    return;
+  }
+  try {
+    const collection = await getWriteCollection();
+    ctx.body = await applyIdentifierBatch(collection, validated);
+    console.log('[identifier-write]', JSON.stringify(ctx.body.counts));
+  } catch (error) {
+    console.error('[identifier-write] failed');
+    ctx.status = 503;
+    ctx.body = {success: false, error: '写入数据库暂不可用'};
   }
 });
 

@@ -24,6 +24,10 @@ var cycloneSchema = new Schema({
     track: Array,
   }],
   fileName:String,
+  unidCurrent:String,
+  unidIns:String,
+  unidGlobal:String,
+  tsid:String,
 },{timestamps: true,}
 );
 // cycloneSchema.index({initTime:1});
