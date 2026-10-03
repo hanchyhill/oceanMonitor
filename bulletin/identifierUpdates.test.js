@@ -71,3 +71,16 @@ test('conflicting value and mismatched issue time do not write', async () => {
   assert.equal(mismatch.results[0].status, 'timeMismatch');
   assert.equal(writes, 0);
 });
+
+test('conditional update includes already-equal fields to catch concurrent changes', async () => {
+  let captured;
+  const collection = {
+    async findOne() { return {initTime: new Date(initTime), unidCurrent: 'wc-0000'}; },
+    async updateOne(filter) { captured = filter; return {matchedCount: 0}; },
+  };
+  const result = await applyIdentifierBatch(collection,
+    validateBatch(batch({unidCurrent: 'wc-0000', unidIns: 'wi-ecmwf-2026-09-0000'})));
+  assert.equal(captured.unidCurrent, 'wc-0000');
+  assert.deepEqual(captured.unidIns, {$exists: false});
+  assert.equal(result.results[0].status, 'conflict');
+});

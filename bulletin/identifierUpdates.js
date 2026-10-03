@@ -83,13 +83,14 @@ async function applyIdentifierBatch(collection, validated) {
       for (const field of Object.keys(item.identifiers)) {
         const previous = current[field];
         const next = item.identifiers[field];
+        // Every supplied field must still match, including already-equal fields.
+        filter[field] = previous === undefined ? {$exists: false} : previous;
         if (previous === next) continue;
         if (previous !== undefined && previous !== null && previous !== '') {
           conflict = true;
           break;
         }
         changed[field] = next;
-        filter[field] = previous === undefined ? {$exists: false} : previous;
       }
       if (conflict) {
         results.push({id: item.id, status: 'conflict'});

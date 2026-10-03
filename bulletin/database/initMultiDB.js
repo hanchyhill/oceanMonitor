@@ -1,5 +1,6 @@
 // 合并initSchemas 和 connect
 const mongoose = require('mongoose');
+const {addIdentifierSchema} = require('./identifierSchema');
 const {configBL,configTC,configWriteTC} = require('./privateConfig/private.dbConfig.js');
 const MAX_RECONNECTED = 10;
 
@@ -110,12 +111,9 @@ let cycloneSchema = new Schema({
     track: Array,
   }],
   fileName:String,
-  unidCurrent:String,
-  unidIns:String,
-  unidGlobal:String,
-  tsid:String,
-},{timestamps: true,}
+},{timestamps: true, autoIndex: false}
 );
+addIdentifierSchema(cycloneSchema);
 
 exports.connectBL = async ()=>{
   let db = await connect(configBL);

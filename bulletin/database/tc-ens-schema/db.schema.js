@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+const {addIdentifierSchema} = require('../identifierSchema');
 
 var cycloneSchema = new Schema({
   cycloneNumber: String,
@@ -24,11 +25,8 @@ var cycloneSchema = new Schema({
     track: Array,
   }],
   fileName:String,
-  unidCurrent:String,
-  unidIns:String,
-  unidGlobal:String,
-  tsid:String,
-},{timestamps: true,}
+},{timestamps: true, autoIndex: false}
 );
+addIdentifierSchema(cycloneSchema);
 // cycloneSchema.index({initTime:1});
 mongoose.model('Cyclone',cycloneSchema,'cyclones');

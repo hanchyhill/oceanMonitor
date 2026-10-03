@@ -10,6 +10,7 @@ const {connectBL,connectTC,connectWriteTC} = require('./database/initMultiDB.js'
 const fs = require('fs');
 const path = require('path');
 const {tokenMatches,parseInitMinute,validateBatch,applyIdentifierBatch} = require('./identifierUpdates.js');
+const {handleIdentifierQuery} = require('./identifierQueries.js');
 const router = new Router();
 const koaBody   = require('koa-body');
 const moment = require('moment');
@@ -96,6 +97,14 @@ router.get('/api/',async(ctx,next)=>{
   let interface = ctx.query.interface;
   const startedAt = Date.now();
   logApiMetric(ctx, interface || 'unknown', 'request-start', {});
+  if (interface === 'tc-ens-by-identifier' || interface === 'tc-ens-identifiers') {
+    await handleIdentifierQuery(ctx, Cyclone.collection);
+    logApiMetric(ctx, interface, 'request-complete', {
+      durationMs: Date.now() - startedAt, status: ctx.status,
+      resultCount: ctx.body && ctx.body.page ? ctx.body.page.count : 0
+    });
+    return;
+  }
   if(interface == "bulletin"){
     let [minTime,maxTime] = [NaN,NaN];
     const ins = ctx.query.ins?ctx.query.ins.split(','):['BABJ','PGTW','RJTD','VHHH'];
